@@ -1,19 +1,45 @@
 %%This is a very basic article template.
 %%There is just one section and two subsections.
 \documentclass{article}
-
+\usepackage[margin=0.5in]{geometry}
 \begin{document}
 
 
-\section{Title}
-
-\subsection{Subtitle}
-
-Plain text.asddsa
-
-\subsection{Another subtitle}
-
-More plain text.
-
+\section{CSC579 : Class Notes}
+\subsection {Administrivia}
+\subsection{Probability Review}
+Put review of probability here. 
+\subsection{ Lecture 001 - Stochastic Process}
+	\subsubsection{Stochastic Procsses}
+	  A family of Random vars $\{ X(t) : t\in T\}$ 
+	\\\indent t is normally time  
+    \\\indent T is called the index set 
+    \\\indent T can be discrete $\{ 0,1,2,3 \ldots \}$ or cont $\{ t : 0 \le t \le \infty \}$
+	\\\indent the set  $\{ X(t) : t \in T \}$ is the State Space 
+	\\
+	\subsubsection{Time Dependence}
+	Stationarity -- invariant under a shift of time origin. 
+	\[Prob\{ X(t_1) \le t_1, X(t_2) \le t_2 \ldots, X(t_n) \le t_n \} = \]
+	\[Prob\{ X(t_1 + \alpha ) \le t_1, X(t_2 + \alpha ) \le t_2 \ldots, X(t_n +\alpha) \le t_n \}\]
+	Homogenerity -- invariant under time elapsed from origin
+	\\
+	\subsubsection{Markov process}
+	A stochastic process who satisfies Markov or Memoryless property. 
+	\[Prob\{ X_{n+1} = x_{n+1} | X_n = x_n, X_{n-1} = x_{n-1} \ldots , X_0 = x_0 \}\]
+	\[= Prob\{ X_{n+1} = x_{n+1} | X_n = x_n\}\]
+	\\Single step transition probability :
+	\[Prob\{X_{n+1} = j | X_n = i \}\]
+	\\Transition Probability Matrix : 
+	\[ \left( \begin{array}{ccc}
+            p_{00}(n) & p_{10}(n) & p_{20}(n) \\
+			p_{10}(n) & p_{11}(n) & p_{21}(n) \\
+			p_{20}(n) & p_{12}(n) & p_{22}(n) 
+	\end{array} \right)\] 
+ 	\\$p_{ab}(n)$ is the probability to move from a to b at timestep n.
+ 	\\If the markov chain is homogeneous, this matrix is the same for all values of n. 
+	\\$$\sum\limits_{all j}{p_{ij}(n)} = 1$$
+	\\For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $l\rightarrow k\rightarrow j\rightarrow i$
+	
+ 	 
 
 \end{document}
