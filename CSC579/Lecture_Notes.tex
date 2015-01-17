@@ -2,6 +2,8 @@
 %%There is just one section and two subsections.
 \documentclass{article}
 \usepackage[margin=0.5in]{geometry}
+\usepackage{units}
+\usepackage{amsfonts}
 \begin{document}
 
 
@@ -9,7 +11,7 @@
 \subsection {Administrivia}
 \subsection{Probability Review}
 Put review of probability here. 
-\subsection{ Lecture 001 - Stochastic Process}
+\subsection{ Stochastic Processes and Markov Models }
 	\subsubsection{Stochastic Procsses}
 	  A family of Random vars $\{ X(t) : t\in T\}$ 
 	\\\indent t is normally time  
@@ -28,7 +30,7 @@ Put review of probability here.
 	\[Prob\{ X_{n+1} = x_{n+1} | X_n = x_n, X_{n-1} = x_{n-1} \ldots , X_0 = x_0 \}\]
 	\[= Prob\{ X_{n+1} = x_{n+1} | X_n = x_n\}\]
 	\\Single step transition probability :
-	\[Prob\{X_{n+1} = j | X_n = i \}\]
+	\[Prob\{X_{n+1} = j | X_n = i \} = p_{ij}(n) \]
 	\\Transition Probability Matrix : 
 	\[ \left( \begin{array}{ccc}
             p_{00}(n) & p_{10}(n) & p_{20}(n) \\
@@ -38,8 +40,8 @@ Put review of probability here.
  	\\$p_{ab}(n)$ is the probability to move from a to b at timestep n.
  	\\If the markov chain is homogeneous, this matrix is the same for all values of n. 
 	\\$$\sum\limits_{all j}{p_{ij}(n)} = 1$$
-	\\For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $l\rightarrow k\rightarrow j\rightarrow i$
-	\\\subsubsection{ Social Modility Model }
+	\\For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $i\rightarrow j\rightarrow k\rightarrow l$
+	\\\subsubsection{Example : Social Modility Model }
 	Partition into upper middle and lower class. 
 	
 	\[P = \bordermatrix{   
@@ -50,6 +52,77 @@ Put review of probability here.
     \]
 
 	$$Prob\{ X_{n+2} = U, X_{n+1} = M | X_n = L \} = P_{ML}P_{MU} = 0.5 \times 0.15 = 0.075 $$
- 	 
-
+ 	\subsubsection{Example : The Ehrenfest Model}
+ 	Two buckets containing N balls - choose one ball at random and move to the other bucket, let k indicate the number of buckets in bucket 1. 
+ 	\[ Prob\{ X_{n+1} = k + 1 | X_{n} = k \} = \frac{ N - k}{N}, \quad Prob\{ X_{n+1} = k-1 | X_n \} = \frac{k}{N}, \quad k \geq 1.\] 
+ 	\[p_{01} = 1 \quad p_{12} = \frac{5}{6} \quad p_{23} = \frac{4}{6} \quad \ldots \quad etc. \]
+ 	\subsubsection{Example : A Non-homogeneous example }
+ 	\[p_{aa}(n) = p_{bb}(n)= 1/n ,\quad p_{ab}(n) = p_{ba}(n) = \frac{n - 1}{n}, \quad \forall n \in N \]
+ 	\[ P(n) = \left( \begin{array}{cc}
+            \nicefrac{1}{n} & \nicefrac{(n - 1)}{n}  \\
+			\nicefrac{(n - 1)}{n} & \nicefrac{1}{n}  
+	\end{array} \right)\]  
+	h
+	As time increases the probability of switching states decreases approaching 0 and n approaches \(\infty\)
+	\subsubsection{Making Markov out of non-memoryless stochastic processes}
+	Consider the belfast weather morkov chain. If it were the case that the tranisition probaility matrix of a state where it was 2 rainy days in a row was
+	different than a single rainy day, then our stochastic process is no longer memoryless. We can flatten this out by creating a new state to accomondate, called
+	RR, making our states $\{S,C,R,RR\}$. This is similar to flattening out a non-deterministic state machine to a deterministic one - it could result in a
+	infinite number of states - but is sometime usefull to make markov chains out of non-memoryless stochastic processes. 
+	\\
+	\\If the last k steps of a stochastic process are important, than stochastic process with s steps can be flattened into a markov chain with $s^k$ states.
+	\\
+	\\When a stochastic process is dependent on k previous steps it is called a k-dependent process.  
+	\subsubsection{The Embedded Markov Chain (Analysis of propensity to move, and normalizing with no self loops)}
+	Diagonal elements of a TPM can be non-zero, Soujour time is the amount of time spent in a state before moving out. 
+	\\For a homogenous soujourn time, the soujour time must be geometric.
+	\\
+	\\Geometric random variable : 
+	\[ \alpha > 0,\quad \alpha(1-\alpha) ^ { n -1 }, \quad n \in \mathbb{N} \]
+	\\Similar to tossing a coin weighted coin until you get heads, stay in state until you get heads.
+	\\
+	\\Prbability of leaving a state i :
+	\[ \sum\limits_{i\neq j}{ p_{ij}} = (1 - p_{ii}) \]
+	\\Probability that we spend k steps in state i:
+	\[ Prob\{R_i=k\} = (1 - p_{ii})p_{ii}^{k-1}\]
+	\[ E[R_i] = \frac{1}{1-p_{ii}}, \quad Var[R_i] =\frac{p_{ii}}{(1-p_{ii})^2} \]
+	\\We can normalize a markov chain to remove self loops $\Longrightarrow$ replace $p_{ij}, i \neq j$ with $p_{ij} / (1 - p_{ii} )$, set diagonal to zeros.
+	\\The new matrix is still stochastic :
+	\[\sum\limits_{i\neq j}{\frac{p_{ij}}{1 - p_{ii}}} = \frac{1}{1-p_{ii}}, \quad\sum\limits_{i\neq j}{p_{ij}} =\frac{1}{1-p_{ii}} ( 1-p_{ii} )= 1\]
+	\\Embedded markov chains, or normalized markov chains lose information.  Recoding the Sojourn times for each nodes allows us to go backwards and know
+	something about the self loops in an embedded markov chain. 
+	\subsubsection {Chapman-Kolmogorov Equation}
+	Belfast process with states $\{R,S,C\}$. 
+	\\Probability that its couldy two days from now given today is sunny: 
+	\[ \sum\limits_{w=R,C,S}{p_{Sw}p_{wC}}. \]
+	\\Find this sum by computing the dot product of the row corresponding to all states leaving the initial state, and the column corresponding to all state
+	entering the destination state. 
+	\[P = \bordermatrix{   
+              & S    & C    & R    \cr
+            S & a & d & g \cr
+			C & b & e & h \cr
+			R & c & f & i } 
+			, \quad V_{Sw} = <a,b,c>
+			, \quad V_{wC} = <b,e,f>
+			, \quad \sum\limits_{w=R,C,S}{p_{Sw}p_{wC}} = V_{Sw}V_{wC}
+    \]
+	\\The cross product of the matrix is the dot product of all of these elements so $P^k$ is the probability of arriving at a state k steps down
+	\[P^2= \bordermatrix{   
+              & S    & C    & R    \cr
+            S & V_{Sw}V_{wS} & V_{Sw}V_{wC} & V_{Sw}V_{wR} \cr
+			C & V_{Cw}V_{wS} & V_{Cw}V_{wC} & V_{Cw}V_{wR} \cr
+			R & V_{Rw}V_{wS} & V_{Rw}V_{wC} & V_{Rw}V_{wR} }  
+	 ,\quad P^3= \bordermatrix{   
+              & S    & C    & R    \cr
+            S & V_{Sw}V_{wx}V_{xS} & V_{Sw}V_{wx}V_{xC} & V_{Sw}V_{wx}V_{xR} \cr
+			C & V_{Cw}V_{wx}V_{xS} & V_{Cw}V_{wx}V_{xC} & V_{Cw}V_{wx}V_{xR} \cr
+			R & V_{Rw}V_{wx}V_{xS} & V_{Rw}V_{wx}V_{xC} & V_{Rw}V_{wx}V_{xR} }  
+	,\quad etc\ldots \]
+	\\Limit as k appraoches infinity is the total probability to be in a state after a long time.  
+	\\Generalize to compute probablities after discrete time steps 
+	\[ p_{ij}^{m} = Prob\{ X_{n+m} = j | X_{n} = i \} \]
+	\\Can be obtain from single step probabilities (Without raising matrixes to powers)
+	\[ p_{ij}^{(m)} = \sum\limits_{\forall k}{p_{ik}^{(l)}p_{kj}^{(m-l)}}, 0 < l < m. \rightarrow P^{(m)} = P^{(l)}P^{(m-l)}\]
+	\\This is the Chapman - Kolmogorov equation.
+	\\Non homogeneous matrixes must accomodate n. 
 \end{document}
