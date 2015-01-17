@@ -39,7 +39,17 @@ Put review of probability here.
  	\\If the markov chain is homogeneous, this matrix is the same for all values of n. 
 	\\$$\sum\limits_{all j}{p_{ij}(n)} = 1$$
 	\\For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $l\rightarrow k\rightarrow j\rightarrow i$
+	\\\subsubsection{ Social Modility Model }
+	Partition into upper middle and lower class. 
 	
+	\[P = \bordermatrix{   
+              & U    & M    & L    \cr
+            U & 0.45 & 0.50 & 0.05 \cr
+			M & 0.15 & 0.65 & 0.20 \cr
+			L & 0.00 & 0.50 & 0.50  }
+    \]
+
+	$$Prob\{ X_{n+2} = U, X_{n+1} = M | X_n = L \} = P_{ML}P_{MU} = 0.5 \times 0.15 = 0.075 $$
  	 
 
 \end{document}
