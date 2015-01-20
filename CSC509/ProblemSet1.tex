@@ -2,18 +2,89 @@
 %%There is just one section and two subsections.
 \documentclass{article}
 \usepackage[margin=0.5in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 \begin{document}
 
 
-\section{Title}
-
-\subsection{Subtitle}
-
-Plain text.
-
-\subsection{Another subtitle}
-
-More plain text.
+\title{Problem Set 1}
+\author{Greg Timmons (gbtimmon) }
+\date{January 19, 2015}
+\maketitle
+\section{Problem 1}
+If $x$ is the number of processor and y is the desired speed up then the following equation applies. 
+\[ 16 + (\frac{84}{x}) = (\frac{100}{y}) \rightarrow x = 84(\frac{100}{y} - 16)^{-1}\]
+\begin{description}
+  \item[(a)] 
+  Setting $y$ to 2 gives $x = 2.64$, or 3 processors. 
+  \item[(b)]
+  Setting $y$ to 3 gives $x = 4.84$, or 5 processors.  
+  \item[(c)]
+  Setting $y$ to 5 gives $x = 21.00$, or 21 processors. 
+  \item[(d)]
+  Setting $y$ to 7 results in a negative x, and it would not be possible to reach this speed up. This is because a speed up of 7 requires a total exectution
+  time of 14.2 seconds, however there is a lower limit of 16 due to the serial portion of the program. 
+\end{description}
+\section{Problem 2}
+\begin{lstlisting}
+for( i = 1;  i <= 1024; i++ ) { 
+    sum[i] = 0; 
+    for ( j = 1;  j <= i; j++ ) { 
+        sum[i] = sum[i] +i;
+    }
+}
+\end{lstlisting}
+\begin{description}
+	\item[(a)] The total excution time will be 
+	\[\sum\limits_{i=1}^{n}{2 + 2i}\]
+	\[= \sum\limits_{i=0}^{n}{2} + 2S\sum\limits_{i=0}^{n}{i}\]
+	\[= 2n + 2\frac{(n^2 + n)}{2}\]
+	\[= 1,051,648 \quad cycles\]
+	\item[(b)] Processor k will process steps $32i-31$ to $32i$. The excution time $E(k)$ can be computer as follows.
+	\[E(k) = \sum\limits_{i=(32k - 31)}^{32k}{2 + 2i}\]
+	\[= \sum\limits_{i=1}^{32k}{2 + 2i} -\sum\limits_{i=1}^{32(k-1)}{2 + 2i}\]
+	\[= (\sum\limits_{i=1}^{32k}{2} - \sum\limits_{i=1}^{32(k-1)}{2}  ) + (2\sum\limits_{i=1}^{32i}{i} - 2\sum\limits_{i=1}^{32(k-1)}{i})\]
+	\[64 + (32k)(32k + 1 ) - (32(k-1))(32(k-1) + 1)\]
+	\[2048k - 928\]
+	As this equation is strictly increasing, we know that k=32 will be our slowest process and it pluging 32 in for k we get a runtime of 
+	\item[(c)] A semi modified round robin assignent pattern can result in optimal scheduling for this work. Psuedocode follows : 
+	\begin{lstlisting}
+	
+	processor = [0] * 32 
+	for ( i in range(1024) ):
+	    index = i % 64
+	    if (index >= 32) : 
+	        index = 63 - index 
+	    processor[index] = processor[index] + 2i + 2       
+	\end{lstlisting}
+	
+	In this assignment pattern all processors will recieve 32,800 units of work, which is the minimum exctution time. 
+	\\The speed up is $\frac{1051648}{32800}$ or 32.8 times faster.  
+	
+\end{description}
+\section{Problem 3}
 
 
 \end{document}

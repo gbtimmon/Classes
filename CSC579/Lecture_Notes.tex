@@ -4,6 +4,9 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage{units}
 \usepackage{amsfonts}
+
+\newcommand\TP{\mathit{TP}}
+\newcommand\FN{\mathit{FN}}
 \begin{document}
 
 
@@ -125,4 +128,21 @@ Put review of probability here.
 	\[ p_{ij}^{(m)} = \sum\limits_{\forall k}{p_{ik}^{(l)}p_{kj}^{(m-l)}}, 0 < l < m. \rightarrow P^{(m)} = P^{(l)}P^{(m-l)}\]
 	\\This is the Chapman - Kolmogorov equation.
 	\\Non homogeneous matrixes must accomodate n. 
+\section{}
+	Let \(\pi_i^{(k)}\) be the probability that a markov chain is in poition i at time step k. \(k = 0\) is the initial step. 
+	\\\indent\(\pi^{(k)}\) is the column vector of these probabilites. 
+    \\\indent\(\pi^{(k+1)} = \pi^{(k)}P(k)\) or in a homogenous Markov chain \(\pi^{(k+1)} = \pi^{(k)}P\)
+    \\
+    \\Example:
+    \[\pi^{(k+1)} = \pi^{(k)}P(k) = \left(0,.5,.5\right) \left( \begin{array}{ccc}
+			0.8&0.15&0.05  \\
+			0.7&0.2&0.1  \\
+			0.5&0.3&0.2   
+	\end{array} \right) = \left(0.6, 0.25, 0.15\right).\]
+	\\
+	\\In a general for a homogenous or a non-homogenous example :
+	\[\left(\pi^{m} =\pi^{(0)}P^{(m)} \right)\mbox{ or }\left( \pi^{m} = \pi^{(0)}\prod\limits_{i=0}^{m}{P(i)} \right)\mbox{ in a non-homogenous example}\]
+	\\
+	\\It is useful to look at the limit as timestep approached infinity when this is available.
+	\[
 \end{document}
