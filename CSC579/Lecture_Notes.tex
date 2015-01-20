@@ -36,11 +36,13 @@ Put review of probability here.
 	\[Prob\{X_{n+1} = j | X_n = i \} = p_{ij}(n) \]
 	\\Transition Probability Matrix : 
 	\[ \left( \begin{array}{ccc}
-            p_{00}(n) & p_{10}(n) & p_{20}(n) \\
-			p_{10}(n) & p_{11}(n) & p_{21}(n) \\
-			p_{20}(n) & p_{12}(n) & p_{22}(n) 
+            p_{00}(n) & p_{01}(n) & p_{02}(n) \\
+			p_{10}(n) & p_{11}(n) & p_{12}(n) \\
+			p_{20}(n) & p_{21}(n) & p_{22}(n) 
 	\end{array} \right)\] 
+	(Row is from, Column is to, p10 is from 1 to 0.)
  	\\$p_{ab}(n)$ is the probability to move from a to b at timestep n.
+	\\
  	\\If the markov chain is homogeneous, this matrix is the same for all values of n. 
 	\\$$\sum\limits_{all j}{p_{ij}(n)} = 1$$
 	\\For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $i\rightarrow j\rightarrow k\rightarrow l$
@@ -48,7 +50,7 @@ Put review of probability here.
 	Partition into upper middle and lower class. 
 	
 	\[P = \bordermatrix{   
-              & U    & M    & L    \cr
+              & U    & M    & L     \cr
             U & 0.45 & 0.50 & 0.05 \cr
 			M & 0.15 & 0.65 & 0.20 \cr
 			L & 0.00 & 0.50 & 0.50  }
@@ -105,8 +107,8 @@ Put review of probability here.
             S & a & d & g \cr
 			C & b & e & h \cr
 			R & c & f & i } 
-			, \quad V_{Sw} = <a,b,c>
-			, \quad V_{wC} = <b,e,f>
+			, \quad V_{Sw} = <a,d,g>
+			, \quad V_{wC} = <d,e,f>
 			, \quad \sum\limits_{w=R,C,S}{p_{Sw}p_{wC}} = V_{Sw}V_{wC}
     \]
 	\\The cross product of the matrix is the dot product of all of these elements so $P^k$ is the probability of arriving at a state k steps down
@@ -128,7 +130,7 @@ Put review of probability here.
 	\[ p_{ij}^{(m)} = \sum\limits_{\forall k}{p_{ik}^{(l)}p_{kj}^{(m-l)}}, 0 < l < m. \rightarrow P^{(m)} = P^{(l)}P^{(m-l)}\]
 	\\This is the Chapman - Kolmogorov equation.
 	\\Non homogeneous matrixes must accomodate n. 
-\section{}
+\subsubsection{Postion Probability Vector ``\pi''}
 	Let \(\pi_i^{(k)}\) be the probability that a markov chain is in poition i at time step k. \(k = 0\) is the initial step. 
 	\\\indent\(\pi^{(k)}\) is the column vector of these probabilites. 
     \\\indent\(\pi^{(k+1)} = \pi^{(k)}P(k)\) or in a homogenous Markov chain \(\pi^{(k+1)} = \pi^{(k)}P\)
@@ -144,5 +146,28 @@ Put review of probability here.
 	\[\left(\pi^{m} =\pi^{(0)}P^{(m)} \right)\mbox{ or }\left( \pi^{m} = \pi^{(0)}\prod\limits_{i=0}^{m}{P(i)} \right)\mbox{ in a non-homogenous example}\]
 	\\
 	\\It is useful to look at the limit as timestep approached infinity when this is available.
-	\[
+	\[ \lim_{n\rightarrow\infty}{\pi^{(n)}} = \pi^{(0)}\lim_{n\rightarrow\infty}{P^{(n)}}\]
+	\\
+	\\ Example : Kafkaesque prison. A prisoner must draw 6 cards. If he ever draws 3 consecutive, he is executed. If he get to 6 cards without drawing 3 red cards
+	he lives. 
+	\\
+	\\ Create 4 states $\{R_0, R_1, R_2, R_3\}$, where the subscript refers to the consectutive number of reds seen. 
+	\\Use the following tranistion probability matrix (Note this example is homogenous.)
+	\[P= \bordermatrix{   
+                & R_0 & R_1 & R_2  & R_3 \cr
+            R_0 & 0.5 & 0.5 & 0    & 0   \cr
+            R_1 & 0.5 & 0   & 0.5  & 0   \cr
+            R_2 & 0.5 & 0   & 0    & 0.5 \cr
+            R_3 & 0   & 0   & 0.5  & 1
+       },\quad \pi_0 = \left(1,0,0,0\right)\]
+       \[P^6 = \left(\matrix{
+         0.375 & 0.203 & 0.109 & 0.312 \cr
+         0.312 & 0.171 & 0.093 & 0.421 \cr
+         0.203 & 0.109 & 0.062 & 0.062 \cr
+         0     & 0     & 0     & 1.0  
+       }\right), \quad \pi_0P^6 = \left( 0.375, 0.203, 0.109, 0.312\right)\]
+     Chance of death is 31.2\%.
+     
+     
+	
 \end{document}
