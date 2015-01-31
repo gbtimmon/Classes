@@ -1,0 +1,31 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\begin{enumerate}
+%Question 1
+\item 
+The probability that St. Mary wins is idependent to the probability of that the
+casters are correct and therefore the probability that St.Mary wins is just 
+\[55\%\]
+
+%Question 2
+\item
+	\begin{enumerate}
+	  \item \[\alpha = \frac{1}{c(b-a)}\]
+	  \item 
+	  \[f_1(x) = \int_0^c f_{X,Y}(x,y)dy = \int_0^c \frac{1}{c(b-a)}dy =
+	  \frac{y}{c(b-a)}\Big|_0^c = \frac{1}{b-a}\]
+	  
+	  \[f_2(y) = \int_a^b f_{X,Y}(x,y)dx = \int_a^b \frac{1}{c(b-a)}dx = 
+	  \frac{x}{c(b-a)}\Big|_a^b = \frac{b}{c(b-a)} - \frac{a}{c(b-a)} = \frac{1}{c}
+	  \]
+	  \item Assuming  \( a < x \leq b \) and \( 0 < y \leq c \), the RV's are
+	  indendent, that is \[Pr( X = x \wedge Y = y) = Pr(X = x)Pr(Y = y)\]
+	  
+	\end{enumerate}
+\item 
+\end{enumerate}
+
+\end{document}
