@@ -5,9 +5,19 @@
 \usepackage{pgf}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usepackage[margin=0.75in]{geometry}
 \usetikzlibrary{arrows,matrix,positioning}
-\usepackage{listings}             % Include the listings-package
-\lstset{language=Matlab}    
+\usepackage{listings}             % Include the  listings-package
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+ 
+\lstset{language=Matlab} 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Homework 1 - Timmons}
+\fancyhead[RE,LO]{CSC 579 - Perf Modeling}
+\fancyfoot[LE,RO]{\thepage}   
 \usetikzlibrary{arrows,automata}
 \usepackage[latin1]{inputenc}
 
@@ -16,6 +26,7 @@
 \date{Febuary 2, 2015}
 \author{Gregory B Timmons, gbtimmon}
 \maketitle
+
 % %%%%%%%%%% %
 % QUESTION 2 %
 % %%%%%%%%%% %
@@ -102,14 +113,14 @@ The reconstructed P matrix from the ebedded markov chain given :
 % %%%%%%%%%%% %
 % QUESTION 10 %
 % %%%%%%%%%%% %
-\newpage
+
 \section*{Question 10} 
 \textbf{A.)} There are 6 states representing how many toys he has
 \([S_0,S_1,S_2,S_3,S_4,S_5,S_6]\).
 At each time step, he wil either recieve a new toy, moving to a higher state, or a
 toy he already owns staying the same. as the number of toys he owns increasse
 the probability of receiving a new toy decreases.
-\bigskip
+\\\[
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm, semithick] \tikzstyle{every state}=[fill=red,draw=none,text=white]
 
   \node[state]         (0)                    {$S_1$};
@@ -119,17 +130,17 @@ the probability of receiving a new toy decreases.
   \node[state]         (4) [right of=3]       {$S_4$};
   \node[state]         (5) [right of=4]       {$S_5$};
 
-  \path (0) edge              node {1.0} (1);
-        (1) edge [loop above] node {0.2} (1);
-            edge              node {0.8} (2);
-        (2) edge [loop above] node {0.4} (2);
-            edge              node {0.6} (3);
-        (3) edge [loop above] node {0.6} (3);
-            edge              node {0.4} (4);
-        (4) edge [loop above] node {0.8} (4);
-            edge              node {0.2} (5);
+  \path (0) edge              node {1.0} (1)
+        (1) edge [loop above] node {0.2} (1)
+            edge              node {0.8} (2)
+        (2) edge [loop above] node {0.4} (2)
+            edge              node {0.6} (3)
+        (3) edge [loop above] node {0.6} (3)
+            edge              node {0.4} (4)
+        (4) edge [loop above] node {0.8} (4)
+            edge              node {0.2} (5)
         (5) edge [loop above] node {1.0} (5); 
-\end{tikzpicture}
+\end{tikzpicture}\]
 \textbf{B.)} The transtion probability matrix :
 \[P = \left(\begin{array}{llllll}
 0&1  &0&0&0&0\\
@@ -164,30 +175,28 @@ absorption for this Markov chain given we start in state 0, since we can see
 that reaching $S_5$ is equivelent to reaching an absorbing state, and states
 $S_0$ through $S_4$ are transient. 
 
+\[ S = (I - T)^{-1} \]
 \[T = \left(\begin{array}{rrrrr}
 0&  1&  0&  0&  0\\
 0&1/5&4/5&  0&  0\\
 0&  0&2/5&3/5&  0\\
 0&  0&  0&3/5&2/5\\
 0&  0&  0&  0&4/5\\
-\end{array}\right)\]
-\[ S = (I - T)^{-1} \]
-\[ S = \left(\begin{array}{rrrrr}
+\end{array}\right), \quad \quad S = \left(\begin{array}{rrrrr}
   1 & 1.25 &   1.66667 &  2.5  & 5 \\
   0 & 1.25 &  1.66667 &  2.5 &  5 \\
   0 & 0 &  1.66667  & 2.5 &  5 \\
   0 & 0 & 0 &  2.5 &  5\\
   0 & 0 & 0 & 0 &  5
 \end{array}\right)\]
+\[Var[S_e] = (2S - I)S_e - \mbox{sq}\{S_e\}\]
 \[ Se = \left(\begin{array}{r}
    11.4167\\
    10.4167\\
     9.1667\\
     7.5000\\
     5.0000
-\end{array}\right)\]
-\[Var[S_e] = (2S - I)S_e - \mbox{sq}\{S_e\}\]
-\[Var[S_e] = 
+\end{array}\right), \quad \quad Var[S_e] = 
 \left(\begin{array}{r}
  25.174 \\
  25.174 \\
@@ -297,42 +306,39 @@ probability to return to A, a contradiction.
   \end{array}\right)\]
   Examining the Marcov chain we can see that the states $[0,1,2,3,4]$ are
   transient, thus:
+  \[S = (I - T)^{-1}\]
    \[ T' =\left(\begin{array}{rrrrr}
   0 & 0   & 0.4 & 0   & 0.6  \\
   0 & 0.6 & 0.4 & 0   & 0    \\
   0 & 0   & 0.2 & 0.6 & 0    \\
   0 & 0.2 & 0   & 0.3 & 0    \\
   0 & 0   & 0   & 0   & 0   
-  \end{array}\right)\]
-  \[S = (I - T)^{-1}\]
-  \[ S'= \left(\begin{array}{rrrrr}
-   1.00000 & 0.27273 & 0.63636 & 0.54545 & 0.60000 \\
-   0.00000 & 3.18182 & 1.59091 & 1.36364 & 0.00000 \\
-   0.00000 & 0.68182 & 1.59091 & 1.36364 & 0.00000 \\
-   0.00000 & 0.90909 & 0.45455 & 1.81818 & 0.00000 \\
-   0.00000 & 0.00000 & 0.00000 & 0.00000 & 1.00000
-  \end{array}\right)\]
-  \[S'_e = \left(\begin{array}{r}
-   3.0545\\
-   6.1364\\
-   3.6364\\
-   3.1818\\
-   1.0000 \end{array}\right)\]
+  \end{array}\right), \quad \quad S'= \left(\begin{array}{rrrrr}
+   1 & .27 & .63 & .54 & .6 \\
+   0 & 3.18 & 1.59 & 1.36 & 0 \\
+   0 & .68 & 1.59 & 1.36 & 0 \\
+   0 & .90 & .45 & 1.81 & 0 \\
+   0 & 0 & 0 & 0 & 1
+  \end{array}\right),\qaud \quad S'_e = \left(\begin{array}{r}
+   3.05\\
+   6.13\\
+   3.63\\
+   3.18\\
+   1 \end{array}\right)\]
  \[Var[S'] = S(2*\mbox{diag}\{S\} - I) - \mbox{sq}\{S\}\] 
- \[Var[S'] = \left(\begin{array}{rrrrr}
-   0.00000 & 1.38843 & 0.98347 & 1.14050 & 0.24000 \\
-   0.00000 & 6.94215 & 0.94008 & 1.73554 & 0.00000 \\ 
-   0.00000 & 3.19215 & 0.94008 & 1.73554 & 0.00000 \\
-   0.00000 & 4.04959 & 0.78512 & 1.48760 & 0.00000 \\
-   0.00000 & 0.00000 & 0.00000 & 0.00000 & 0.00000 
- \end{array}\right)\]
  \[Var[S_e] = (2S - I)S_e - \mbox{sq}\{S_e\}\]
- \[Var[S'_e] = \left(\begin{array}{r}
-    6.37058\\
-   15.50620\\
-   11.75620\\ 
-   12.72727\\
-    0.00000 
+   \[Var[S'] = \left(\begin{array}{rrrrr}
+   0 & 1.38 & .98 & 1.14 & .24 \\
+   0 & 6.94 & .94 & 1.73 & 0 \\ 
+   0 & 3.19 & .94 & 1.73 & 0 \\
+   0 & 4.04 & .78 & 1.48 & 0 \\
+   0 & 0 & 0 & 0 & 0 
+ \end{array}\right), \quad \quad Var[S'_e] = \left(\begin{array}{r}
+    6.37\\
+   15.50\\
+   11.75\\ 
+   12.72\\
+    0 
   \end{array}\right)\]
   \textbf{A.)}Starting in state 0, the mean number of visits to state 1 is
   0.27273, varience is 1.38843 
@@ -425,7 +431,7 @@ pz_1 \longrightarrow pz_0 = pz_1 \]
 pz_2 \longrightarrow pz_0 = pz_2 \]
 \[\longrightarrow \underline{z_0 = z_2}\] 
 For all $k \in \mathbb{N},\quad z_n = z_{n-1}$ : 
-\\
+\\\\\textbf{B.)}
 \\Proof by induction.
 \\Base case $z_2 = z_1$ is shown above since $z_0 = z_1 = z_2$.
 \[z_n = qz_{n-1} + pz_{n+1}  \longrightarrow z_n = qz_n + pz_{n+1}
@@ -442,6 +448,7 @@ Solving this equation gives
 \approx 0.701 \] 
 
 \section*{Question 29}
+\subsection*{\underline{$P_A$}}
 \[P_A =\left(\begin{array}{rrr}
 0.5&0.5&0\\
 0&0.5&0.5\\
@@ -451,15 +458,17 @@ Solving this equation gives
 $(1/3,1/3,1/3)$ satisfies the requirement to be a stationary distribution. 
 \newline
 \textbf{ii.)} This has a limiting distribution, because 
-\[\lim_{n\rightarrow\infty}{P_A^{n} = \left(\begin{array}{rrr}
+\[\lim_{n\rightarrow\infty}{P_A^{n} }= \left(\begin{array}{rrr}
 1/3&1/3&1.3\\
 1/3&1/3&1/3\\
 1/3&1/3&1/3
 \end{array}\right)\]
 and since this limit is defined it has a limiting distribution. 
+\\\textbf{iii.)} Since the converging distribution is always $(1/3,1/3,1/3)$
+regardless of initial state probabilities, there is a steady state dsitribution.
 
-\[P_B =\left(\begin{array}{rrr}
-0&1&0\\
+\subsection*{\underline{$P_B$}}
+\[P_B =\left(\begin{array}{rrr} 0&1&0\\
 0&0&1\\
 1&0&0
 \end{array}\right)\]
@@ -467,7 +476,11 @@ and since this limit is defined it has a limiting distribution.
 $(1/3,1/3,1/3)$ satisfies the requirement to be a stationary distribution.
 \newline
 \textbf{ii.)} This does not have a limiting distribution since raising this
-matrix to powers is periodic and itwill never converge a n goes to infinity. 
+matrix to powers is periodic and itmwill never converge as n goes to infinity. 
+\\\textbf{iii.)} Since this has no limiting distribution, it can have no steady
+state distribution
+
+\subsection*{\underline{$P_C$}}
 \[P_C =\left(\begin{array}{rrrr}
 .5&.5&0&0\\
 .5&.5&0&0\\
@@ -476,15 +489,18 @@ matrix to powers is periodic and itwill never converge a n goes to infinity.
 \end{array}\right)\]
 \textbf{i.)}This has a stationary distribution, because the z vector
 $(1/4,1/4,1/4,1/4)$ satisfies the requirement to be a stationary distribution.
-\textbf{ii.)}This has a limiting distribution since $P^n$ = $P^{n+1}$ and
+\\\textbf{ii.)}This has a limiting distribution since $P^n$ = $P^{n+1}$ and
 raising this to the power of inifnity just equals P, therefore it converges.
+\\\textbf{iii.)} Since the converging distribution depends on the initial state1
+or 2, vs 3 or 4, there is not a steady state distribution. 
 
-\[P_D =\left(\begin{array}{rr} 1/n&(n-1)/n\\
+\subsection*{\underline{$P_D$}}
+ \[P_D =\left(\begin{array}{rr} 1/n&(n-1)/n\\
 (n-1)/n&1/n&
 \end{array}\right)\]
 \textbf{i.)}This has a stationary distribution, because the z vector
 $(1/2,1.2	)$ satisfies the requirement to be a stationary distribution.
-\textbf{ii.}
+\\\textbf{ii.}
 \[P_D^{k} = \frac{1}{2}\left(\begin{array}{rr}
 \frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k &
 \frac{1}{2} - \frac{1}{2}\left(\frac{2-n}{n}\right)^k\\
@@ -492,10 +508,12 @@ $(1/2,1.2	)$ satisfies the requirement to be a stationary distribution.
 \frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k 
 \end{array}\right)\]
 As the figure $-n + 2 / n$ is less then 0 for all n, this figure approaches 0
-and k goes to infinity, and thus :
+as k goes to infinity, and thus :
 \[\lim_{n\rightarrow\infty}{P_D^{n} = \left(\begin{array}{rrr}
 1/2&1/2\\
 1/2&1/2
 \end{array}\right)\]
+Therefore this has a limiting distribution.
+\\\textbf{iii.)}Since the limit allways convergers to $(1/2, 1/2)$ regardless of
 \end{array}
 \end{document}
