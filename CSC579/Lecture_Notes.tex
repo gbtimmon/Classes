@@ -44,7 +44,7 @@ Put review of probability here.
  	\\$p_{ab}(n)$ is the probability to move from a to b at timestep n.
 	\\
  	\\If the markov chain is homogeneous, this matrix is the same for all values of n. 
-	\[sum\limits_{all j}{p_{ij}(n)} = 1\]
+	\[ \sum\limits_{all j}{p_{ij}(n)} = 1\]
 	For a homogeneous markov chain, $p_{ij} p_{jk} p_{kl}$ is the probability of traveling $i\rightarrow j\rightarrow k\rightarrow l$
 	\subsubsection{Example : Social Modility Model }
 	Partition into upper middle and lower class. 
@@ -130,7 +130,7 @@ Put review of probability here.
 	\[ p_{ij}^{(m)} = \sum\limits_{\forall k}{p_{ik}^{(l)}p_{kj}^{(m-l)}}, 0 < l < m. \rightarrow P^{(m)} = P^{(l)}P^{(m-l)}\]
 	\\This is the Chapman - Kolmogorov equation.
 	\\Non homogeneous matrixes must accomodate n. 
-    \subsection{Postion Probability Vector ``\pi''}
+    \subsection{Postion Probability Vector ``$\pi$''}
 	Let \(\pi_i^{(k)}\) be the probability that a markov chain is in poition i at time step k. \(k = 0\) is the initial step. 
 	\\\indent\(\pi^{(k)}\) is the column vector of these probabilites. 
     \\\indent\(\pi^{(k+1)} = \pi^{(k)}P(k)\) or in a homogenous Markov chain \(\pi^{(k+1)} = \pi^{(k)}P\)
@@ -192,7 +192,7 @@ Put review of probability here.
       8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\cr    
        }\]
    
-   	\subsection{Mathmatical Analysis of Recurrent States}
+   	\subsection{Mathmatical Analysis of Reccurent States, or returning to a state. }
    	\subsubsection{Calculation of \(f_{jj}^{(n)}\)}
     $P_{jj}^{(n)}$ is the probability that a markov returns to j from j after n steps. 
    	\\$f_{jj}^{(n)}$ is the probability that a markov returns to j from j \underline{for the first time} after n steps. 
@@ -223,7 +223,7 @@ Put review of probability here.
     \[E\left[ \sum\limits_{n=0}^{\infty}{I_n|X_0=j}\right]=\sum\limits_{n=0}^{\infty}{E\left[I_n|X_0=j\right]} = \sum\limits_{n=0}^{\infty}{P\{X_n=j|X_0=j\}}\]
     \[= \sum\limits_{n=0}^{\infty}{p_{jj}^{(n)}} = \infty \]
     Thus when state j is recurrent we expect to visit the state an infinite number of times as time goes to infinity
-	\subsection{Mathematical classification of Transient States}
+	\subsection{Mathematical classification of Transient States - or not returning to a state.}
 	If \(f_{jj} < 1 \) then the state j is said to be transient - nonzero probability that the chain will never return. 
 	\\The probability to never return to state j is \(( 1 - f_{jj})\)
 	\\View this as a set bernoulli trials. Probability of returning to the state k times is \(1-f_{jj})f_{jj}^{k}\)
@@ -235,14 +235,33 @@ Put review of probability here.
 	\[M_{jj} = \sum\limits_{n=1}^{\infty}{nf_{jj}^{(n)}}\]
 	A \underline{finite} mean recurrence time makes a state \textit{positive-recurrent} or \textit{recurrent nonnull}  state
 	\\An \underline{infinite} mean recurrence time makes a state \textit{null recurrent} - only occures when number of states is infinite.
-	\subsubsection{No state is null recurrent in a finite Markov Chain}
-	No state is null-recrrent and there must be at least on recurrent state in a finite markov chain. 
-	\subsection{Mathmatical Analysis of Transitions}
-	corresponding to \(f_{ii}^{(n)}\) let \(f_{ij}^{(n)}\) be defined.
+	\subsubsection{Thereom}
+	No state is null-recrrent and there must be at least on recurrent state in a finite markov chain.
+	
+	 
+	\subsection{Mathmatical Analysis of Transitions - traveling from on state to anohter. }
+	just like recurrence and transeince
+	\\corresponding to \(f_{ii}^{(n)}\) let \(f_{ij}^{(n)}\) be defined.
 	\[f_{ij}^{(n)} = p_{ij}\]
 	\[  p_{ij}^{(n)} = \sum\limits_{l=1}^{n}{f_{ij}^{(l)}p_{ij}^{(n-l)}}, \quad n \geq 1.\]
-	\[  f_{ij}^{(n)} = p_{ij}^{(n)} - \sum\limits_{l=1}^{n-1}{f_{ij}^{(l)}p_{ij}^{(n-l)}}}, \quad n \geq 1. \]
+	\[  f_{ij}^{(n)} = p_{ij}^{(n)} - \sum\limits_{l=1}^{n-1}{f_{ij}^{(l)}p_{ij}^{(n-l)}}, \quad n \geq 1. \]
 	Probability that state j is ever reached from i is 
 	\[ f_{ij} = \sum\limits_{n=1}^{\infty}{f_{ij}^{(n)}}.\]
-	If $f_{ij} < 1$ the process starting from i may never reach j. If $f_{ij} = 1$ the process must eventually hit j. 
+	If $f_{ij} < 1$ the process starting from i may never reach j. If $f_{ij} = 1$ the process must eventually hit j.
+	\\
+	\\Mean first passage time $M_{ij}$:
+	\[ M_{ij}=\sum\limits_{n=1}^{\infty}{nf_{ij}{(n)}}, \mbox{for} i \neq j \]
+	We have the unique equation 
+	\[ M_{ij} = p_{ij} + \sum\limits_{k\neq j}{p_{ik}(1 + M_{kj})} = 1 + \sum\limits_{k \neq j}p_{ik}M_{kj} = 1 + \sum\limits_{k}{p_{ik}M_{kj}} - p_{ij}M_{ij}  \]
+	\subsubsection{Mean Transitions in matrix math}
+	The aboce equation can be expressed in matrix form :
+	\[ M = E + P(M - diag\{M\}) \quad\mbox{where E is a matrix of ones}\]
+	\[ M^{(k+1)} = E + P(M^{(k)} - diag\{M^{(k)}), \mbox{with} M^{(0)} = E	\]
+	\subsection{Periodicity} 
+	A state is periodic with period p ( cyclic index of p)
+	\\On leaving state j we can only return in a number of transition that is a multiple of p > 1. 
+	\\A state whose period is 1 is aperiodic
+	\\A state which is positive-reucrrent and aperiodic is said to be \underline{ergodic}	 
+	
+	
 \end{document}
