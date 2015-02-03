@@ -3,6 +3,7 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{pgf}
+\usepackage{amssymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows,matrix,positioning}
 \usepackage{listings}             % Include the listings-package
@@ -11,7 +12,10 @@
 \usepackage[latin1]{inputenc}
 
 \begin{document}
-
+\title{Homework 1}
+\date{Febuary 2, 2015}
+\author{Gregory B Timmons, gbtimmon}
+\maketitle
 % %%%%%%%%%% %
 % QUESTION 2 %
 % %%%%%%%%%% %
@@ -105,7 +109,7 @@ The reconstructed P matrix from the ebedded markov chain given :
 At each time step, he wil either recieve a new toy, moving to a higher state, or a
 toy he already owns staying the same. as the number of toys he owns increasse
 the probability of receiving a new toy decreases.
-\\\\
+\bigskip
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm, semithick] \tikzstyle{every state}=[fill=red,draw=none,text=white]
 
   \node[state]         (0)                    {$S_1$};
@@ -115,18 +119,18 @@ the probability of receiving a new toy decreases.
   \node[state]         (4) [right of=3]       {$S_4$};
   \node[state]         (5) [right of=4]       {$S_5$};
 
-  \path (0) edge              node {1.0} (1)
-        (1) edge [loop above] node {0.2} (1)
-            edge              node {0.8} (2)
-        (2) edge [loop above] node {0.4} (2)
-            edge              node {0.6} (3)
-        (3) edge [loop above] node {0.6} (3)
-            edge              node {0.4} (4)
-        (4) edge [loop above] node {0.8} (4)
-            edge              node {0.2} (5)
-        (5) edge [loop above] node {1.0} (5)  ; 
+  \path (0) edge              node {1.0} (1);
+        (1) edge [loop above] node {0.2} (1);
+            edge              node {0.8} (2);
+        (2) edge [loop above] node {0.4} (2);
+            edge              node {0.6} (3);
+        (3) edge [loop above] node {0.6} (3);
+            edge              node {0.4} (4);
+        (4) edge [loop above] node {0.8} (4);
+            edge              node {0.2} (5);
+        (5) edge [loop above] node {1.0} (5); 
 \end{tikzpicture}
-\\\\\\\textbf{B.)} The transtion probability matrix :
+\textbf{B.)} The transtion probability matrix :
 \[P = \left(\begin{array}{llllll}
 0&1  &0&0&0&0\\
 0&1/5&4/5&0&0&0\\
@@ -403,6 +407,95 @@ Now we compute absorbtion probabilities, SB :
    0.900  & 0.100
           \end{array}\right)\]
 \section*{Question 25}
-\section*{Question 26}
+\[P = =\left(\begin{array}{rrrrrr}
+ q&p&0&0&0&\ldots\\
+ q&0&p&0&0&\ldots\\
+ 0&q&0&p&0&\ldots\\
+ 0&0&q&0&p&\ldots\\
+ 0&0&0&q&0&\ldots\\
+ \vdots&\vdots&\vdots&\vdots&\vdots&\ddots
+\end{array}\right)\]
+\textbf{A.)} The state machine would be ergodic if it has a z such that the sum
+of z is 1, and zP = z. 
+
+\[z_0 = qz_0 +pz_1 \longrightarrow z_0 - qz_0 = pz_1 \longrightarrow (1-q)z_0 =
+pz_1 \longrightarrow pz_0 = pz_1 \]
+\[\longrightarrow \underline{z_0 = z_1}\] 
+\[z_1 = qz_0 + pz_2 \longrightarrow z_0 - qz_0 = pz_2  \longrightarrow (1-q)z_0 =
+pz_2 \longrightarrow pz_0 = pz_2 \]
+\[\longrightarrow \underline{z_0 = z_2}\] 
+For all $k \in \mathbb{N},\quad z_n = z_{n-1}$ : 
+\\
+\\Proof by induction.
+\\Base case $z_2 = z_1$ is shown above since $z_0 = z_1 = z_2$.
+\[z_n = qz_{n-1} + pz_{n+1}  \longrightarrow z_n = qz_n + pz_{n+1}
+\longrightarrow z_n - qz_n = pz_{n+1} \longrightarrow (1 - q)z_n = pz_{n+1} \]
+\[ \longrightarrow pz_n = pz_{n+1}  \longrightarrow \underline {z_n = z_{n+1}}\]
+
+\section*{Question 26} This is a simple gamblers ruin problem. From the derivations from the notes, we
+know the following equation holds : 
+\[ x_i = \frac{1 - (p/q)^i}{1 - (p/q)^N}\]
+From the problem, we know
+\[ p = 18/38,\quad q = 20/38,\quad i = 10,\quad N=25.\]
+Solving this equation gives 
+\[x_{10} = \frac{1 - (\frac{18/38}{20/38})^{10}}{1 - (\frac{18/38}{20/38})^{25}}
+\approx 0.701 \] 
+
 \section*{Question 29}
+\[P_A =\left(\begin{array}{rrr}
+0.5&0.5&0\\
+0&0.5&0.5\\
+0.5&0&0.5
+\end{array}\right)\]
+\textbf{i.)}This has a stationart distribution, because the z vector
+$(1/3,1/3,1/3)$ satisfies the requirement to be a stationary distribution. 
+\newline
+\textbf{ii.)} This has a limiting distribution, because 
+\[\lim_{n\rightarrow\infty}{P_A^{n} = \left(\begin{array}{rrr}
+1/3&1/3&1.3\\
+1/3&1/3&1/3\\
+1/3&1/3&1/3
+\end{array}\right)\]
+and since this limit is defined it has a limiting distribution. 
+
+\[P_B =\left(\begin{array}{rrr}
+0&1&0\\
+0&0&1\\
+1&0&0
+\end{array}\right)\]
+\textbf{i.)}This has a stationart distribution, because the z vector
+$(1/3,1/3,1/3)$ satisfies the requirement to be a stationary distribution.
+\newline
+\textbf{ii.)} This does not have a limiting distribution since raising this
+matrix to powers is periodic and itwill never converge a n goes to infinity. 
+\[P_C =\left(\begin{array}{rrrr}
+.5&.5&0&0\\
+.5&.5&0&0\\
+0&0&.5&.5\\
+0&0&.5&.5
+\end{array}\right)\]
+\textbf{i.)}This has a stationary distribution, because the z vector
+$(1/4,1/4,1/4,1/4)$ satisfies the requirement to be a stationary distribution.
+\textbf{ii.)}This has a limiting distribution since $P^n$ = $P^{n+1}$ and
+raising this to the power of inifnity just equals P, therefore it converges.
+
+\[P_D =\left(\begin{array}{rr} 1/n&(n-1)/n\\
+(n-1)/n&1/n&
+\end{array}\right)\]
+\textbf{i.)}This has a stationary distribution, because the z vector
+$(1/2,1.2	)$ satisfies the requirement to be a stationary distribution.
+\textbf{ii.}
+\[P_D^{k} = \frac{1}{2}\left(\begin{array}{rr}
+\frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k &
+\frac{1}{2} - \frac{1}{2}\left(\frac{2-n}{n}\right)^k\\
+\frac{1}{2} - \frac{1}{2}\left(\frac{2-n}{n}\right)^k &
+\frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k 
+\end{array}\right)\]
+As the figure $-n + 2 / n$ is less then 0 for all n, this figure approaches 0
+and k goes to infinity, and thus :
+\[\lim_{n\rightarrow\infty}{P_D^{n} = \left(\begin{array}{rrr}
+1/2&1/2\\
+1/2&1/2
+\end{array}\right)\]
+\end{array}
 \end{document}
