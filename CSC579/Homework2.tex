@@ -1,0 +1,38 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{pgf}
+\usepackage{lastpage}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{arrows,matrix,positioning}
+\usepackage{listings}             % Include the  listings-package
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+ 
+\lstset{language=Matlab} 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Homework 1 - Greg Timmons}
+\fancyhead[RE,LO]{CSC 579 - Perf Modeling}
+\fancypagestyle{plain}{
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+} 
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+\usetikzlibrary{arrows,automata}
+\usepackage[latin1]{inputenc}
+\usepackage{pdfpages}
+
+
+
+\begin{document}
+\includepdf[pages={1}]{cover.pdf}
+\title{Homework 2}
+\date{Febuary 2, 2015}
+\author{Gregory B Timmons, gbtimmon}
+\maketitle
+
+\end{document}
