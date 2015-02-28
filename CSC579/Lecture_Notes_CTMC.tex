@@ -27,7 +27,7 @@
 	\date{2/28/2015}
 	\author{Gregory B Timmons, gbtimmon}
 	\maketitle
-\underline{CTMC} \\
+\section*{\underline{CTMC Basics}} \\
  Continuous Time Markov chain, is a markov chain is a chain
 where a state transtion can happen at infinitesimally small time periods -- at any
 point in continuous time. We measure tranistion in the expected rate of
@@ -37,11 +37,42 @@ transitions.
 states or time spent in the current state relavent to the computation of
 probability of transition to furture states
 \\
-\\Non-homogenous CTMC still depend on time in the chain. $p_{ij}(s,t)$ is the
-probability having transitioned from state 'i' to state 'j' by time 't' when you
+\\Non-homogenous CTMC still depend on time in the chain.
+\underline{$p_{ij}(s,t)$} is the probability having transitioned from state 'i' to state 'j' by time 't' when you
 where in state i at time 's'.
+\[P_{ij}(s,t) = \mbox{Prob}\{X(t) = j | X(s) = i\} \]
+\\Similar to a DTMC, a homogenous chain does not depend on how long you have
+been in the chain as transtion probabilities are not dependent on time. 's' and
+;t' from above can simply be expressed as a amount of time passed, $\tau$.
+\[P_{ij}(\tau) = \mbox{Prob}\{X(s + \tau) = j | X(s) = i\}, \quad \forall s \geq
+0\]
 \\
-\\Similar to a DTMC, a homogenous chain does not depen on how long you have
-been in the chain as transtion probabilities are no dependent on time. 
+Tranistions probability adjust to the time period being examined. They always
+sum to one regarless to the size of $\tau$.
+\[\sum\limits_{\mbox{all j}}{p_{ij}(\tau) = 1, \quad \forall \tau \geq 0}\]
+\section*{\underline{Transition Rates vs Transition Probabilities}}
+Where a DTMC is represented in transtion probabilities, CTMC are dependent on
+the amount of time being examined $\tau$. A DTMC can be seen as a CTMC where
+$\tau$ is restricted to be integers or unit times. But for the CTMC we need to
+support $\tau$ in the real number space so tranistion probabilities become
+unatural to express -- rather we more naturally express these markov chains in
+expected rates of transition -- That is 5 per hour on average, which are not
+dependent on the observation time. 
+\\
+\\
+There are intersting observations about the size of $\tau$. As $\tau
+\rightarrow 0$, $p_{ii}$ goes to 1, and the sum of all other probabilities goes
+to 0. Assuming i is not an abosrbing state, as $tau$ goes to infinity, then
+$P_{ii}$ goes to 0 and the sum of all other probabilities in row goes to 1. 
+\\
+\\We define $q_{ij}$ to be the transition rate from i to j. In a non-homogenous
+sense this quantity can depend on 't' but it does not depend on the length of
+time $\tau$ being observed. 
+\\
+\\Q is a speed of change of the probability of transition as time moves. 
+\\
+\\for $q_ii$ the transition rate is negative, to imply as time increases the
+chance to stay decreases. 
+\\When 'i' is an absorbing state $q_{ii}$ is 0. since the derivative of 0
 
 \end{document}
