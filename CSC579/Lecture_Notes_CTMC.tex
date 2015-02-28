@@ -1,0 +1,47 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{pgf}
+\usepackage{lastpage}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{arrows,matrix,positioning}
+\usepackage{listings}             % Include the  listings-package
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\lstset{language=Matlab} 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{CTMC - Greg Timmons}
+\fancyhead[RE,LO]{CSC 579 - Perf Modeling}
+\fancypagestyle{plain}{\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}} 
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+\usetikzlibrary{arrows,automata}
+\usepackage[latin1]{inputenc}
+\usepackage{pdfpages}
+\begin{document}
+	\title{Class Notes -- CTMC}
+	\date{2/28/2015}
+	\author{Gregory B Timmons, gbtimmon}
+	\maketitle
+\underline{CTMC} \\
+ Continuous Time Markov chain, is a markov chain is a chain
+where a state transtion can happen at infinitesimally small time periods -- at any
+point in continuous time. We measure tranistion in the expected rate of
+transitions.
+\\
+\\This markov chain is still \underline{memoryless}, in that neither previous
+states or time spent in the current state relavent to the computation of
+probability of transition to furture states
+\\
+\\Non-homogenous CTMC still depend on time in the chain. $p_{ij}(s,t)$ is the
+probability having transitioned from state 'i' to state 'j' by time 't' when you
+where in state i at time 's'.
+\\
+\\Similar to a DTMC, a homogenous chain does not depen on how long you have
+been in the chain as transtion probabilities are no dependent on time. 
+
+\end{document}
