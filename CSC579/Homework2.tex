@@ -31,8 +31,269 @@
 \begin{document}
 \includepdf[pages={1}]{cover.pdf}
 \title{Homework 2}
-\date{Febuary 2, 2015}
+\date{Febuary 26, 2015}
 \author{Gregory B Timmons, gbtimmon}
 \maketitle
+\section*{Question 1}
+\[ r_{ij} = \frac{p_{ji}\pi_j}{\pi_i}, \quad R = \mbox{diag}\{\pi\}^{-1} P^{T}
+\mbox{diag}\{\pi\}.\quad \mbox{ Where }\pi \mbox{ is a stationary distribution
+of P.}\]
+\subsection*{\underline{$P_1$}}
+\[ \pi_1 P_1 =  \left( 1/3, 1/3, 1/3 \right) \left( \begin{array}{ccc}
+	0&1&0\\
+	0&0&1\\
+    1&0&0\\
+\end{array}\right)  = \left( 1/3, 1/3, 1/3 \right) = \pi_1\]
 
+\[
+\left( \begin{array}{ccc}
+	3&0&0\\
+	0&3&0\\
+    0&0&3\\
+\end{array}\right)
+\left( \begin{array}{ccc}
+	0&1&0\\
+	0&0&1\\
+    1&0&0\\
+\end{array}\right)^{T}
+\left( \begin{array}{ccc}
+	1/3	&0&0\\
+	0&1/3&0\\
+    0&0&1/3
+    \\
+\end{array}\right) = 
+\left( \begin{array}{ccc}
+	0&0&1\\
+	1&0&0\\
+    0&1&0\\
+\end{array}\right)
+\]
+
+\subsection*{\underline{$P_2$}}
+\[ \pi_2 P_2 =  \left( 1/3, 1/3, 1/3 \right) \left( \begin{array}{ccc}
+	.4&.2&.4\\
+	.1&.3&.6\\
+    .5&.5& 0\\
+\end{array}\right)  = \left( 1/3, 1/3, 1/3 \right) = \pi_2\]
+
+\[
+\left( \begin{array}{ccc}
+	3&0&0\\
+	0&3&0\\
+    0&0&3
+\end{array}\right)
+\left( \begin{array}{ccc}
+	.4&.2&.4\\
+	.1&.3&.6\\
+    .5&.5& 0
+\end{array}\right)^{T} \left( \begin{array}{ccc}
+	1/3	&0&0\\
+	0&1/3&0\\
+    0&0&1/3
+\end{array}\right) = 
+\left( \begin{array}{ccc}
+	.4&.1&.5\\
+	.2&.3&.5\\
+    .4&.6&0\\
+\end{array}\right)
+\]
+\subsection*{\underline{$P_3$}}
+\[ \pi_3 P_3 =  \left( 1/4, 5/12, 1/4, 5/12 \right) \left( \begin{array}{cccc}
+	0&1&0&0\\
+	0&0&.6&.4\\
+    0&0&0&1\\
+    .6&.4&0&0
+\end{array}\right)  = \left( 1/4, 5/12, 1/4, 5/12 \right) = \pi_3\]
+
+\[
+\left( \begin{array}{cccC}
+	4&    0& 0&    0\\
+	0& 12/5& 0&    0\\
+    0&    0& 4&    0\\
+    0&    0& 0& 12/5
+\end{array}\right)
+\left(\begin{array}{cccc}
+	  0&  1&  0&  0\\
+      0&  0& .6& .4\\
+      0&  0&  0&  1\\
+     .6& .4&  0&  0
+\end{array}\right) ^{T}
+\left( \begin{array}{cccc}
+	1/4 & 0    &   0 &    0 \\
+	0   & 5/12 &   0 &    0 \\
+    0   & 0    & 1/4 &    0 \\
+    0   & 0    &   0 & 5/12 
+\end{array}\right) = 
+\left( \begin{array}{cccc}
+	 0 &  0 &  0 &  1 \\
+	.6 &  0 &  0 & .4 \\
+     0 &  1 &  0 &  0 \\
+     0 & .4 & .6 &  0
+\end{array}\right)
+\]
+\section*{Question 2}
+\subsection*{\underline{$P_1$}}
+This markov chain is not reversible because it does not have a symmetirc
+structure, that is $ \exists $ $i, j $ s.t. $ p_{ij} > 0 $ and $p_{ji} = 0$
+\subsection*{\underline{$P_2$}}
+\(P_2 \mbox{ has a stationary distribution } \pi = \left(\begin{array}{cccc}
+ 0.13 & 0.30 & 0.33 & 0.33 \\
+\end{array}\right)\)
+\\
+\\
+\[\mbox{diag}\{\pi\}^{-1}
+\left(\begin{array}{cccc}
+ 0.00 & 0.75 & 0.25 & 0.00 \\
+ 0.33 & 0.00 & 0.44 & 0.22 \\
+ 0.10 & 0.40 & 0.00 & 0.50 \\
+ 0.00 & 0.29 & 0.71 & 0.00 \\
+\end{array}\right)^{T}
+\mbox{diag}\{\pi\} = 
+\left(\begin{array}{cccc}
+ 0.00 & 0.75 & 0.25 & 0.00 \\
+ 0.33 & 0.00 & 0.44 & 0.22 \\
+ 0.10 & 0.40 & 0.00 & 0.50 \\
+ 0.00 & 0.29 & 0.71 & 0.00 \\
+\end{array}\right)\]
+\\
+\\
+From the above derivation, we can see the $P = R$, which implies the detail
+equations are satisfied and the markov chain is reversible. 
+\subsection*{\underline{$P_3$}}
+\(P_3 \mbox{ has a stationary distribution } \pi = \left(\begin{array}{cccccc}
+ 0.12 & 0.14 & 0.08 & 0.27 & 0.27 & 0.11 \\
+\end{array}\right)
+
+\\
+\\
+\[\mbox{diag}\{\pi\}^{-1}
+\left(\begin{array}{cccccc}
+ 0.10 & 0 & 0 & 0.90 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 0 \\
+ 0.40 & 0 & 0 & 0 & 0.20 & 0.40 \\
+ 0 & 0.50 & 0.30 & 0.20 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 0 \\
+\end{array}\right)^{T}
+\mbox{diag}\{\pi\} = 
+\left(\begin{array}{cccccc}
+ 0.10 & 0 & 0 & 0.90 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 0 \\
+ 0.40 & 0 & 0 & 0 & 0.20 & 0.40 \\
+ 0 & 0.50 & 0.30 & 0.20 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 0 \\
+\end{array}\right)
+\]
+From the above derivation, we can see the $P = R$, which implies the detail
+equations are satisfied and the markov chain is reversible. 
+
+\subsection*{\underline{$P_4$}}
+\(P_3 \mbox{ has a stationary distribution } \pi = \left(\begin{array}{ccc}
+ 0.35 & 0.21 & 0.44 \\
+\end{array}\right)
+
+\\
+\\
+\[\mbox{diag}\{\pi\}^{-1}
+\left(\begin{array}{ccc}
+ 0.50 & 0.10 & 0.40 \\
+ 0.20 & 0.40 & 0.40 \\
+ 0.30 & 0.20 & 0.50 \\
+\end{array}\right)^{T}
+\mbox{diag}\{\pi\} = 
+\left(\begin{array}{ccc}
+ 0.50 & 0.12 & 0.38 \\
+ 0.17 & 0.40 & 0.43 \\
+ 0.31 & 0.19 & 0.50 \\
+\end{array}\right)
+
+
+\]
+From the above derivation, we can see the $P \neq R$, which implies the detail
+balance equations are not upheld and the markov chain is not reversible. 
+
+\section*{Question 3}
+\subsection*{\bold{a.)}}
+
+\subsection*{\bold{b.)}}
+State 1 indicates that all of the peices are working as expected. 
+\\States 2,3,4 indicate the number of damaged computers, 1 2 or 3 respectively. 
+\\State 5 indicates a damaged voter. 
+\\If a computer is damaged we move into a higher state aprroaching state 4. Once
+in state 4, all computers are broken and no more can be broken. At any point in
+states 1 through 4, the vote may break. If the voter breaks we go to state 5 ,
+waiting for repair. Since we are garunteed that all computers are repaired with
+the voter when the voter is repaired, then state 5 will return to state one on
+repair. 
+ \subsection*{\bold{c.)}} \begin{tikzpicture}[->,>=stealth', shorten
+>=5pt,auto,node distance=3cm, thick] \tikzstyle{every state}=[rectangle,rounded corners,draw,align=center, minimum size=1.25cm]
+
+  \node[state]         (0)                    {$S_0$};
+  \node[state]         (1) [right of=0]       {$S_1$};
+  \node[state]         (2) [right of=1]       {$S_2$};
+  \node[state]         (3) [right of=2]       {$S_3$};
+  \node[state]         (4) [below of=1]       {$S_4$};
+
+  \path (0) edge   [bend left =15]    node {$\lambda$} (1)
+        (1) edge   [bend left =15]    node {$\mu$} (0)
+        (1) edge   [bend left =15]    node {$\lambda$} (2)
+        (2) edge   [bend left =15]    node {$\mu$} (1)
+        (2) edge   [bend left =15]    node {$\lambda$} (3)
+        (3) edge   [bend left =15]    node {$\mu$} (2)
+        (0) edge   [bend right=45]    node {$\epsilon$} (4)
+        (4) edge   [bend right=10]    node {$\upsilon$} (0)
+        (1) edge   [bend left =15]    node {$\epsilon$} (4)
+        (2) edge   [bend left =15]    node {$\epsilon$} (4)
+        (3) edge   [bend left =15]    node {$\epsilon$} (4)
+\end{tikzpicture}
+\subsection*{\bold{d.)}}        
+\[ Q = \left(\begin{array}{ccccc}
+ $-(\lambda + \epsilon)$ & $\lambda$ & 0 & 0 & $\epsilon$\\
+ $\mu$ & $-(\mu + \lambda + \epsilon)$ & $\lambda$ & 0 & $\epsilon$\\
+ 0 & $\mu$ & $-(\mu + \lambda + \epsilon)$ & $\lambda$ & $\epsilon$\\
+ 0 & 0 & $\mu$ & $-(\mu + \epsilon)$ & $\epsilon$\\
+ $\upsilon$ & 0 & 0 & 0 & -$\upsilon$\\
+\end{array}\right)\] 
+\section*{Question 6}   
+Let $pi = \left(\begin{array}{cccccc}0&0&0&1&0&0\end{array}\right)$
+\\$P(t)$ is computed by $\mbox{expm}\left(Q\right)^t$
+\\The states of interest are highlighted $(1, 4, 6h)$
+\[pi * P(0.01) = 
+\left(\begin{array}{cccccc}
+ \underline{0} & 0.0011 & 0.0557 & \underline{0.9156} & 0.0270 &
+ \underline{0.0006}
+\end{array}\right)
+\] 
+\[pi * P(0.1) = 
+\left(\begin{array}{cccccc}
+ \underline{0.0052} & 0.0683 & 0.3025 & \underline{0.4801} & 0.1122 &
+ \underline{0.0316} \\
+\end{array}\right)
+\] 
+\[pi * P(0.5) = 
+\left(\begin{array}{cccccc}
+ \underline{0.1777} & 0.2889 & 0.2286 & \underline{0.1172} & 0.0382 &
+ \underline{0.1494} \\
+\end{array}\right)
+\] 
+\[pi * P(1.0) = 
+\left(\begin{array}{cccccc}
+ \underline{0.4379} & 0.2112 & 0.1029 & \underline{0.0420} & 0.0124 &
+ \underline{0.1935} \\
+\end{array}\right)
+\] 
+\[pi * P(2.0) = 
+\left(\begin{array}{cccccc}
+ \underline{0.6842} & 0.0605 & 0.0252 & \underline{0.0094} & 0.0027 &
+ \underline{0.2180} \\
+\end{array}\right)
+\] 
+\[pi * P(5.0) = 
+\left(\begin{array}{cccccc}
+ \underline{0.7726} & 0.0011 & 0.0004 & \underline{0.0002} & 0.0000 &
+ \underline{0.2257} \\
+\end{array}\right)
+\] 
+\end{array}
 \end{document}

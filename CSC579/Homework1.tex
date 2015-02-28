@@ -3,6 +3,7 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{pgf}
+\usepackage{lastpage}
 \usepackage{amssymb}
 \usepackage{tikz}
 \usepackage[margin=0.75in]{geometry}
@@ -15,19 +16,26 @@
 \lstset{language=Matlab} 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[LE,RO]{Homework 1 - Timmons}
+\fancyhead[LE,RO]{Homework 1 - Greg Timmons}
 \fancyhead[RE,LO]{CSC 579 - Perf Modeling}
-\fancyfoot[LE,RO]{\thepage}   
+\fancypagestyle{plain}{
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+} 
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
 \usetikzlibrary{arrows,automata}
 \usepackage[latin1]{inputenc}
+\usepackage{pdfpages}
+
+
 
 \begin{document}
+\includepdf[pages={1}]{cover.pdf}
 \title{Homework 1}
 \date{Febuary 2, 2015}
 \author{Gregory B Timmons, gbtimmon}
 \maketitle
 
-% %%%%%%%%%% %
+% %%%%%%%%%% % 
 % QUESTION 2 %
 % %%%%%%%%%% %
 \section*{Question 2}
@@ -502,11 +510,11 @@ or 2, vs 3 or 4, there is not a steady state distribution.
 $(1/2,1.2	)$ satisfies the requirement to be a stationary distribution.
 \\\textbf{ii.}
 \[P_D^{k} = \frac{1}{2}\left(\begin{array}{rr}
-\frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k &
-\frac{1}{2} - \frac{1}{2}\left(\frac{2-n}{n}\right)^k\\
-\frac{1}{2} - \frac{1}{2}\left(\frac{2-n}{n}\right)^k &
-\frac{1}{2} + \frac{1}{2}\left(\frac{2-n}{n}\right)^k 
-\end{array}\right)\]
+\frac {1} {2} + \frac {1} {2} \left( \frac {2-n} {n} \right) ^ k &
+\frac {1} {2} - \frac {1} {2} \left( \frac {2-n} {n} \right) ^ k \\
+\frac {1} {2} - \frac {1} {2} \left( \frac {2-n} {n} \right) ^ k &
+\frac {1} {2} + \frac {1} {2} \left( \frac {2-n} {n} \right) ^ k 
+\end{array} \right)\]
 As the figure $-n + 2 / n$ is less then 0 for all n, this figure approaches 0
 as k goes to infinity, and thus :
 \[\lim_{n\rightarrow\infty}{P_D^{n} = \left(\begin{array}{rrr}
