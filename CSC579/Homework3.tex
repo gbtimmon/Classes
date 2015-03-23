@@ -101,8 +101,123 @@ $\pi^{(2)} = \left(\begin{array}{ccc}
 \section*{Question 3}
 Interarrival time $1/\lambda = .25$ -- mean arrival rate
 $\lambda = 4$ \subsection*{(a)}
-\[ p_{0}(.5) = e^{-(.5)} = 0.135 \]
+\[ p_0(t) = e^{-\lambda t}\]
+\[ p_{0}(.5) = e^{-(2)} = 0.135 \]
 \subsection*{(b)}
 At a rate of 4 per hours, we expect to reach ten customers at 2.5 hours. 
-\sub
+\subsection*{(c)}
+\[\mbox{Prob}\{N(t) = n \} = p_n(t) = e^{-\lambda t}\frac{(\lambda
+t)^{n}}^{n!}\]
+\[\mbox{Prob}\{N(.5) > 5 \} = 1 - \mbox{Prob}\{N(.5) \leq 5 \} = 1 -
+\sum\limits_{k=0}^{5}p_{k}(.5)\]
+\[ =1 - \sum\limits_{k=0}^{5}{e^{-2}\frac{(2)^{n}}^{n!}} = \boxed{0.016}\]
+\subsection*{(d)}
+Since each customers arrival is uniformly distributed within the hour, both
+customers have a $1/6$ independent probability of arriving in the last ten
+minutes of the of the hour. Therefore the probability of them both arriving in
+this time period is $\boxed{1/6^2}$
+\subsection*{(e)}	
+\[ 1/6 + 5/6*1/6 = \boxed{11/6^2}\]
+\section*{Question 4}
+\[ \rho = \frac{\lambda}{\mu}, \quad \rho = .8, \quad \mu = 2 \quad \Rightarrow
+\lambda = 1.6\]
+Although it is not explicit in the question I will make the assumption that the
+2.5 minutes waiting for service is an \underline{average} queue time, that is : 
+\[W_q = 2.5, \quad \boxed{R = 3} \]
+Littles law state the average number is the system is 
+\[L = \lambda W, \quad \boxed{L = 4.8}\]
+\newpage
+\section*{Question 5}
+\[\lambda = 10, \quad \mu = 15, \quad \rho = \frac{\lambda}{\mu} = \frac{2}{3}
+\]
+\subsection*{(a)}
+\[ p_0 = 1 - \rho = \boxed{1/3} \]
+\subsection*{(b)}
+\[ L_q = \frac{\rho^2}{1 - \rho} = \frac{\left(2/3\right)^2}{1 -
+\left(2/3\right)} = \boxed{4/3}
+\]
+\subsection*{(c)}
+\[E[R]= \frac{1}{\mu - \lambda} = \frac{1}{15 - 10} = \boxed{1/5  \quad
+\mbox{*(12 minutes)}}\]
+
+\subsection*{(d)}
+\[0.125 = \frac{1}{\mu - 10} \Rightarrow 0.125\mu - 1.25 = 1 \Rightarrow
+\boxed{\mu = 18 }\
+\]
+
+\subsection*{(e)}
+\[(1-\rho) * 24  = \boxed{\mbox{ 8 papers an hour}}\]
+
+\section*{Question 6}
+\[\mu = 4, \quad W_q = .2 \mbox{ or 12 minutes}\]
+\[.2 = \frac{\lambda}{4(4-\lambda)} \Rightarrowm \lambda = \boxed{16/9} \]
+
+\section*{Question 7}
+\[ \lambda = 3, \quad \mu = 7.5, \quad \rho = 0.4 \]
+
+\subsection*{(a)}
+\[\boxed{ \rho = 0.4 }\]
+since if the service is being utilize they will have to wait and this is the
+average utilization. 
+\subsection*{(b)}
+\[L_q = \frac{\rho^2}{1-\rho} = \frac{0.4^2}{1-0.4} = \boxed{4/15}\]
+\subsection*{(c)}
+\[\mbox{Prob}\{N > 5\} = 1 - \mbox{Prob}\{N \leq 5\}\]
+\[= 1 -\sum\limits_{n=0}^{5}p_n = 1 - \sum\limits_{n=0}^{5}{\rho^n(1 -
+\rho)}\]\[ = 1 - \sum\limits_{k=0}^{5}{0.4^k(1 -
+0.4)} = \boxed{0.004096} \]
+\subsection*{(d)}
+\[W_q(t) = 1 - \rho e^{\mu (1- \rho)t} \]
+\[\mbox{Prob}\{\mbox{Wait time} \leq \mbox{12 mins} | \mbox{the server is busy}
+\} = W_q(0.20) = 1 - 0.4 e^{-7.5 (1- 0.4).20} = 0.8373 \] \[\mbox{Prob}\{
+\mbox{Wait time} > \mbox{12 mins} \} = 0.6 + 0.4(0.8373) = \boxed{0.9349}\]
+\subsection*{(e)}
+\[8/60 = \frac{\lambda}{7.5(7.5 - \lambda)}\quad \Rightarrow \boxed{\lambda =
+3.75}}\]
+
+\section*{Question 8}
+\section*{Question 9}
+This is an example of an M/M/5 or M/M/6 queue respectively.
+\[ \mbox{ 6/3/5 } : \lambda = 6, \quad \mu = 3, \quad c = 5, \quad \rho =
+\frac{6}{5 * 2} = .6\]
+
+\[ p_0 = 
+  \left[ 1 + \left(\sum\limits_{n=1}^{c-1}{\frac{(c\rho)^n
+  }{n!}}\right) + \frac{(c\rho)^c}{c!}\frac{1}{1 - \rho}\right]^{-1}\]
+
+\[ p_0 = 
+  \left[ 1 + \left(\sum\limits_{n=1}^{5-1}{\frac{(5 * .6)^n
+  }{n!}}\right) + \frac{(5 * .6)^5}{5!}\frac{1}{1 - .6}\right]^{-1}\]
+  
+\[ \boxed{p_0 = 0.0466472} \]
+
+
+\[ W_q = \left[
+\frac{(\lambda/\mu)^c\mu}{(c - 1)!(c\mu - \lambda)^2} \right]p_0 \] 
+
+\[W_q = \left[\frac{3(6/3)^5}{(5 - 1)!(5(3) - 6)^2}\right] * 0.0466472\]
+
+\[ W_q = 0.0023032 \mbox{ hours } , \boxed{8.29 \mbox{ seconds}}\]
+This should satisfy the requirement. 
+\[ \mbox{ 6/3/6 } : \lambda = 6, \quad \mu = 3, \quad c = 6, \quad \rho =
+\frac{6}{6 * 2} = .5\]
+
+\[ p_0 = 
+  \left[ 1 + \left(\sum\limits_{n=1}^{c-1}{\frac{(c\rho)^n
+  }{n!}}\right) + \frac{(c\rho)^c}{c!}\frac{1}{1 - \rho}\right]^{-1}\]
+
+\[ p_0 = 
+  \left[ 1 + \left(\sum\limits_{n=1}^{5-1}{\frac{(5 * .5)^n
+  }{n!}}\right) + \frac{(5 * .5)^5}{5!}\frac{1}{1 - .5}\right]^{-1}\]
+  
+\[ \boxed{p_0 = 0.0801001} \]
+
+
+\[ W_q = \left[
+\frac{(\lambda/\mu)^c\mu}{(c - 1)!(c\mu - \lambda)^2} \right]p_0 \] 
+
+\[W_q = \left[\frac{3(6/3)^6}{(6 - 1)!(6(3) - 6)^2}\right] * 0.0801001\]
+
+\[ W_q = 0.00089 \mbox{ hours } , \boxed{3.2 \mbox{ seconds}}\]
+ \section*{Question 10}
 \end{document}
