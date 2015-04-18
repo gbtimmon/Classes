@@ -1,0 +1,52 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{pgf}
+\usepackage{lastpage}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{arrows,matrix,positioning}
+\usepackage{listings}             % Include the  listings-package
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{yfonts}
+\usepackage{fancyhdr}
+ 
+\lstset{language=Matlab} 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Test 2 Notes - Greg Timmons}
+\fancyhead[RE,LO]{CSC 579 - Introduction to Performance Modeling}
+\fancypagestyle{plain}{
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+} 
+\fancyfoot[LE,RO]{\thepage\backslash\pageref{LastPage}}  
+\usetikzlibrary{arrows,automata}
+\usepackage[latin1]{inputenc}
+\usepackage{pdfpages}
+
+
+
+\begin{document}
+\section{Numerical Solutions to Markov Chain}
+\[\pi P = \pi,\quad \pi e = 1. \quad \pi Q = 0,\quad \pi e = 1. \]
+
+$\pi P = \pi \Longrightarrow \pi( P - I ) = 0$\\
+ 
+$\pi Q = 0 \Longrightarrow \pi (Q\Delta t + I) = \pi ~~~~ \leftarrow$ use
+inverse of max element of Q as $\Delta t$ ~~~~ $\Delta t \leq  
+\frac{1}{\mbox{max}_i|q_{ii}|}$\\
+
+\subsection*{Stochastic Matrixes}
+$P \in \mathbb{R}^{nxn} $ is \textit{stochastic} if :\\
+ 	\indent 1.) p_{ij} ~$\geq$ ~for~all  \textit{i} and \textit{j}.\\
+ 	\indent 2.) $\sum_{\mbox{all}~j} p_{ij} = 1}$ for all i.\\
+ 	\indent 3.) $\sum_{\mbox{all}~i} p_{ij} > 0}$ for all j.
+ 	
+ \underline{Property 1} : Every stochastic matrix has and eigenvalue = 1
+ ($\pi$). \\
+    
+ 	
+\end{document}

@@ -150,7 +150,7 @@ Littles law state the average number is the system is
 
 \section*{Question 6}
 \[\mu = 4, \quad W_q = .2 \mbox{ or 12 minutes}\]
-\[.2 = \frac{\lambda}{4(4-\lambda)} \Rightarrowm \lambda = \boxed{16/9} \]
+\[.2 = \frac{\lambda}{4(4-\lambda)} \Longrightarrow \boxed{ \lambda = 16/9} \]
 
 \section*{Question 7}
 \[ \lambda = 3, \quad \mu = 7.5, \quad \rho = 0.4 \]
@@ -176,7 +176,54 @@ average utilization.
 3.75}}\]
 
 \section*{Question 8}
-\section*{Question 9}
+
+
+\subsection*{(a)}
+Yes the Pasta therom does hold $p_n = a_n$. The probabitlity of seeing a certain
+number in the system for a particular arrival is the same as the probility of
+the system holding that many people at equlibrium.
+\subsection*{(b)} We are
+concerned with weather or not we have unbounded growth of the queue. In a normal queue if $\rho > 1$ the rate of arrivals is greater then the rate of exit
+from the system and the growth of the queue will be unbounded. Since the rate of
+arriavl is dependent on n, then the arrival rate slows and we will always bound
+our queue. Any $\boxed{\rho < \infty}$ should be sufficent to bound the size of
+the queue and ensure the stability of the queue.
+\\
+
+Put mathmatically : 
+\[\left[\sum_{n=0}^{\infty}{\left(\frac{\rho^n}{n!}\right)}}\right]\]
+(as derived below) Converges for any $\rho$, therefor the system will remain
+stable for any $\rho < \infty$.
+ \subsection*{(c)}
+Assuming $\rho < \infty$ 
+\[ p_n = p_0\prod_{i=0}^{n-1}{\frac{\lambda}{\mu(n + 1)}} =
+p_0\left(\frac{\rho^n}{n!}\right)	
+\]
+\[ 1 = \sum_{n=0}^{\infty}{p_n} =
+\sum_{n=0}^{\infty}{p_0\left(\frac{\rho^n}{n!}\right)}}\] 
+	\[p_0 = \left[\sum_{n=0}^{\infty}{\left(\frac{\rho^n}{n!}\right)}}\right]^{-1}
+	= e^{-\rho}\]
+\[\boxed{p_n = \left(\frac{\rho^n}{n!}\right)e^{-\rho}}\] 
+\subsection*{(d)}
+????
+\subsection*{(e)}
+\[ L  = E[N] = \sum_{n=0}^{\infty}np^n =
+\sum_{n=0}^{\infty}n\left(\frac{\rho^n}{n!}\right)e^{-\rho} = \rho \]
+
+\[ \boxed{ L = \rho } \]
+
+\[ R_n = \frac{\frac{\lambda}{n+1}p_n}{\sum_{k=0}^{\infty}p_k}
+=
+\frac{\frac{\rho^{n+1}}{(n+1)!}e^{-\rho}}{\sum_{k=0}^{\infty}{\frac{\rho^{k+1}}{(k+1)!}e^{-\rho}}}
+= \frac{p_{n+1}}{1 - e^{-\rho}}\]
+\[E[R] = \sum_{k=0}^{\infty}{\frac{k+1}{\mu}R_k}} =
+\frac{1}{\mu}\sum_{k=0}^{\infty}{\frac{(k+1)p_{k+1}}{1 - e^{-\rho}}} =
+\frac{1}{\mu(1-e^{-\rho})}L = \frac{\rho}{\mu(1-e^{-\rho})}\]
+\[\boxed{R = \frac{\rho}{\mu(1-e^{-\rho})}}}\]
+\\
+\\
+The following source was use in answering this
+question:\\http://irh.inf.unideb.hu/\~jsztrik/education/16/SOR\_Main\_Angol.pdf \section*{Question 9}
 This is an example of an M/M/5 or M/M/6 queue respectively.
 \[ \mbox{ 6/3/5 } : \lambda = 6, \quad \mu = 3, \quad c = 5, \quad \rho =
 \frac{6}{5 * 2} = .6\]
@@ -220,4 +267,25 @@ This should satisfy the requirement.
 
 \[ W_q = 0.00089 \mbox{ hours } , \boxed{3.2 \mbox{ seconds}}\]
  \section*{Question 10}
+ \[10/20/1/2 : \quad \lambda = 10, \quad \mu = 20, \quad \rho = .5 , \quad k =
+ 2.\] 
+ \subsection*{(a)}
+ \[p_n = \frac{(1-\rho)\rho^n}{1-\rho^{K+1}}\]
+ \[p_0 = \frac{(1-.5)}{1-.5^3} = \boxed{0.571429}\]
+ \[p_1 = \frac{(1-.5).5}{1-.5^3} = \boxed{0.285714}\]
+ \[p_2 = \frac{(1-.5).5^2}{1-.5^3} = \boxed{0.142857}
+ \]
+ \subsection*{(b)}
+ \[ \mbox{ Throughput }X = \lambda ( 1 - p_2) \]
+ \[ X = 10(1 - 0.142857) = 8.57143 \] 
+ \[\mbox{ Utilization } U = \frac{1}{\mu}X  = \frac{1}{20}8.57143 \]
+ \[ U = 42.85\% \] 
+ The server is busy $\boxed{42.85\%}$ of the time. 
+ In 8 hours the servers throughput is 8.57 an hour therefor he should server
+ $\boxed{68.5}$ people
+  \subsection*{(c)}
+  If 10 customers arrive and hour and 8.57143 get serviced on average then
+  $\boxed{85.7143\%}$ of customers succed in getting their shoes shined and
+  $(100 - 85.7143)\%$ will get turned away. 
+  
 \end{document}
