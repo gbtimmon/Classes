@@ -1,0 +1,84 @@
+#!/usr/bin/python
+####################
+# GDE calculator
+####################
+import sys
+import glob
+import itertools
+
+def pairwise(iterable):
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return itertools.izip(a, b)
+
+class Graph : 
+  def __init__ (self, filename) : 
+
+    print "Building Graph : ", filename
+
+    self.nodeSet = set()
+    self.edgeSet = set()
+    
+    with open(filename) as fp :
+      fp.readline() #skip first line 
+      for line in fp : 
+        v1 , v2 = line.split()
+        self.addEdge(v1,v2)
+
+  # In our implementation, 
+  # as is imply by the paper, all edges are assume to have
+  # weight 1, and are onyl measure on existence in the GED 
+  # the MGED implementations. 
+  def addEdge(self, v1, v2) : 
+    self.nodeSet.add(v1)
+    self.nodeSet.add(v2)
+    self.edgeSet.add(str(v1) + "->" + str(v2))
+
+  def editDistance(self, other):
+    Vg   = len(self.nodeSet)
+    Vh   = len(other.nodeSet)
+    VgVh = len(self.nodeSet & other.nodeSet)
+    Eg   = len(self.edgeSet)
+    Eh   = len(other.edgeSet)
+    EgEh = len(self.edgeSet & other.edgeSet)
+    return (Vg + Vh - 2*VgVh + Eg + Eh - 2*EgEh)
+     
+def computeThreshold (dists) : 
+  median = sorted(dists)[len(dists)/2]
+  mean   = sum(dists) / len(dists)
+  summed = 0 
+  for i in dists : 
+    summed += (i - mean)**2
+  stddev  = (summed / len(dists))**.5
+  print median, stddev
+  return (median - (2*stddev)) , (median + (2*stddev))
+  
+
+def main() : 
+  print "Algoritm    : ", sys.argv[1]
+  print "Filepattern : ", sys.argv[2]
+  files = sorted(glob.glob(sys.argv[2]))
+  print "Files       : ", files
+  graphs = [ Graph(filename) for filename in files ] 
+
+  dists = []
+  if sys.argv[1] == 'GDE' : 
+    for i,j in pairwise(graphs) : 
+      dists.append(i.editDistance(j))
+  elif sys.argv[1] == 'MGDE' :
+    print "MGDE"
+
+  lower_bound, upper_bound = computeThreshold(dists)
+
+  print upper_bound, lower_bound
+  for idx, val in enumerate(dists) : 
+    print idx, val
+    
+
+  
+
+
+if __name__ == '__main__':
+  main()
+
+
