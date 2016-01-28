@@ -1,0 +1,72 @@
+/* 
+ * myThread.c++
+ *
+ *  Created on: Jan 20, 2016
+ *      Author: u236862
+ */
+#include <iostream>
+#include <queue>
+#include <ucontext.h>
+#include "./mythread.h"
+
+#ifndef MYTHREAD_C
+#define MYTHREAD_C
+
+static void f1 (void) {
+	for (int i = 0 ; i < 100; i++){
+		std::cout << "[" << i << "]\n";
+	}
+};
+
+static void f2 (void) { 
+	for (int i = 58; i < 127; i++){
+		std::cout << "[" << (char) i << "]\n";
+	}
+};
+
+class _MyThread {
+	private:
+		int                           	id;
+		ucontext_t*			ctx; 
+		static std::queue<_MyThread> 	readyQueue;
+
+	public:
+		static int counter;
+
+					_MyThread();
+		_MyThread*		_MyTheadCreate();
+		void 			_MyThreadYield( void );
+		int 			_MyThreadJoin( MyThread thread );
+		void 			_MyThreadJoinAll( void );
+		void 			_MyThreadExit( void );
+};
+
+int _MyThread::counter = 0;
+
+_MyThread::_MyThread()
+{
+	std::cout << counter << "hahaha\n";
+	counter++;
+};
+
+
+_MyThread* _MyThread::_MyTheadCreate()
+{
+        ctx  = new ucontext_t;
+	return new _MyThread;
+}
+
+
+
+int main()
+{
+        f1();
+	f2();
+        _MyThread* m =_MyThread::_MyThreadCreate();
+	return 0;
+}
+
+
+#endif
+
+
