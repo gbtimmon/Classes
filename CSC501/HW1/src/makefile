@@ -7,10 +7,10 @@ LDIR=../lib
 
 LIBS=-lm
 
-_DEPS = ctx.h
+_DEPS = thread.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = ctx.o mythread.o
+_OBJ = thread.o mythread.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
