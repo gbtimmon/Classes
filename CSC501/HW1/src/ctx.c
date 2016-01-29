@@ -3,14 +3,13 @@
 
 #include <ucontext.h>
 #include <stdlib.h>
-#include "./ctx.h"
+#include <ctx.h>
 
 
-
-static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
+ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
 
     #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link )");
+        p("CALL :  ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link )");
     #endif
 
     ctx_t* n            = (ctx_t*) malloc(sizeof(ctx_t));
@@ -30,20 +29,20 @@ static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
     return n;
 };
 
-static ctx_t* _ctx_get(ctx_t* link){
+ctx_t* _ctx_get(ctx_t* link){
 
     #ifdef DEBUG
-       p("CALL : static ctx_t* _ctx_get(ctx_t* link)");
+       p("CALL :  ctx_t* _ctx_get(ctx_t* link)");
     #endif
 
     return _ctx_make(NULL, NULL, link);
 };
 
 
-static ctx_t* _ctx_link(ctx_t* from, ctx_t* to){
+ctx_t* _ctx_link(ctx_t* from, ctx_t* to){
 
     #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_link(ctx_t* from, ctx_t* to)");
+        p("CALL :  ctx_t* _ctx_link(ctx_t* from, ctx_t* to)");
     #endif
     from->uc_link = to;
 };

@@ -10,8 +10,9 @@
 #endif
 
 typedef ucontext_t ctx_t; 
-static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link );
-static ctx_t* _ctx_get(ctx_t* link);
-static ctx_t* _ctx_link(ctx_t* from, ctx_t* to);
+
+ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link );
+ctx_t* _ctx_get(ctx_t* link);
+ctx_t* _ctx_link(ctx_t* from, ctx_t* to);
 
 #endif

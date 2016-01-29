@@ -1,18 +1,18 @@
 /*
- *  * myThread.c++
- *   *
- *    *  Created on: Jan 20, 2016
- *     *      Author: u236862
- *      */
+ * myThread.c++
+ *
+ *  Created on: Jan 20, 2016
+ *      Author: u236862
+ */
+#ifndef MYTHREAD_C
+#define MYTHREAD_C
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
 #include <errno.h>
-#include "mythread.h"
-//#include "ctx.h"
-
-#ifndef MYTHREAD_C
-#define MYTHREAD_C
+#include <mythread.h>
+#include <ctx.h>
 
 #ifdef _LP64
   #define STACK_SIZE 2097152+16384 /* large enough value for AMODE 64 */
@@ -31,7 +31,7 @@ void f2 (void* args) { int i;  for (i = 58; i < 127; i++){ printf("[1.)%d]\n",(i
 static int      threadCount   = 0;
 static int      initialized   = 0;
 static ctx_t*   ctx_list_head = (ctx_t*) 0; 
-//static ctx_t*   ctx_list_tail = (ctx_t*) 0; 
+static ctx_t*   ctx_list_tail = (ctx_t*) 0; 
 
 static void f3 (void* _i ) {
 
@@ -43,7 +43,6 @@ static void f3 (void* _i ) {
     int* i = (int*) _i; 
     for( j = 0; j < *i; j++) printf("This is a int : %d\n", j); 
 }
-
 /*
 static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
 
@@ -85,48 +84,7 @@ static ctx_t* _ctx_link(ctx_t* from, ctx_t* to){
     #endif
     from->uc_link = to;
 };
-tatic ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
-
-    #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link )");
-    #endif
-
-    ctx_t* n            = (ctx_t*) malloc(sizeof(ctx_t));
-    getcontext(n);
-    n->uc_stack.ss_sp   = (char *) malloc(STACK_SIZE);
-    n->uc_stack.ss_size = STACK_SIZE;
-    n->uc_flags         = 0;
- 
-    if(link) {
-        n->uc_link = link; 
-    }
- 
-    if(f) {
-        makecontext( n, (void(*)()) f, 1, args); 
-    }
- 
-    return n; 
-};
-
-static ctx_t* _ctx_get(ctx_t* link){
-
-    #ifdef DEBUG
-       p("CALL : static ctx_t* _ctx_get(ctx_t* link)");
-    #endif
-
-    return _ctx_make(NULL, NULL, link);
-};
-
-
-static ctx_t* _ctx_link(ctx_t* from, ctx_t* to){
-
-    #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_link(ctx_t* from, ctx_t* to)");
-    #endif
-    from->uc_link = to;    
-};
 */
-
 void MyThreadInit(void(*f)(void*), void* args) { 
 
     #ifdef DEBUG
