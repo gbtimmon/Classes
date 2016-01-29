@@ -8,11 +8,18 @@
 #define MYTHREAD_C
  
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <ucontext.h>
 #include <errno.h>
 #include <mythread.h>
-#include <ctx.h>
+
+#define DEBUG
+#ifdef DEBUG
+    #define debug(x) printf("[DEBUG] "); printf(x); printf("\n")
+#else
+    #define debug(x)
+#endif
 
 #ifdef _LP64
   #define STACK_SIZE 2097152+16384 /* large enough value for AMODE 64 */
@@ -20,111 +27,180 @@
   #define STACK_SIZE 16384         /* AMODE 31 addressing */
 #endif
 
-#define p(x) printf(x); printf("\n")
 
-#define DEBUG 1
+static Thread* ready_queue;
+static Thread* running_thread;
+static int thread_count = 0;
 
-void func(int arg) { printf( "function called with value %d\nprocess will exit when function returns\n",arg); };
-void f1 (void* args) { int i;  for (i = 0 ; i < 100; i++) { printf("[0.)%d]\n",(int*)args);}};
-void f2 (void* args) { int i;  for (i = 58; i < 127; i++){ printf("[1.)%d]\n",(int*)args);}};
+void f1 (void* args);
+int a = 4;
+int b = 7; 
+void f0 (void* args) {
+    printf("    This is thread 1 : %d\n", *((int*) args));
+    MyThreadCreate(f1, &a);
+    MyThreadCreate(f1, &b);
+};
+void f1 (void* args) {  
+     int* g = (int*) args;
+     int i; 
+     for( i = 0; i < (*g)*2; i++) { 
+         printf("Thread %d : iteration %d\n", running_thread->id, i);
+         if( i == (*g) ) MyThreadYeild();
+     }
 
-static int      threadCount   = 0;
-static int      initialized   = 0;
-static ctx_t*   ctx_list_head = (ctx_t*) 0; 
-static ctx_t*   ctx_list_tail = (ctx_t*) 0; 
+};
+typedef ucontext_t ctx_t; 
 
-static void f3 (void* _i ) {
+typedef struct Thread {
+    char* name; 
+    int id; 
 
-    #ifdef DEBUG
-       p("CALL : static f3 (void* _i )");
-    #endif
+    int  isRunning; 
+    ctx_t* ctx;     
+    ctx_t* return_ctx; 
 
-    int  j; 
-    int* i = (int*) _i; 
-    for( j = 0; j < *i; j++) printf("This is a int : %d\n", j); 
+    void(*func)();      
+    void* args;
+
+    struct Thread* next; 
+    struct Thread* last;
+} Thread; 
+
+Thread* new_Thread(char* nm, int id, void(*f)(void*), void* args) { 
+    debug("> Thread*  new_Thread(char* nm , int id) ");
+
+    int l = strlen(nm);
+
+    Thread* t    = (Thread*) malloc(sizeof(Thread));
+    t->name      = (char*) malloc(sizeof(char*) * l );
+    t->func      = (void(*)()) f; 
+    t->args      = args; 
+    t->id        = id; 
+    t->next      = NULL; 
+    t->last      = NULL;
+    t->isRunning = 0; 
+
+    strcpy(t->name, nm);
+    return t; 
+};
+
+void print_Thread( Thread* t ) { 
+    debug("> void print_Thread( Thread* t )");
+
+    printf("Thread\n");
+    printf("   id        : %d\n", t->id);
+    printf("   name      : %s\n", t->name);
+    printf("   next      : %s\n", (t->next) ? t->next->name : "NULL"); 
+    printf("   last      : %s\n", (t->last) ? t->last->name : "NULL");     
+};
+
+Thread* pop_Thread(Thread** queue){ 
+    debug("> Thread*  pop_Thread(Thread** queue)");
+     
+    Thread* c = *queue; 
+
+    if( c  == NULL ) return NULL;
+
+    while( c->last != NULL ) c = c->last; 
+   
+    if(c->next == NULL ) *queue = NULL;
+
+    else   c->next->last = NULL;
+
+    return c; 
 }
-/*
-static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link ) {
 
-    #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_make(void(*f)(void*), void* args, ctx_t* link )");
-    #endif
+Thread* pause_Thread(Thread* t){
+     swapcontext(t->ctx, t->return_ctx);
+};
 
-    ctx_t* n            = (ctx_t*) malloc(sizeof(ctx_t));
-    getcontext(n);
-    n->uc_stack.ss_sp   = (char *) malloc(STACK_SIZE);
-    n->uc_stack.ss_size = STACK_SIZE;
-    n->uc_flags         = 0;
+Thread* run_Thread(Thread* t) { 
+    debug("> Thread*  run_Thread(Thread* t)");
 
-    if(link) {
-        n->uc_link = link;
+    if(t->isRunning == 0 ) {
+        debug("Starting Thread");
+        t->return_ctx            = (ctx_t*) malloc(sizeof(ctx_t));
+        t->ctx                   = (ctx_t*) malloc(sizeof(ctx_t));
+        getcontext(t->ctx); 
+        t->ctx->uc_stack.ss_sp   = malloc(STACK_SIZE);
+        t->ctx->uc_stack.ss_size = STACK_SIZE;
+        t->ctx->uc_link          = t->return_ctx; 
+        makecontext(t->ctx, t->func, 1,  t->args); 
+        swapcontext(t->return_ctx, t->ctx);
+    } else { 
+        debug("Resuming Thread");
+        swapcontext(t->return_ctx, t->ctx);
     }
+};
 
-    if(f) {
-        makecontext( n, (void(*)()) f, 1, args);
+void push_Thread(Thread** queue, Thread* ele) { 
+    debug("> void     push_Thread(Thread** queue, Thread* ele)");
+    if( *queue == NULL ) {
+        *queue = ele;     
+    } else { 
+        (*queue)->next = ele; 
+        ele->last    = *queue; 
+        *queue       = ele;     
     }
-
-    return n;
 };
 
-static ctx_t* _ctx_get(ctx_t* link){
+void schedule_Thread( void ){ 
+    debug("> void   schedule_Thread( void )");
 
-    #ifdef DEBUG
-       p("CALL : static ctx_t* _ctx_get(ctx_t* link)");
-    #endif
+    while(ready_queue != NULL){
+        //Get the next out of the queue; 
+        Thread* t = pop_Thread(&ready_queue);
+        
+        //pop it from the queue; 
+        if(t->next == NULL){
+            ready_queue = NULL;
+        } else {
+           t->next->last = NULL;
+        }
+ 
+        running_thread = t; 
+        run_Thread(t);        
+        running_thread = NULL;
+    }
+     
+};
 
-    return _ctx_make(NULL, NULL, link);
+void wrap_Thread( void(*f)(void*), void* a ){ 
+    debug("> void mt_wrapper( void(*f)(void*), void* a )");
+    MyThreadExit(); 
+};
+
+void MyThreadInit( void(*f)(void*), void* args ) {  
+    debug("> void     MyThreadInit(void(*f)(void*), void* args)");
+    push_Thread( &ready_queue, new_Thread("First", thread_count++, f, args) );
+    schedule_Thread(); 
+};
+
+MyThread MyThreadCreate( void(*f)(void*), void* args ) { 
+    debug("> MyThread MyThreadCreate(void(*start_funct)(void*), void* args)"); 
+    push_Thread( &ready_queue,  new_Thread("MTC", thread_count++, f, args) ); 
+}; 
+
+void MyThreadYeild( void ) { 
+    debug("> void    MyThreadYeild( void )");
+
+    Thread* me = running_thread; 
+    running_thread = NULL;
+    swapcontext(me->ctx, me->return_ctx);
+
+};
+
+void MyThreadExit(void) { 
+    debug("> void    MyThreadExit(void)");
+    (void*) 0; 
 };
 
 
-static ctx_t* _ctx_link(ctx_t* from, ctx_t* to){
 
-    #ifdef DEBUG
-        p("CALL : static ctx_t* _ctx_link(ctx_t* from, ctx_t* to)");
-    #endif
-    from->uc_link = to;
-};
-*/
-void MyThreadInit(void(*f)(void*), void* args) { 
-
-    #ifdef DEBUG
-        p("CALL : void MyThreadInit(void(*f)(void*), void* args)");
-    #endif
-
-    if(ctx_list_head != 0 ) {
-        MyThreadCreate(f, args);
-        fprintf(stderr, "Warning : MyThreadInit called from already initialized ThreadManager\n"); 
-        return; 
-    }    
-
-    p("im trying");
-    ctx_t* t_main = _ctx_get ( (ctx_t*) 0 ); 
-    ctx_t* t_frst = _ctx_make( f, args, t_main); 
-    ctx_list_head = t_main; 
-    swapcontext( t_main, t_frst);
-    
-    p("OhGodTheAfterMath\n");
-}
-
-MyThread MyThreadCreate(void(*f)(void*), void* args) { 
-    
-    #ifdef DEBUG
-        p("CALL : MyThread MyThreadCreate(void(*start_funct)(void*), void* args)");
-    #endif    
-
-    ctx_t* t_new = _ctx_make((void(*)()) f, args, (ctx_t*) 0 ); 
-          
-}
-
+int k = 9; 
 int main ( int argc, void* args){
-
-    #ifdef DEBUG
-        p("CALL : int main ( int argc, void* args)");
-    #endif
-    
-    p("hello");
-    int i = 8;
-    MyThreadInit( f3, (void*) &i); 
+    debug("> int      main ( int argc, void* args)");
+    MyThreadInit(&f0, &k);
 };
 
 #endif
