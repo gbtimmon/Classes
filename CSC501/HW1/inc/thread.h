@@ -9,13 +9,20 @@
   #define STACK_SIZE 16384         /* AMODE 31 addressing */
 #endif
 
+#define THREAD_IS_STARTED  1
+#define THREAD_IS_COMPLETE 2
+#define THREAD_HAS_CHILD   4
+#define THREAD_YIELD_IND   8
+
+
 typedef ucontext_t ctx_t; 
 
 typedef struct Thread {
-    char* name; 
     int id; 
+ 
+    int child_count; 
 
-    int  isRunning; 
+    int flags; 
     ctx_t* ctx;     
     ctx_t* return_ctx; 
 
@@ -26,12 +33,14 @@ typedef struct Thread {
     struct Thread* last;
 } Thread; 
 
-Thread* Thread_new(char* nm, int id, void(*f)(void*), void* args) ; 
-void    Thread_print( Thread* t ) ; 
+void    Thread_join(Thread** q, Thread* me, Thread* you);
+void    Thread_join_all(Thread** q, Thread* me);
+Thread* Thread_new(Thread* parent, void(*f)(void*), void* args); 
+void    Thread_pause(Thread** queue, Thread* thread);
 Thread* Thread_pop(Thread** queue); 
-Thread* Thread_pause(Thread* t);
-Thread* Thread_run(Thread* t) ; 
+void    Thread_print(Thread* t);
 void    Thread_push(Thread** queue, Thread* ele) ; 
-void Thread_schedule( Thread** queue, Thread** running);
+Thread* Thread_run(Thread* t) ; 
+void    Thread_schedule( Thread** queue, Thread** running);
 
 #endif

@@ -8,38 +8,36 @@
 #include <ucontext.h>
 #include <thread.h>
 
+/*
+ * Create a new thread object
+ */
+static curr_id = 0; 
+Thread* Thread_new(Thread* parent, void(*f)(void*), void* args) { 
+    tcs("> Thread*  Thread_new(char* nm , int id) ");
 
+    Thread* t      = (Thread*) malloc(sizeof(Thread));
+    t->func        = (void(*)()) f; 
+    t->args        = args; 
+    t->id          = curr_id++; 
+    t->next        = NULL; 
+    t->last        = NULL;
+    t->flags       = 0;
+    t->child_count = 0; 
 
-Thread* Thread_new(char* nm, int id, void(*f)(void*), void* args) { 
-    debug("> Thread*  new_Thread(char* nm , int id) ");
+    parent->child_count++; 
 
-    int l = strlen(nm);
-
-    Thread* t    = (Thread*) malloc(sizeof(Thread));
-    t->name      = (char*) malloc(sizeof(char*) * l );
-    t->func      = (void(*)()) f; 
-    t->args      = args; 
-    t->id        = id; 
-    t->next      = NULL; 
-    t->last      = NULL;
-    t->isRunning = 0; 
-
-    strcpy(t->name, nm);
     return t; 
 };
 
-void Thread_print( Thread* t ) { 
-    debug("> void print_Thread( Thread* t )");
-
-    printf("Thread\n");
-    printf("   id        : %d\n", t->id);
-    printf("   name      : %s\n", t->name);
-    printf("   next      : %s\n", (t->next) ? t->next->name : "NULL"); 
-    printf("   last      : %s\n", (t->last) ? t->last->name : "NULL");     
-};
-
+/*
+ * Pop a thread from the thread list started at 
+ * the Thread object pointed at by 'queue'
+ *
+ * If the queue has one element it will leave
+ * the queue empty
+ */
 Thread* Thread_pop(Thread** queue){ 
-    debug("> Thread*  pop_Thread(Thread** queue)");
+    tcs("> Thread*  pop_Thread(Thread** queue)");
      
     Thread* c = *queue; 
     if( c  == NULL ) return NULL;
@@ -52,16 +50,26 @@ Thread* Thread_pop(Thread** queue){
     return c; 
 };
 
-Thread* Thread_pause(Thread* t){
-     swapcontext(t->ctx, t->return_ctx);
-};
-
+/*
+ * Swap the current context for the context of the thread 
+ * passed by this function. 
+ *
+ * If the thread is new ( !THREAD_IS_STARTED ) the the context
+ * must be built.
+ *
+ * If the thread has already started then we simple resume the 
+ * context
+ *
+ * Threads are set to return to the calling process when completed
+ * or yeiled. 
+ */
 Thread* Thread_run(Thread* t) { 
-    debug("> Thread*  Thread_run(Thread* t)");
+    tcs("> Thread*  Thread_run(Thread* t)");
 
-    if(t->isRunning == 0 ) {
-        t->isRunning = 1; 
-        debug("Starting Thread");
+    if( t->flags & THREAD_IS_STARTED ) {
+        swapcontext(t->return_ctx, t->ctx);
+    } else {
+        t->flags |= THREAD_IS_STARTED;
         t->return_ctx            = (ctx_t*) malloc(sizeof(ctx_t));
         t->ctx                   = (ctx_t*) malloc(sizeof(ctx_t));
         getcontext(t->ctx); 
@@ -70,25 +78,33 @@ Thread* Thread_run(Thread* t) {
         t->ctx->uc_link          = t->return_ctx; 
         makecontext(t->ctx, t->func, 1,  t->args); 
         swapcontext(t->return_ctx, t->ctx);
-    } else { 
-        debug("Resuming Thread");
-        swapcontext(t->return_ctx, t->ctx);
     }
 };
 
 void Thread_push(Thread** queue, Thread* ele) { 
-    debug("> void     push_Thread(Thread** queue, Thread* ele)");
+    tcs("> void     Thread_push(Thread** queue, Thread* ele)");
     if( *queue == NULL ) {
         *queue = ele;     
     } else { 
         (*queue)->next = ele; 
         ele->last    = *queue; 
+        ele->next    = NULL;
         *queue       = ele;     
+    }
+};
+void Thread_join_all(Thread** q, Thread* me) { 
+    tcs("> void     Thread_join_all(Thread** q, Thread* me)");    
+}
+
+void Thread_join(Thread** q, Thread* me,  Thread* you ) {
+    tcs("> void     Thread_join(Thread** q,  Thread * w )");
+    while(!(you->flags & THREAD_IS_COMPLETE)){
+        Thread_pause(q,me);
     }
 };
 
 int Thread_queue_length( Thread* head ) {
-    debug("> int Thread_queue_length( Thread* head )");
+    tcs("> int Thread_queue_length( Thread* head )");
     int c = 0; 
     Thread* t = head; 
 
@@ -101,12 +117,11 @@ int Thread_queue_length( Thread* head ) {
     return c; 
 };
 
-
 void Thread_scheduler( Thread** queue, Thread** running){ 
-    debug("> void   schedule_Thread( void )");
+    tcs("> void   schedule_Thread( void )");
 
     while(*queue != NULL){
-        infof("Length of queue", Thread_queue_length( *queue ) );
+        info("schedule loop");
         //Get the next out of the queue; 
         Thread* t = Thread_pop(queue);
         
@@ -116,11 +131,33 @@ void Thread_scheduler( Thread** queue, Thread** running){
         } else {
            t->next->last = NULL;
         }
- 
+       
         *running = t; 
         Thread_run(t);        
+        if(t->flags & THREAD_YIELD_IND) {
+            t->flags &= ~THREAD_YIELD_IND;   
+        } else {
+            t->flags |= THREAD_IS_COMPLETE; 
+        }
         *running = NULL;
     }
      
+
+};
+
+void Thread_pause(Thread** q, Thread* t){
+    tcs("> void     Thread_pause(Thread** t)");
+    Thread_push(q, t);
+    t->flags |= THREAD_YIELD_IND;
+    swapcontext(t->ctx, t->return_ctx);
+}
+
+void Thread_print( Thread* t ){
+    printf("Id     : %d\n", t->id);
+    printf("next Id: %d\n", (t->next)? t->next->id : -1);
+    printf("last Id: %d\n", (t->last)? t->last->id : -1);
+    printf("ctx    : %s\n", (t->ctx)? "Yes" :"No");
+    printf("ret_ctx: %s\n", (t->return_ctx)? "Yes" :"No");
+
 };
 #endif
