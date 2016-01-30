@@ -84,7 +84,7 @@ MyThread MyThreadCreate( void(*f)(void*), void* args ) {
 
 void MyThreadYield( void ) { 
     mcs("MyThreadYeild( void )");
-    Thread_pause(&ready_queue, running_thread);
+    Thread_yeild();
 };
 
 void MyThreadExit(void) { 
@@ -101,8 +101,21 @@ int MyThreadJoin( MyThread waiton ) {
 void MyThreadJoinAll(void) {
     mcs("MyThreadJoinAll(void)");
     Thread_join_all(&ready_queue, running_thread);
-}
+};
 
+MySemaphore MySemaphoreInit(int initialValue){
+    return (MySemaphore) Sem_new(initialValue);
+};
+
+void MySemaphoreSignal(MySemaphore sem){
+   
+};
+void MySemaphoreWait(MySemaphore sem){
+
+};
+int MySemaphoreDestroy(MySemaphore sem){
+
+};
 
 int k = 9; 
 int main ( int argc, void* args){

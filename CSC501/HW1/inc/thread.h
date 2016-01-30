@@ -34,15 +34,29 @@ typedef struct Thread {
     struct Thread* last;
 } Thread; 
 
+typedef Thread* Queue;
+
 Thread* Thread_getCurrent();
-void    Thread_join(Thread* you);
+void    Thread_join( Thread* you );
 void    Thread_join_all();
-Thread* Thread_new(void(*f)(void*), void* args); 
-void    Thread_pause();
-Thread* Thread_pop(Thread** q); 
-void    Thread_print(Thread* t);
-void    Thread_push(Thread** q, Thread* e) ; 
+Thread* Thread_new( void(*f)(void*), void* args ); 
+void    Thread_pause_and_queue( Queue * q );
+Thread* Thread_pop( Queue* q ); 
+void    Thread_print( Thread* t );
+void    Thread_push( Queue* q, Thread* e ) ; 
 Thread* Thread_run() ; 
 void    Thread_schedule();
+void    Thread_yeild();
+
+
+typedef struct Sem {
+    int     count;
+    Queue q_blocked;
+} Sem;
+
+Sem*    Sem_new(int i);
+void    Sem_sig(Sem* s);
+void    Sem_wait(Sem* s);
+int     Sem_destroy(Sem* s);
 
 #endif
