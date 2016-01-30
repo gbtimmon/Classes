@@ -11,11 +11,17 @@
 /*
  * Create a new thread object
  */
-static curr_id = 0; 
-Thread* Thread_new(Thread* parent, void(*f)(void*), void* args) { 
-    tcs("> Thread*  Thread_new(char* nm , int id) ");
+static int     curr_id    = 0; 
+static Thread* q_running  = NULL;
+static Thread* q_ready    = NULL;
+static Thread* q_blocked  = NULL;
+static Thread* q_reapable = NULL;
+  
+Thread* Thread_new(void(*f)(void*), void* args) { 
+    tcs("Thread_new(char* nm , int id) ");
 
     Thread* t      = (Thread*) malloc(sizeof(Thread));
+
     t->func        = (void(*)()) f; 
     t->args        = args; 
     t->id          = curr_id++; 
@@ -23,9 +29,12 @@ Thread* Thread_new(Thread* parent, void(*f)(void*), void* args) {
     t->last        = NULL;
     t->flags       = 0;
     t->child_count = 0; 
+    t->parent      = q_running;
 
-    parent->child_count++; 
+    if(t->parent != NULL ) 
+        t->parent->child_count++; 
 
+    Thread_push(&q_ready, t);
     return t; 
 };
 
@@ -36,17 +45,19 @@ Thread* Thread_new(Thread* parent, void(*f)(void*), void* args) {
  * If the queue has one element it will leave
  * the queue empty
  */
-Thread* Thread_pop(Thread** queue){ 
-    tcs("> Thread*  pop_Thread(Thread** queue)");
-     
-    Thread* c = *queue; 
-    if( c  == NULL ) return NULL;
+Thread* Thread_pop(Thread** q){ 
+    tcs("Thread_pop(Thread* c)");
+    Thread* c = *q;
 
-    while( c->last != NULL ) c = c->last; 
-   
-    if(c->next == NULL ) *queue = NULL;
-    else   c->next->last = NULL;
-
+    if( c  == NULL ) 
+        return NULL;
+    while( c->last != NULL ) 
+        c = c->last; 
+    if(c->next == NULL ) {
+       *q = NULL;
+    }else   {
+        c->next->last = NULL;
+    }
     return c; 
 };
 
@@ -63,13 +74,12 @@ Thread* Thread_pop(Thread** queue){
  * Threads are set to return to the calling process when completed
  * or yeiled. 
  */
-Thread* Thread_run(Thread* t) { 
-    tcs("> Thread*  Thread_run(Thread* t)");
-
+Thread* Thread_run() { 
+    Thread* t = q_running; 
     if( t->flags & THREAD_IS_STARTED ) {
         swapcontext(t->return_ctx, t->ctx);
     } else {
-        t->flags |= THREAD_IS_STARTED;
+        t->flags                |= THREAD_IS_STARTED;
         t->return_ctx            = (ctx_t*) malloc(sizeof(ctx_t));
         t->ctx                   = (ctx_t*) malloc(sizeof(ctx_t));
         getcontext(t->ctx); 
@@ -81,30 +91,37 @@ Thread* Thread_run(Thread* t) {
     }
 };
 
-void Thread_push(Thread** queue, Thread* ele) { 
-    tcs("> void     Thread_push(Thread** queue, Thread* ele)");
-    if( *queue == NULL ) {
-        *queue = ele;     
+/*
+ * Add a thread to a list/queue of lists. 
+ */
+void Thread_push(Thread** q, Thread* e) { 
+    tcs("Thread_push(Thread** queue, Thread* ele)");
+    if( *q == NULL ) {
+        *q = e;     
     } else { 
-        (*queue)->next = ele; 
-        ele->last    = *queue; 
-        ele->next    = NULL;
-        *queue       = ele;     
+        (*q)->next = e; 
+        e->last    = *q; 
+        e->next    = NULL;
+        *q         = e;     
     }
 };
-void Thread_join_all(Thread** q, Thread* me) { 
-    tcs("> void     Thread_join_all(Thread** q, Thread* me)");    
+
+void Thread_join_all() { 
+    tcs("Thread_join_all(Thread** q, Thread* me)");    
+    while(q_running->child_count > 0 ){
+        Thread_pause();   
+    }
 }
 
-void Thread_join(Thread** q, Thread* me,  Thread* you ) {
-    tcs("> void     Thread_join(Thread** q,  Thread * w )");
+void Thread_join(Thread* you) {
+    tcs("Thread_join(Thread* you )");
     while(!(you->flags & THREAD_IS_COMPLETE)){
-        Thread_pause(q,me);
+        Thread_pause();
     }
 };
 
 int Thread_queue_length( Thread* head ) {
-    tcs("> int Thread_queue_length( Thread* head )");
+    tcs("Thread_queue_length( Thread* head )");
     int c = 0; 
     Thread* t = head; 
 
@@ -117,47 +134,51 @@ int Thread_queue_length( Thread* head ) {
     return c; 
 };
 
-void Thread_scheduler( Thread** queue, Thread** running){ 
-    tcs("> void   schedule_Thread( void )");
+void Thread_scheduler(){ 
+    tcs("Thread_scheduler");
 
-    while(*queue != NULL){
+    while((q_ready != NULL) || (q_blocked != NULL)){
         info("schedule loop");
         //Get the next out of the queue; 
-        Thread* t = Thread_pop(queue);
-        
-        //pop it from the queue; 
-        if(t->next == NULL){
-            *queue = NULL;
-        } else {
-           t->next->last = NULL;
+        q_running = Thread_pop(&q_ready); 
+        if(q_running != NULL){
+            Thread_run();        
+      
+          //Thread came to schedule incomplete. 
+            if( q_running->flags &   THREAD_YIELD_IND ) {
+                q_running->flags &= ~THREAD_YIELD_IND;   
+          //Thread came in completed : run thread reaping. 
+            } else {
+                q_running->flags |= THREAD_IS_COMPLETE; 
+                if( q_running->parent != NULL )
+                    q_running->parent->child_count--;
+                Thread_push(&q_reapable, q_running); 
+            }
         }
-       
-        *running = t; 
-        Thread_run(t);        
-        if(t->flags & THREAD_YIELD_IND) {
-            t->flags &= ~THREAD_YIELD_IND;   
-        } else {
-            t->flags |= THREAD_IS_COMPLETE; 
-        }
-        *running = NULL;
     }
-     
-
 };
 
-void Thread_pause(Thread** q, Thread* t){
-    tcs("> void     Thread_pause(Thread** t)");
-    Thread_push(q, t);
-    t->flags |= THREAD_YIELD_IND;
-    swapcontext(t->ctx, t->return_ctx);
-}
+void Thread_pause(){
+    tcs("Thread_pause()");
+    Thread_push(&q_ready, q_running);
+    q_running->flags |= THREAD_YIELD_IND;
+    swapcontext(q_running->ctx, q_running->return_ctx);
+};
 
 void Thread_print( Thread* t ){
-    printf("Id     : %d\n", t->id);
-    printf("next Id: %d\n", (t->next)? t->next->id : -1);
-    printf("last Id: %d\n", (t->last)? t->last->id : -1);
-    printf("ctx    : %s\n", (t->ctx)? "Yes" :"No");
-    printf("ret_ctx: %s\n", (t->return_ctx)? "Yes" :"No");
-
+    if( t == NULL ) t = q_running; 
+    tcs("Thread_print( Thread* t )");
+    info("Id     : %d", t->id);
+    info("next Id: %d", (t->next)? t->next->id : -1);
+    info("last Id: %d", (t->last)? t->last->id : -1);
+    info("ctx    : %s", (t->ctx)? "Yes" :"No");
+    info("ret_ctx: %s", (t->return_ctx)? "Yes" :"No");
 };
+
+Thread* Thread_getCurrent(){
+    return q_running; 
+};
+
+
+
 #endif

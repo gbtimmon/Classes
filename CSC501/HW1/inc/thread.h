@@ -29,18 +29,20 @@ typedef struct Thread {
     void(*func)();      
     void* args;
 
+    struct Thread* parent;
     struct Thread* next; 
     struct Thread* last;
 } Thread; 
 
-void    Thread_join(Thread** q, Thread* me, Thread* you);
-void    Thread_join_all(Thread** q, Thread* me);
-Thread* Thread_new(Thread* parent, void(*f)(void*), void* args); 
-void    Thread_pause(Thread** queue, Thread* thread);
-Thread* Thread_pop(Thread** queue); 
+Thread* Thread_getCurrent();
+void    Thread_join(Thread* you);
+void    Thread_join_all();
+Thread* Thread_new(void(*f)(void*), void* args); 
+void    Thread_pause();
+Thread* Thread_pop(Thread** q); 
 void    Thread_print(Thread* t);
-void    Thread_push(Thread** queue, Thread* ele) ; 
-Thread* Thread_run(Thread* t) ; 
-void    Thread_schedule( Thread** queue, Thread** running);
+void    Thread_push(Thread** q, Thread* e) ; 
+Thread* Thread_run() ; 
+void    Thread_schedule();
 
 #endif

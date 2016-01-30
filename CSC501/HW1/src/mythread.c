@@ -31,7 +31,7 @@ int a = 4;
 int b = 7; 
 
 void f0 (void* args) {
-    printf("    This is thread 1 : %d\n", *((int*) args));
+    puts("   This is thread 1 : %d", *((int*) args));
     MyThread m = MyThreadCreate(f2, &b);
     MyThreadCreate(f1, &a);
     MyThreadCreate(f1, &b);
@@ -39,72 +39,75 @@ void f0 (void* args) {
     MyThreadCreate(f1, &b);
     MyThreadCreate(f1, &a);
     MyThreadCreate(f1, &b);
-    MyThreadJoin( m );
+    MyThreadJoinAll();
 };
 
 void f1 (void* args) {  
-    printf("Thread %d : 1.)Start\n", running_thread->id);
-    printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 1.)Start", Thread_getCurrent()->id);
+    puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);
-    printf("Thread %d : 4.)Exit\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);
+    puts("Thread %d : 4.)Exit", Thread_getCurrent()->id);
 };
 
 void f2(void* args){
-    printf("Thread %d : 1.)Start\n", running_thread->id);
-    printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 1.)Start", Thread_getCurrent()->id);
+    puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);printf("Thread %d : 2.)Switch\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);puts("Thread %d : 2.)Switch", Thread_getCurrent()->id);
     MyThreadYield();
-    printf("Thread %d : 3.)Returning\n", running_thread->id);
+    puts("Thread %d : 3.)Returning", Thread_getCurrent()->id);
 };
 
 
 
 void MyThreadInit( void(*f)(void*), void* args ) {  
-    mcs("> void     MyThreadInit(void(*f)(void*), void* args)");
-    Thread_push( &ready_queue, Thread_new(running_thread, f, args) );
-    Thread_scheduler(&ready_queue, &running_thread); 
+    mcs("MyThreadInit(void(*f)(void*), void* args)");
+    Thread_new(f, args);
+    Thread_scheduler(); 
 };
 
 MyThread MyThreadCreate( void(*f)(void*), void* args ) { 
-    mcs("> MyThread MyThreadCreate(void(*start_funct)(void*), void* args)"); 
-    Thread* new = Thread_new(running_thread, f, args);
-    Thread_push( &ready_queue, new ); 
-    return (MyThread) new; 
+    mcs("MyThreadCreate(void(*start_funct)(void*), void* args)"); 
+    return (MyThread) Thread_new(f, args);
 }; 
 
 void MyThreadYield( void ) { 
-    mcs("> void    MyThreadYeild( void )");
+    mcs("MyThreadYeild( void )");
     Thread_pause(&ready_queue, running_thread);
 };
 
 void MyThreadExit(void) { 
-    mcs("> void    MyThreadExit(void)");
+    mcs("MyThreadExit(void)");
     (void*) 0; 
 };
 
 int MyThreadJoin( MyThread waiton ) {
-   mcs("> int      MyThreadJoin( MyThread waiton )");
-    Thread_join( &ready_queue, running_thread, (Thread*) waiton );
+    mcs("MyThreadJoin( MyThread waiton )");
+    Thread_join((Thread*) waiton );
     return 0;
 };
 
+void MyThreadJoinAll(void) {
+    mcs("MyThreadJoinAll(void)");
+    Thread_join_all(&ready_queue, running_thread);
+}
+
+
 int k = 9; 
 int main ( int argc, void* args){
-    mcs("> int      main ( int argc, void* args)");
+    mcs("main ( int argc, void* args)");
     MyThreadInit(&f0, &k);
-
 };
 
 #endif
