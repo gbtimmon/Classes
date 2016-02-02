@@ -3,16 +3,14 @@
 
 #include <ucontext.h>
 
-#ifdef _LP64
-  #define STACK_SIZE 2097152+16384 /* large enough value for AMODE 64 */
-#else
-  #define STACK_SIZE 16384         /* AMODE 31 addressing */
-#endif
+#define STACK_SIZE (1024*8)
 
 #define THREAD_IS_STARTED  1
 #define THREAD_IS_COMPLETE 2
 #define THREAD_HAS_CHILD   4
 #define THREAD_YIELD_IND   8
+#define THREAD_JOIN       16
+#define THREAD_JOIN_ALL   32
 
 typedef ucontext_t ctx_t;
 
@@ -20,26 +18,37 @@ typedef struct Thread {
     int id;
 
     int child_count;
+    int dead_count;
 
     int flags;
-    ctx_t* ctx;
-    ctx_t* return_ctx;
+    ctx_t ctx;
+    ctx_t return_ctx;
 
     void(*func)();
     void* args;
 
     struct Thread* parent;
-    struct Thread* next;
-    struct Thread* last;
+    struct Thread* after;
+    struct Thread* before;
 } Thread;
 
 typedef Thread* Queue;
 
-void    Thread_pause_and_queue( Queue * q );
-Thread* Thread_pop( Queue* q );
-void    Thread_print( Thread* t );
-void    Thread_push( Queue* q, Thread* e ) ;
-Thread* Thread_run() ;
-void    Thread_schedule();
+void    _MyThreadPause( Queue * q );
+Thread* _MyThreadPop( Queue* q );
+void    _MyThreadPrint( Thread* t );
+void    _MyThreadPush( Queue* q, Thread* e ) ;
+void    _MyThreadRun() ;
+void    _MyThreadSchedule();
+Thread* _MyThreadGetCurrent();
+void    _MyThreadUnblock(Thread* t);
+void    _MyThreadFree(Thread* t);
+void    _MyThreadReap();
+void    _MyThreadListRemove(Queue* from, Queue* to, Thread* t);
+int     _MyThreadQueueLength(Queue * q);
+typedef struct Sem {
+    int     count;
+    Queue q_blocked;
+} Sem;
 
-
+#endif

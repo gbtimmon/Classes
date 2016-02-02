@@ -7,18 +7,18 @@ LDIR=../lib
 
 LIBS=-lm
 
-_DEPS = thread.h semaphore.h
+_DEPS = mythread.h 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = thread.o semaphore.o mythread.o
+_OBJ = mythread.o test.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
 $(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -Wall -Werror -c -o $@ $< $(CFLAGS)
 
 go: $(OBJ)
-	gcc -o $@ $^ $(CFLAGS) $(LIBS)
+	$(CC) -Wall -Werror -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 
