@@ -296,12 +296,15 @@ Thread* _MyThreadGetCurrent(){
 };
 
 MySemaphore MySemaphoreInit(int initialValue){
+    tcs("MySemaphoreInit(int initialValue)");
     Sem* s = malloc(sizeof(Sem));
     s->count = initialValue;
+    s->q_blocked = NULL;
     return (MySemaphore) s; 
 };
 
 void MySemaphoreSignal(MySemaphore sem){
+    tcs("MySemaphoreSignal(MySemaphore sem)");
     Sem* s = (Sem*) sem;
     if(s->count < 0 ) { 
        _MyThreadPush(&q_ready, _MyThreadPop(&s->q_blocked));
@@ -310,6 +313,7 @@ void MySemaphoreSignal(MySemaphore sem){
 };
 
 void MySemaphoreWait(MySemaphore sem){
+    tcs("MySemaphoreWait(MySemaphore sem)");
     Sem* s = (Sem*) sem;
     s->count--;
     if(s->count <0){
@@ -318,6 +322,7 @@ void MySemaphoreWait(MySemaphore sem){
 };
 
 int MySemaphoreDestroy(MySemaphore sem){
+    tcs("MySemaphoreDestroy(MySemaphore sem)");
     Sem* s = (Sem*) sem;
     if( s->q_blocked != NULL)
        return -1; 
