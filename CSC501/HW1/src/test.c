@@ -25,12 +25,9 @@
 static int n[SIZE] = {};
 
 void countTo(void* args){
-    int* ip = (int*) args; 
-    int  i  = *ip;
- 
     int j = 0; 
     printf("This is thread %d and I am about  to count to %d\n",_MyThreadGetCurrent()->id,j);
-    for(; j<i; j++){
+    for(; j<100; j++){
         NOOP();
     }
 
@@ -71,6 +68,19 @@ void Yields(void *args){
     }
 }
 
+void Regression(void* args){
+    int* ip = (int*) args; 
+    int i = *ip;
+       
+    if( i > 0 ) { 
+        MyThreadCreate(&Regression, &n[i-1]);
+        MyThreadYield();
+        MyThreadCreate(&Regression, &n[i-2]);
+    } else {
+        MyThreadCreate(&countTo, &n[50]);
+    }
+}
+
 void Test(int i, char* title, void(*f)(void*), void* a) { 
      printf("###############################\n");
      printf(" Test %d : %s\n",i, title);
@@ -78,6 +88,48 @@ void Test(int i, char* title, void(*f)(void*), void* a) {
      MyThreadInit(f, a);
 
 };
+
+void fib(void *in)
+{
+    int *n = (int *)in;	 	/* cast input parameter to an int * */
+
+    if (*n == 0)
+      /* pass */;			/* return 0; it already is zero */
+
+  else if (*n == 1)
+      /* pass */;			/* return 1; it already is one */
+
+  else {
+    int n1 = *n - 1;		/* child 1 param */
+    int n2 = *n - 2;		/* child 2 param */
+
+    MyThreadCreate(fib, (void*)&n1);
+    MyThreadCreate(fib, (void*)&n2);
+    MyThreadJoinAll();
+    *n = n1 + n2;
+    MyThreadExit();		// always call this at end
+  }
+}
+
+void test1(void * l)
+{
+  MyThread T;
+  int* kk = (int*) l;
+  int n1 = *kk; 
+  printf("test1 start %d\n", n1);
+
+  int n2 = n1 -1 ;
+  if (n1 > 0) {
+    printf("test1 create\n");
+    T = MyThreadCreate(test1, &n[n2]);
+    if (n1 % 1 == 0)
+      MyThreadYield();
+    else if (n1 % 1 == 1)
+      MyThreadJoin(T);
+  }
+  printf("test1 end\n");
+  MyThreadExit();
+}
 
 int main (){
     int i = 0 ;
@@ -93,10 +145,22 @@ int main (){
           Test(1, "basic thread", countTo, &n[5]);
           break;
          case 2:
-          Test(2, "100 counters", manyCounts, &n[2]);
+          Test(2, "100 counters", manyCounts, &n[100]);
           break; 
          case 3:
           Test(3, "Yields", Yields, &n[30]);
+          break;
+         case 4:
+          Test(4, "Regression", Regression, &n[12]);
+          break; 
+         case 5:
+          i = n[15]; 
+          printf("fib(%d) = ", i);
+          Test(5, "Fib", fib, &i);
+          printf("%d\n", i);
+          break;
+         case 6:
+          Test(6, "Supplied Test1", test1, &n[1000]);
           break;
          default:
           printf(" wut?\n");

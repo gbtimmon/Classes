@@ -11,6 +11,7 @@
     #define ANSI_COLOR_RESET   "\x1b[0m"
 
     #define THREAD_C_STACK
+    #define INFO
 
     #define C_INF ANSI_COLOR_CYAN
     #define C_MCS ANSI_COLOR_GREEN

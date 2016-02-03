@@ -35,7 +35,7 @@ typedef struct Thread {
 typedef Thread* Queue;
 
 void    _MyThreadPause( Queue * q );
-Thread* _MyThreadPop( Queue* q );
+Thread*  _MyThreadPop( Queue* q );
 void    _MyThreadPrint( Thread* t );
 void    _MyThreadPush( Queue* q, Thread* e ) ;
 void    _MyThreadRun() ;
@@ -44,7 +44,7 @@ Thread* _MyThreadGetCurrent();
 void    _MyThreadUnblock(Thread* t);
 void    _MyThreadFree(Thread* t);
 void    _MyThreadReap();
-void    _MyThreadListRemove(Queue* from, Queue* to, Thread* t);
+void    _MyThreadListRemove(Queue* from, Thread* t);
 int     _MyThreadQueueLength(Queue * q);
 typedef struct Sem {
     int     count;

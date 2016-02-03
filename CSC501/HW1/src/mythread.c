@@ -53,21 +53,13 @@ MyThread MyThreadCreate(void(*f)(void*), void* args) {
  */
 Thread* _MyThreadPop(Queue* q){ 
     tcs("_MyThreadPop(Thread* c)");
-    Thread* c = *q;
-
-    if( c  == NULL ) 
-        return NULL;
-    while( c->before != NULL ) {
-        c = c->before; 
-     }
-    if(c->after == NULL ) {
-       *q = NULL;
-    }else   {
-        c->after->before = NULL;
+    Thread* head = *q; 
+    if(head) {
+        *q = head->after;
     }
-    c->before = NULL;
-    c->after  = NULL;
-    return c; 
+    head->before = NULL;
+    head->after  = NULL;
+    return head; 
 };
 
 /*
@@ -107,16 +99,17 @@ void _MyThreadRun() {
 void _MyThreadPush(Queue* q, Thread* e) { 
     tcs("_MyThreadPush(Thread** queue, Thread* ele)");
 
-    if( *q == NULL ) { //If only one of the queue;
+    Thread* cur = *q;
+    if( cur == NULL ) { //If only one of the queue;
         *q = e;     
-         e->before  = NULL;
-         e->after   = NULL;
+        e->before  = NULL;
+        e->after   = NULL;
        
     } else {           //If going as first in a populated queue; 
-        (*q)->after = e; 
-        e->before   = *q; 
-        e->after    = NULL;
-        *q          = e;     
+        while( cur->after != NULL ) cur = cur->after;
+        cur->after = e;
+        e->before = cur;
+        e->after = NULL;
     }
 
 };
@@ -155,9 +148,9 @@ int _MyThreadQueueLength( Queue* q ) {
 
     if( t == NULL ) return c; 
     c++;
-    while(t->before != 0) {
+    while(t->after != NULL ) {
        c++;
-       t = t->before;
+       t = t->after;
     }
     return c; 
 };
@@ -217,10 +210,10 @@ void _MyThreadReap(){
      Thread* c = q_reapable; 
      Thread* n = NULL;
      while(c != NULL){
-         n = c->before;
+         n = c->after;
          if( c->flags & THREAD_IS_COMPLETE){
              if( c->child_count <= c->dead_count){
-                 _MyThreadListRemove(&q_reapable, NULL, c);
+                 _MyThreadListRemove(&q_reapable, c);
                  _MyThreadFree(c); 
              }            
          }
@@ -250,8 +243,8 @@ void _MyThreadPrint( Thread* t ){
     info("Id     : %d", t->id);
     info("after Id: %d", (t->after)? t->after->id : -1);
     info("before Id: %d", (t->before)? t->before->id : -1);
-    info("ctx    : %s", (t->ctx)? "Yes" :"No");
-    info("ret_ctx: %s", (t->return_ctx)? "Yes" :"No");
+    //info("ctx    : %s", (t->ctx)? "Yes" :"No");
+    //info("ret_ctx: %s", (t->return_ctx)? "Yes" :"No");
 };
 void MyThreadExit(){
     NOOP();
@@ -262,41 +255,40 @@ void MyThreadInit(void(*f)(void *), void *args){
     MyThreadCreate(f, args);
     _MyThreadScheduler();
     info("Exiting");
-    info("READY   : %d", _MyThreadQueueLength(&q_ready));
-    info("REAP    : %d", _MyThreadQueueLength(&q_reapable));
-    info("RUNNING : %d", _MyThreadQueueLength(&q_running));
-    info("BLOCKED : %d", _MyThreadQueueLength(&q_blocked));
+    q_ready    = NULL;
+    q_reapable = NULL;
+    q_running  = NULL;
+    q_blocked  = NULL;
 
 };
 void _MyThreadUnblock(Thread* t){
     tcs("_MyThreadUnblock(Thread* t)");
-    _MyThreadListRemove(&q_blocked, &q_ready, t);
+     _MyThreadListRemove(&q_blocked, t);
+    _MyThreadPush(&q_ready, t);
 };
 
-void _MyThreadListRemove(Queue* from, Queue* to, Thread* t){
+void _MyThreadListRemove(Queue* from, Thread* t){
     tcs("_MyThreadListRemove(Queue* from, Queue* to, Thread* t)");
-    Thread* l = t->after; 
-    Thread* r = t->before;
+    Thread* aft = t->after; 
+    Thread* bef = t->before;
 
-    if( l == NULL && r == NULL ) { //Only one in list;
+    t->after  = NULL;
+    t->before = NULL;
+
+    if( aft == NULL && bef == NULL ) { //Only one in list;
         *from = NULL;
 
-    } else if( l == NULL ) { //first in the list; 
-        *from = r; 
-        r->after  = NULL;
+    } else if( aft == NULL ) { //end in the list; 
+        bef->after  = NULL;
 
-    } else if( r == NULL ) {//last in the list;
-        l->before = NULL;
+    } else if( bef == NULL ) {//first in the list;
+        aft->before = NULL;
+        *from = aft; 
 
     } else {  // middle; 
-        l->before = r; 
-        r->after  = l;
+       aft->before = bef; 
+       bef->after  = aft;
     }
-
-    t->before     = NULL;
-    t->after      = NULL;
-    if(to != NULL ) 
-        _MyThreadPush(to, t);
 };
 
 Thread* _MyThreadGetCurrent(){
