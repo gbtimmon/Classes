@@ -77,7 +77,6 @@ static Cmd mkCmd(Token inpipe)
 
   while ( CmdToken(LA) )	// skip over ; and &
     Next();
-
   if ( LA != Tword ) {		// a word begins every command
     if ( LA == Tend )
       return &End;
