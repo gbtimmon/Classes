@@ -98,7 +98,14 @@ static void prCmd(Cmd c)
     }
 }
 
-int builtins(Cmd c){
+/**
+ * execute will run builtins or the cmd as 
+ * appropriate. 
+ * this call WILL NOT exit, only return, since completed
+ * calls should exit only in the child. If a build in is not 
+ * called in a child it will not exit. 
+ */
+int execute(Cmd c){
     /*** BG ***
      * Not Implemented
      */
@@ -112,8 +119,11 @@ int builtins(Cmd c){
      * valid then no effect. 
      */ 
     } else if( STR_EQ( c->args[0] , B_CD ) ) {
-        
-        return EXIT_SUCCESS;
+        printf( "%s : %s\n", c->args[0], c->args[1]);
+        if(chdir(c->args[1]) == 0) 
+            return( EXIT_SUCCESS );
+        perror(" cd failed!\n");
+        return( EXIT_FAILURE );
 
     /*** ECHO ***
      * prints all args to stdout, no std in, replaces
@@ -150,7 +160,6 @@ int builtins(Cmd c){
      * prints the pwd of the system. 
      */
     } else if( STR_EQ( c->args[0] , B_PWD ) ) {
-        
         printf( "%s\n", getcwd(NULL, 0) );
         return EXIT_SUCCESS;
 
@@ -163,6 +172,8 @@ int builtins(Cmd c){
     } else if( STR_EQ( c->args[0] , B_WHERE ) ) {
         printf( "built in %s\n", B_WHERE );
         return EXIT_SUCCESS;
+    } else {
+        execvp(c->args[0], c->args); 
     }
     return EXIT_FAILURE;
 }
@@ -184,6 +195,41 @@ void dup_file(const char* fname, int flags, int dest_fd) {
         fprintf(stderr, "Failed to redirect %s to %d\n", fname, dest_fd);
         exit(EXIT_FAILURE);
     }
+}
+
+/*
+ * redirctFiles(Cmd c)
+ */
+
+void redirectFiles(Cmd c){
+    if( c->in == Tin ) 
+        dup_file( c->infile, 0, STDIN_FILENO ); 
+
+    if( c->out != Tnil ) { 
+        switch( c->out ) {
+            case Tout :    // >
+                dup_file(c->outfile, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO );
+                break;
+            case Tapp :   // >>
+                dup_file(c->outfile, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO ) ;
+                break;
+            case ToutErr: // >&
+                dup_file(c->outfile, O_WRONLY | O_CREAT , STDERR_FILENO );
+                break;
+            case TappErr: // >>&
+                dup_file(c->outfile, O_WRONLY | O_CREAT | O_APPEND, STDERR_FILENO ) ;
+                break;
+            case Tpipe:
+                fprintf(stderr, " | not yet implemented\n");
+                break;
+            case TpipeErr : 
+                fprintf(stderr, " |& not yet implemented\n");
+                break;
+            default : 
+                fprintf(stderr, "Shouldnt be here 4434\n");
+                exit(EXIT_FAILURE);
+        }
+    } 
 }
 
 static int runCmd(Cmd c) { 
@@ -217,41 +263,9 @@ static int runCmd(Cmd c) {
            
          
     } else if ( IS_CHILD( pid ) ) {
+        redirectFiles(c); 
+        exit( execute(c) );
 
-        int rc = builtins(c);   
-        if ( rc == EXIT_SUCCESS ) 
-           return EXIT_SUCCESS;
-        
-        if( c->in == Tin ) 
-            dup_file( c->infile, 0, STDIN_FILENO ); 
-
-        if( c->out != Tnil ) { 
-            switch( c->out ) {
-                case Tout :    // >
-                    dup_file(c->outfile, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO );
-                    break;
-                case Tapp :   // >>
-                    dup_file(c->outfile, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO ) ;
-                    break;
-                case ToutErr: // >&
-                    dup_file(c->outfile, O_WRONLY | O_CREAT , STDERR_FILENO );
-                    break;
-                case TappErr: // >>&
-                    dup_file(c->outfile, O_WRONLY | O_CREAT | O_APPEND, STDERR_FILENO ) ;
-                    break;
-                case Tpipe:
-                    fprintf(stderr, " | not yet implemented\n");
-                    break;
-                case TpipeErr : 
-                    fprintf(stderr, " |& not yet implemented\n");
-                    break;
-                default : 
-                    fprintf(stderr, "Shouldnt be here 4434\n");
-                    exit(EXIT_FAILURE);
-            }
-        } 
-        execvp( c->args[0], c->args );
-        exit(EXIT_FAILURE);
     } else {  
         perror("Failed to fork, Fatal error\n");
         exit(1); 
@@ -306,12 +320,12 @@ int mainLoop() {
         prompt();
         Pipe p = parse();
         while ( p != NULL ) {
-            prCmd(p->head);
             runCmd(p->head);
             p = p->next;
         }
         freePipe(p);
     }
+    prCmd(NULL);
 }
 
 int main(int argc, char *argv[])

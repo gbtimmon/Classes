@@ -1,0 +1,9 @@
+total 44
+15 -rwx------ 1 gbtimmon ncsu 14612 Feb 15 23:35 go
+ 2 drwx------ 2 gbtimmon ncsu  2048 Feb 18 14:52 inc
+ 2 drwx------ 2 gbtimmon ncsu  2048 Feb 11 08:52 lib
+ 1 -rw------- 1 gbtimmon ncsu   326 Feb 18 14:08 makefile
+ 2 drwx------ 2 gbtimmon ncsu  2048 Feb 15 23:27 obj
+ 2 drwx------ 2 gbtimmon ncsu  2048 Feb 21 22:37 src
+ 0 -rw------- 1 gbtimmon ncsu     0 Feb 21 22:37 test
+20 -rwx------ 1 gbtimmon ncsu 19774 Feb 21 22:37 ush
