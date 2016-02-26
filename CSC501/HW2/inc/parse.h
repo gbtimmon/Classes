@@ -19,7 +19,7 @@ typedef enum {Terror, Tword, Tamp, Tpipe, Tsemi, Tin, Tout,
  * linked list, one cmd_T for each cmd in a pipe 
  */
 struct cmd_t {
-  Token exec;			/* whether background or foreground */
+ Token exec;			/* whether background or foreground */
   Token in, out;		/* determines where input/output comes/goes*/
   char *infile, *outfile;	/* set if file redirection */
   int nargs, maxargs;		/* num args in args array below (and size) */

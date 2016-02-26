@@ -9,7 +9,7 @@
  *****************************************************************************/
 
 #define _GNU_SOURCE
-
+#include <builtins.h>
 #include <error.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -24,6 +24,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#define OK                     0
+#define NOT_OK                 -1
+
 #define DEFAULT_MODE 	       S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH 
 #define DEFAULT_BUFFER_SIZE    2048
 #define DEFAULT_CONFIG_FILE    "/.ushrc"
@@ -32,179 +35,111 @@
 #define IS_PARENT(x)           ( x > 0 )
 #define IS_CHILD(x)            ( x == 0 )
 
-#define C_SUCCESS              1
-#define C_PARSE_FAILURE        2
-#define C_CHILD_FAILURE        3
-#define C_END                  4
+#define PIPE_READ(x)           ( x[0] )
+#define PIPE_WRITE(x)          ( x[1] )
 
-#define STR_EQ(x,y)            !strcmp(x,y)
-#define B_BG                   "bg"
-#define B_CD                   "cd"
-#define B_ECHO                 "echo"
-#define B_FG                   "fg"
-#define B_JOBS                 "jobs"
-#define B_KILL                 "kill"
-#define B_LOGOUT               "logout"
-#define B_NICE                 "nice"
-#define B_PWD                  "pwd"
-#define B_SETENV               "setenv"
-#define B_UNSETENV             "unsetenv"
-#define B_WHERE                "where"
-
-
-static void prCmd(Cmd c)
-{
-  int i;
-
-  if ( c ) {
-    printf("%s%s ", c->exec == Tamp ? "BG " : "", c->args[0]);
-    if ( c->in == Tin )
-      printf("<(%s) ", c->infile);
-    if ( c->out != Tnil )
-      switch ( c->out ) {
-      case Tout:
-	printf(">(%s) ", c->outfile);
-	break;
-      case Tapp:
-	printf(">>(%s) ", c->outfile);
-	break;
-      case ToutErr:
-	printf(">&(%s) ", c->outfile);
-	break;
-      case TappErr:
-	printf(">>&(%s) ", c->outfile);
-	break;
-      case Tpipe:
-	printf("| ");
-	break;
-      case TpipeErr:
-	printf("|& ");
-	break;
-      default:
-	fprintf(stderr, "Shouldn't get here\n");
-	exit(-1);
-      }
-
-      printf("[");
-      for ( i = 1; c->args[i] != NULL; i++ )
-	printf("%d:%s,", i, c->args[i]);
-      printf("\b]");
-    }
-    putchar('\n');
-    // this driver understands one command
-    if ( !strcmp (c->args[0], "end") ){
-        printf("END! \n");
-        exit(0);
-    }
-}
-
-/**
- * execute will run builtins or the cmd as 
- * appropriate. 
- * this call WILL NOT exit, only return, since completed
- * calls should exit only in the child. If a build in is not 
- * called in a child it will not exit. 
- */
-int execute(Cmd c){
-    /*** BG ***
-     * Not Implemented
-     */
-    if( STR_EQ( c->args[0] , B_BG ) ) {
-        printf("built-in BG not implemented\n");
-        return EXIT_SUCCESS;
-
-    /*** CD ***
-     *  changes the cwd of the process
-     * to the path specified. If path is not
-     * valid then no effect. 
-     */ 
-    } else if( STR_EQ( c->args[0] , B_CD ) ) {
-        printf( "%s : %s\n", c->args[0], c->args[1]);
-        if(chdir(c->args[1]) == 0) 
-            return( EXIT_SUCCESS );
-        perror(" cd failed!\n");
-        return( EXIT_FAILURE );
-
-    /*** ECHO ***
-     * prints all args to stdout, no std in, replaces
-     * linux echo def. 
-     */
-    } else if( STR_EQ( c->args[0] , B_ECHO ) ) {
-        for(int i = 1; c->args[i] != NULL; i++) 
-            printf("%s ", c->args[i]);
-        printf("\b\n");
-        return EXIT_SUCCESS;
-
-    /*** FG ***
-     * not implemented
-     */
-    } else if( STR_EQ( c->args[0] , B_FG ) ) {
-        printf( "built in %s\n", B_FG );
-        return EXIT_SUCCESS;
-
-    
-    } else if( STR_EQ( c->args[0] , B_JOBS ) ) {
-        printf( "built in %s\n", B_JOBS );
-        return EXIT_SUCCESS;
-    } else if( STR_EQ( c->args[0] , B_KILL ) ) {
-        printf( "built in %s\n", B_KILL );
-        return EXIT_SUCCESS;
-    } else if( STR_EQ( c->args[0] , B_LOGOUT ) ) {
-        printf( "built in %s\n", B_LOGOUT );
-        return EXIT_SUCCESS;
-    } else if( STR_EQ( c->args[0] , B_NICE ) ) {
-        printf( "built in %s\n", B_NICE );
-        return EXIT_SUCCESS;
-
-    /*** PWD ***
-     * prints the pwd of the system. 
-     */
-    } else if( STR_EQ( c->args[0] , B_PWD ) ) {
-        printf( "%s\n", getcwd(NULL, 0) );
-        return EXIT_SUCCESS;
-
-    } else if( STR_EQ( c->args[0] , B_SETENV ) ) {
-        printf( "built in %s\n", B_SETENV );
-        return EXIT_SUCCESS;
-    } else if( STR_EQ( c->args[0] , B_UNSETENV ) ) {
-        printf( "built in %s\n", B_UNSETENV );
-        return EXIT_SUCCESS;
-    } else if( STR_EQ( c->args[0] , B_WHERE ) ) {
-        printf( "built in %s\n", B_WHERE );
-        return EXIT_SUCCESS;
-    } else {
-        execvp(c->args[0], c->args); 
-    }
-    return EXIT_FAILURE;
-}
 
 /*
  * dup_file 
  *
  * Procedure to redirect an existing OS file to a std file 
- * channel. Only ok to be run in a child process. Will kill
- * child on failure. 
+ * channel. 
  */
-void dup_file(const char* fname, int flags, int dest_fd) {
-    int fd = open(fname, flags, DEFAULT_MODE);
-    if( fd < 0 ){
-        fprintf(stderr, "[ush] Failed to open file %s, errno %d\n [%s]\n", fname, fd, strerror(errno));
-        exit(EXIT_FAILURE);
+
+static int runCmd(int, int*, Cmd);
+
+int dup_file(const char* fname, int flags, int dest_fd, int* orig_fd_pt ) {
+
+    int orig_fd, new_fd; 
+
+    if( orig_fd_pt != NULL) { 
+        if( (orig_fd = dup(dest_fd) ) < 0 ) { 
+            fprintf(stderr, "ush: Failed to dup file %d, errno %d\n [%s]\n", dest_fd, errno, strerror(errno));
+            return NOT_OK; 
+        }
     }
-    if ( dup2(fd, dest_fd) < 0 ) { 
-        fprintf(stderr, "Failed to redirect %s to %d\n", fname, dest_fd);
-        exit(EXIT_FAILURE);
+    
+    if( ( new_fd = open(fname, flags, DEFAULT_MODE) ) < 0 ){
+        fprintf(stderr, "ush: Failed to open file %s, errno %d\n [%s]\n", fname, errno, strerror(errno));
+        return NOT_OK; 
     }
+
+    if ( dup2(new_fd, dest_fd) < 0 ) { 
+        fprintf(stderr, "ush: Failed to redirect %s to %d\n", fname, dest_fd);
+        return NOT_OK; 
+    }
+    
+    if ( orig_fd_pt != NULL) *orig_fd_pt = orig_fd; 
+    return OK; 
 }
 
 /*
- * redirctFiles(Cmd c)
+ * Dud wrapper without a file open.
+ * Used for pipes. 
  */
+int dup_pipe( int src_fd, int dest_fd, int* orig_fd_pt) { 
+    int orig_fd; 
+    
+    perror("A"); 
+    if( orig_fd_pt != NULL ) {
+    perror("B"); 
+        if( (orig_fd = dup(dest_fd) ) < 0 ) {
+    perror("C"); 
+            fprintf(stderr, "ush: Failed to dup file %d, errno %d\n [%s]\n", dest_fd, errno, strerror(errno));
+    perror("D"); 
+            return NOT_OK;
+        }
+    }
 
-void redirectFiles(Cmd c){
-    if( c->in == Tin ) 
-        dup_file( c->infile, 0, STDIN_FILENO ); 
+    if ( dup2(src_fd, dest_fd) < 0 ) {
+    perror("E"); 
+        fprintf(stderr, "ush: Failed to redirect %d to %d, errno %d\n [%s]\n", src_fd, dest_fd, errno, strerror(errno));
+    perror("F"); 
+        return NOT_OK;
+    perror("G"); 
+    }
 
+    if( orig_fd_pt != NULL ) *orig_fd_pt = orig_fd;
+    perror("H"); 
+
+    return OK;
+
+}
+
+int directStdIn(int * p, Cmd c, int* orig_fd_pt){
+    if( c->in == Tin) {
+        if( dup_file( c->infile, O_RDONLY, STDIN_FILENO, orig_fd_pt) != OK ) { 
+            return NOT_OK;   
+        } 
+        return OK; 
+    } else if (p != NULL ) { 
+        if ( dup_pipe( PIPE_READ(p), STDIN_FILENO, orig_fd_pt ) != OK ) { 
+            return NOT_OK; 
+        }
+        return OK; 
+    } else {
+        if(orig_fd_pt) *orig_fd_pt = -1;
+        return OK; 
+    }
+}
+
+int directOut(int* p, Cmd c){
+    if( c->out == Tnil)
+        return OK; 
+    switch( c->out ) {
+
+        case Tpipe :
+            fprintf(stderr, "aAAAA\n"); fflush(NULL);
+            return dup_pipe( PIPE_WRITE(p), STDOUT_FILENO, NULL );
+            break;
+        default :
+            fprintf(stderr, "Unimplemented token\n"); 
+    }
+
+
+    return OK;
+}
+    /*
     if( c->out != Tnil ) { 
         switch( c->out ) {
             case Tout :    // >
@@ -219,58 +154,102 @@ void redirectFiles(Cmd c){
             case TappErr: // >>&
                 dup_file(c->outfile, O_WRONLY | O_CREAT | O_APPEND, STDERR_FILENO ) ;
                 break;
-            case Tpipe:
-                fprintf(stderr, " | not yet implemented\n");
-                break;
-            case TpipeErr : 
-                fprintf(stderr, " |& not yet implemented\n");
-                break;
             default : 
                 fprintf(stderr, "Shouldnt be here 4434\n");
-                exit(EXIT_FAILURE);
+                exit(NOT_OK);
         }
     } 
+}**/
+
+static int runLocal(int * p, Cmd c, Builtin b){
+  
+    int fd_to_return; //This will be the original std_in fd. 
+                      // will need to return to this to not break
+                      // the shell after a builtin. 
+    if ( directStdIn(p, c, &fd_to_return) != OK ) { 
+        return NOT_OK; 
+    }
+
+    if( b(c) != OK ) {
+        return NOT_OK; 
+    }
+
+    if( fd_to_return >= 0 ) {
+        if( dup2( fd_to_return, STDIN_FILENO ) < 0 ) {
+            fprintf(stderr, "Failed to reclaim stdin, Fatal Error\n"); 
+            exit(NOT_OK); 
+        }
+    }
+
+    return OK;
 }
 
-static int runCmd(Cmd c) { 
+static int buildPipe(int* p, Cmd c){
+    if( c->out != Tpipe && c->out != TpipeErr ) 
+        return OK; 
 
-    if( ! c ) 
-        return C_PARSE_FAILURE; 
-    if( !strcmp( c->args[0], "end") )    
-        return C_END; 
+    if( pipe(p) < 0 ) {
+        fprintf(stderr, "ush: failed to create a pipe, errno %d\n[%s]\n", errno, strerror(errno));
+        return NOT_OK; 
+    }
+    return OK; 
+}
+
+static int runFork(int chain, int * p, Cmd c, Builtin b){
     
+    int new_pipe[2]; 
+    buildPipe(new_pipe, c); 
+
     pid_t pid = fork();
 
-    if( IS_PARENT( pid ) ) { 
-
-        int rc;
-        if(c->next != NULL ) { 
-
-           rc = runCmd(c->next);
-           if( rc != C_SUCCESS ) { 
-               kill(pid, SIGTERM);
-               return rc;
-           }
-        } 
-
-        int status; 
-        waitpid(pid, &status, 0);
-
-        return ( WEXITSTATUS(status) == EXIT_SUCCESS ) 
-            ? C_SUCCESS 
-            : C_CHILD_FAILURE ;
-           
-           
-         
-    } else if ( IS_CHILD( pid ) ) {
-        redirectFiles(c); 
-        exit( execute(c) );
-
-    } else {  
-        perror("Failed to fork, Fatal error\n");
-        exit(1); 
+    if ( IS_PARENT(pid) ) { 
+         if(c->next != NULL){
+             if( runCmd(chain+1, new_pipe, c->next) != OK ){
+                 fprintf(stderr, "ush: command failed \n"); 
+                 kill(pid, SIGTERM); 
+                 return NOT_OK; 
+             }
+         }
+   
+         int status; 
+         wait(&status); 
+         if( WEXITSTATUS(status) != 0 ) { 
+             fprintf(stderr, "ush: command failed\n");
+             return NOT_OK; 
+         } else {
+             return OK; 
+         }
+    } 
+    if ( IS_CHILD(pid) ) { 
+        directStdIn(p, c, NULL);
+        directOut(p, c);
+        execvp(c->args[0], c->args); 
+        return OK; 
     }
-} 
+    return OK;
+}
+
+static int runCmd(int chain, int * p , Cmd c) { 
+
+    if( ! c ) 
+        return NOT_OK; 
+    if( !strcmp( c->args[0], "end") )    
+        return NOT_OK; 
+
+    int isLast = (c->next == NULL); 
+    Builtin b = (getBuiltin(c->args[0])); 
+    
+    if(p != NULL && c->in == Tin) { //if not first but has inredirect.
+        fprintf(stderr, " %s: Improper input redirection", c->args[0]);
+        return NOT_OK;
+    }
+
+    if(isLast && b != NULL ) { // we arent gonna fork 
+         return runLocal(p, c, b); 
+    } else {                   // lets run in a child process. 
+         return runFork(chain, p, c, b); 
+    }
+}
 
 const char* getHome() { 
     return (getenv("HOME") == NULL)
@@ -290,22 +269,16 @@ int init() {
     strcpy(file_path, getHome());
     strcat(file_path, DEFAULT_CONFIG_FILE);
     
-    int fd = open(file_path, O_RDONLY );
-
-    if( fd < 0 ) { 
-        fprintf(stderr, "Failed to open %s, conitnuing with ush\n", DEFAULT_CONFIG_FILE);
-        return EXIT_FAILURE; 
-    }
-    
-    int old_stdin = dup(STDIN_FILENO);
-    dup_file( file_path, O_RDONLY, STDIN_FILENO ); 
+    int old_stdin;
+    dup_file( file_path, O_RDONLY, STDIN_FILENO, &old_stdin ); 
     while( 1 ){
         Pipe p = parse();
         while( p != NULL ){
-            int rc = runCmd(p->head);
-            if( rc != EXIT_SUCCESS ) {
+            int rc = runCmd(0, NULL, p->head);
+            if( rc != OK ) {
+                
                 dup2( old_stdin, STDIN_FILENO);
-                return EXIT_SUCCESS;
+                return OK;
             } 
             p = p->next; 
          }
@@ -320,17 +293,17 @@ int mainLoop() {
         prompt();
         Pipe p = parse();
         while ( p != NULL ) {
-            runCmd(p->head);
+            runCmd(0, NULL, p->head);
             p = p->next;
         }
         freePipe(p);
     }
-    prCmd(NULL);
 }
 
 int main(int argc, char *argv[])
 {
     printf("DEBUG> %s\n", getHome());
+    printf("EFAIL> %d\n", NOT_OK); 
     int rc; 
     rc = init();
     //if (rc == ERR) 
