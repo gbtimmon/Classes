@@ -23,6 +23,7 @@ struct job_t {
      int          prc_cnt; 
      struct job_t *next; 
      struct job_t *last; 
+     int          end;
 }; 
 
 typedef struct prc_t *Proc;

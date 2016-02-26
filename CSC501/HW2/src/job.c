@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -114,7 +115,11 @@ Job Job_build(Pipe p ){
         
         //Set the builtin;//
         p->builtin = getBuiltin(c); 
-
+        
+        //Look for end
+        //if( !strcmp( p->cmd->args[0], "end" ) ){
+         //   j->end = YES;
+        //} 
         //Wrap up;//
         p->cmd = c;
         Job_add(j, p);
@@ -150,6 +155,7 @@ void Job_run(Job j) {
 
         }  else if ( IS_CHILD(pid) ) {
             if( p->in_fd >= 0 ) { 
+                close(STDIN_FILENO);
                 dup2( p->in_fd, STDIN_FILENO); 
             }
             
@@ -160,6 +166,7 @@ void Job_run(Job j) {
                     ? STDERR_FILENO
                     : STDOUT_FILENO;
 
+                close(fd);
                 dup2( p->out_fd, fd); 
             }
 
@@ -197,7 +204,6 @@ void Job_join(Job j){
 
     while( j->prc_cnt ) { 
         pid_t pid = waitpid(0, &stat, 0);
-        printf("Pid %d return\n", (int) pid);
         Job_close_proc(j, pid);
         j->prc_cnt--;
     }

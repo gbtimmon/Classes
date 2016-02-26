@@ -1,11 +1,16 @@
 #ifndef BUILTINS_C
 #define BUILTINS_C
 
+#define _GNU_SOURCE
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <builtins.h>
+#include <unistd.h>
+
+#define OK     0
+#define NOT_OK 1
 
 #define STR_EQ(x,y)            !strcmp(x,y)
 #define B_BG                   "bg"
@@ -22,66 +27,72 @@
 #define B_WHERE                "where"
 
 int f_BG (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "BG: not yet implemented");
+    return OK;
 }
 
 int f_CD (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    const char * cd = c->args[1];
+    if( chdir(cd) ) return NOT_OK;
+    return OK;
 }
 
 int f_ECHO (Cmd c){
     for ( int i = 1; c->args[i] != NULL; i++ )
         printf("%s ", c->args[i]);
     printf("\n"); 
-    return EXIT_SUCCESS;
+    return OK;
 }
 
 int f_FG (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_JOBS (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_KILL (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_LOGOUT (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_NICE (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 
 int f_PWD (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    char * pwd = getenv("PWD");
+    if( !pwd ) {
+        dprintf(STDERR_FILENO, "Pwd: Something terrible has happened!\n");
+        return NOT_OK;
+    }  
+    dprintf(STDOUT_FILENO, "%s", pwd);
+    return OK;
 }
 
 int f_SETENV (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_UNSETENV (Cmd c){
-    fprintf(stderr, "Implementation missing\n"); 
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 int f_WHERE (Cmd c){
-    fprintf(stderr, "Implementation missing\n");
-    return EXIT_SUCCESS;
+    dprintf(STDERR_FILENO, "FG: not yet implemented");
+    return OK;
 }
 
 Builtin getBuiltin(Cmd c){
