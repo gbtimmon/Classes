@@ -1,0 +1,14 @@
+grep: invalid argument 'asd' for '--directories'
+Valid arguments are:
+  - 'read'
+  - 'recurse'
+  - 'skip'
+Usage: grep [OPTION]... PATTERN [FILE]...
+Try 'grep --help' for more information.
+grep: invalid argument 'fasdf' for '--directories'
+Valid arguments are:
+  - 'read'
+  - 'recurse'
+  - 'skip'
+Usage: grep [OPTION]... PATTERN [FILE]...
+Try 'grep --help' for more information.

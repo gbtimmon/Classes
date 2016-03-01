@@ -12,9 +12,6 @@
 #define OK     0
 #define NOT_OK 1
 
-#define YES    1
-#define NO     0
-
 #define STR_EQ(x,y)            !strcmp(x,y)
 #define B_BG                   "bg"
 #define B_CD                   "cd"
@@ -114,40 +111,23 @@ int f_UNSETENV (Cmd c){
 int f_WHERE (Cmd c){
     if ( isBuiltin(c->args[1]) ) 
         dprintf(STDOUT_FD, "%s is a builtin\n", c->args[1]);
-       
-    char buf[1024];
-    char* src = strdup( getenv( "PATH") );
-    char delims[] = ":";
-    char* ptr = strsep( &src, delims);
-
-    while( ptr ) {
-        strcpy(buf,ptr);
-        strcat(buf,"/");
-        strcat(buf,c->args[1]);
-        if( access(buf, X_OK ) != -1)
-            printf("%s\n", buf);
-        ptr = strsep( &src, ":" );
-         
-    }
-    free(src);
     return OK;
-} 
+}
 
 int isBuiltin(const char * arg){
-    if (STR_EQ(arg,B_BG) )            { return YES;}
-    else if (STR_EQ(arg,B_CD) )       { return YES;}
-    else if (STR_EQ(arg,B_ECHO) )     { return YES;}
-    else if (STR_EQ(arg,B_FG) )       { return YES;}
-    else if (STR_EQ(arg,B_JOBS) )     { return YES;}
-    else if (STR_EQ(arg,B_KILL) )     { return YES;}
-    else if (STR_EQ(arg,B_LOGOUT) )   { return YES;}
-    else if (STR_EQ(arg,B_NICE) )     { return YES;}
-    else if (STR_EQ(arg,B_PWD) )      { return YES;}
-    else if (STR_EQ(arg,B_SETENV) )   { return YES;}
-    else if (STR_EQ(arg,B_UNSETENV) ) { return YES;}
-    else if (STR_EQ(arg,B_WHERE) )    { return YES;}
-    else                              { return NO;}
-}
+    if (STR_EQ(arg,B_BG) )            { return OK;}
+    else if (STR_EQ(arg,B_CD) )       { return OK;}
+    else if (STR_EQ(arg,B_ECHO) )     { return OK;}
+    else if (STR_EQ(arg,B_FG) )       { return OK;}
+    else if (STR_EQ(arg,B_JOBS) )     { return OK;}
+    else if (STR_EQ(arg,B_KILL) )     { return OK;}
+    else if (STR_EQ(arg,B_LOGOUT) )   { return OK;}
+    else if (STR_EQ(arg,B_NICE) )     { return OK;}
+    else if (STR_EQ(arg,B_PWD) )      { return OK;}
+    else if (STR_EQ(arg,B_SETENV) )   { return OK;}
+    else if (STR_EQ(arg,B_UNSETENV) ) { return OK;}
+    else if (STR_EQ(arg,B_WHERE) )    { return OK;}
+    else                              { return NOT_OK;}
 Builtin getBuiltin(Cmd c){
 
     const char* arg = c->args[0]; 

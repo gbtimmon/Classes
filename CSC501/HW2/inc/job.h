@@ -12,7 +12,9 @@ struct prc_t
     struct prc_t* next; 
     int in_fd; 
     int out_fd; 
+    int out_inc_err;
     int exited;
+    int created;
     Builtin builtin;
     pid_t id; 
 }; 
@@ -28,11 +30,10 @@ struct job_t {
 
 typedef struct prc_t *Proc;
 typedef struct job_t *Job; 
-typedef const char* CString;
 
 Job Job_build(Pipe); 
 void Job_free(Job);
-void Job_print(Job, CString); 
 void Job_run(Job);
 void Job_join(Job);
+void Job_kill(Job);
 #endif

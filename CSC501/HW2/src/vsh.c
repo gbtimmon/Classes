@@ -25,6 +25,7 @@
 
 #define PROMPT()     printf("%s%%", hostname)
 #define RC_FILE      "/.ushrc"
+#define DEFAULT_MODE S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 
 #define IS_PARENT(x) ( x >  0 )
 #define IS_CHILD(x)  ( x == 0 )
@@ -33,17 +34,22 @@
 #define PIPE_RD(x)   x[0]
 #define PIPE_WT(x)   x[1]
 
-#define IS_END(x)    !strcmp(j->head->cmd->args[0], "end")
+#define IS_END(x)    !strcmp(x->head->args[0], "end")
 #define CHUNK_SIZE   32 
 #define BUFFER_SIZE  256
 #define LOG(x)       dprintf( STDERR_FD, "[LOG] :  %s\n", x);
 
-static int STDIN_FD; 
-static int STDOUT_FD; 
-static int STDERR_FD; 
+int STDIN_FD; 
+int STDOUT_FD; 
+int STDERR_FD; 
 
-static char hostname[BUFFER_SIZE]        = "" ; 
-static char rc_path[BUFFER_SIZE]         = "";
+static char hostname[BUFFER_SIZE] = "" ; 
+static char rc_path[BUFFER_SIZE]  = "";
+
+
+void sig_handler( int signo ) {
+    dprintf( STDOUT_FD, "\n%s%%", hostname);
+}
 
 const char* getHome() {
     return (getenv("HOME") == NULL)
@@ -59,12 +65,25 @@ char* getRCPath() {
     return rc_path;
 }
 
-int batch() {
-        Job j = Job_build(parse());
+int doPipe(Pipe p){
+    Pipe q = p;
+    while(q){
+        Job j = Job_build(q);
         Job_run(j);
         Job_join(j);
         Job_free(j);
-        return OK;
+        q = q->next;
+    }
+    return OK;
+}
+
+int batch() {
+    Pipe p = parse();
+    while( p ) { 
+        doPipe(p);
+        p = parse();
+    }
+    return OK;
 }
 
 int main(int argc, char** args, char** env){
@@ -73,31 +92,26 @@ int main(int argc, char** args, char** env){
     STDOUT_FD = dup( STDOUT_FILENO ); 
     STDERR_FD = dup( STDERR_FILENO ); 
     
-       
+    signal( SIGINT, sig_handler);
+    signal( SIGQUIT, sig_handler);    
+
     gethostname(hostname, BUFFER_SIZE);
 
-    int rc_fd = open( getRCPath(), O_RDONLY ); 
+    int rc_fd = open( getRCPath(), O_RDONLY); 
 
     if( rc_fd < 0 ) {
         dprintf( STDERR_FD, "Failed to open config %s. Errno %d [%s]\n",  getRCPath(), errno, strerror(errno));
     }else {
         close(STDIN_FILENO);
         dup2( rc_fd, STDIN_FILENO); 
-
         batch();
-
         close(STDIN_FILENO);
         dup2( dup(STDIN_FD), STDIN_FILENO);
     }
-   
-    
 
     while( PROMPT() ) { 
         fflush( NULL );
-        batch();
+        doPipe(parse());
     }      
 }
-
-
-
 #endif
