@@ -15,17 +15,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-
-Socket Socket_open(char* hostin, int port) { 
+int SocketListener_new(int port) { 
    
-    int s, rc; 
     char hostname[256];
-
-    if(hostin == NULL ) {
-        gethostname(hostname, sizeof hostname);
-    } else {
-        strcpy(hostname, hostin);
-    }
+    gethostname(hostname, sizeof hostname);
  
     struct hostent *hp = gethostbyname(hostname);
     if( hp == NULL ) {
@@ -33,7 +26,7 @@ Socket Socket_open(char* hostin, int port) {
         return -1; 
     }
 
-    s = socket( AF_INET, SOCK_STREAM, 0);   
+    int s = socket( AF_INET, SOCK_STREAM, 0);   
     if( s < 0 ) {
         perror("socket:");
         return -1; 
@@ -44,7 +37,7 @@ Socket Socket_open(char* hostin, int port) {
     sin.sin_port = htons(port);
     memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
-    rc = bind(s, &sin, sizeof(sin));
+    int rc = bind(s, &sin, sizeof( struct sockaddr_in ));
     if( rc < 0 ) {
         perror("bind:");
         return -1; 
@@ -55,7 +48,6 @@ Socket Socket_open(char* hostin, int port) {
         perror("listen:");
         return -1; 
     }
-
     return s; 
 }
 
