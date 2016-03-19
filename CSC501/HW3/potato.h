@@ -13,7 +13,7 @@ typedef int Stream;
 typedef char* String; 
 
 Potato Potato_cook(int);
-Potato Potato_give(Potato, int, Stream);
+String Potato_give(Potato, int, Stream);
 Potato Potato_take(String); 
 Potato Potato_print(Potato, Stream); 
 void   Potato_free(Potato); 

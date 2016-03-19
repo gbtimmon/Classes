@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
           printf("MSG > %s\n", buf);
 
           Potato p = Potato_take(buf); 
-          Potato_print(p);
+          Potato_print(p, STDOUT_FILENO);
           Potato_free(p); 
       }
       close(p);

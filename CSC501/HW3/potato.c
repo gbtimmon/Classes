@@ -33,16 +33,17 @@ Potato Potato_cook(int count) {
 
 Potato Potato_print(Potato p, Stream s ){
 
-    dprintf(s, "potato\n");
+    dprintf(s, "<potato>");
     dprintf(s, "%d",  p->initial_count);
     dprintf(s, ",%d", p->current_count);
     dprintf(s, ",%d", p->signature_count);
     for(int i = 0; i < p->signature_count; i++ ) 
         dprintf(s, ",%d", p->signature[i]);
+    dprintf(s, "</potato>\n"); 
     return p; 
 }
 
-String Potato_give( Potato p, int id ) {
+String Potato_give( Potato p, int id , Stream s) {
     return "asdf";
 }
 
@@ -69,9 +70,8 @@ String Stream_readline(Stream stream){
     return s;
 }
 
-Potato Potato_take(Stream stream){
+Potato Potato_take(String s){
     const char* delim = ",";
-    String s = Stream_readline(stream); 
 
     Potato p = malloc(sizeof(struct potato_t)); 
 

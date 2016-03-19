@@ -48,34 +48,8 @@ int main (int argc, char *argv[])
     exit(1);
   }
   
-  /* fill in hostent struct */
-  hp = gethostbyname(argv[1]); 
-  if ( hp == NULL ) {
-    fprintf(stderr, "%s: host not found (%s)\n", argv[0], host);
-    exit(1);
-  }
-  port = atoi(argv[2]);
-
-  /* create and connect to a socket */
-
-  /* use address family INET and STREAMing sockets (TCP) */
-  s = socket(AF_INET, SOCK_STREAM, 0);
-  if ( s < 0 ) {
-    perror("socket:");
-    exit(s);
-  }
-
-  /* set up the address and port */
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons(port);
-  memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
-  
-  /* connect to socket at above addr and port */
-  rc = connect(s, (struct sockaddr *)&sin, sizeof(sin));
-  if ( rc < 0 ) {
-    perror("connect:");
-    exit(rc);
-  }
+  int s = SocketWriter_new( argv[1], atoi(argv[2]) ); 
+  if( s < 0 ) exit(EXIT_FAILURE); 
 
   /* read a string from the terminal and send on socket */
   while ( fgets(str, LEN, stdin) != NULL ) {
