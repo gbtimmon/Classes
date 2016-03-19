@@ -22,6 +22,7 @@
 #define _GNU_SOURCE
 
 #include "socket.h"
+#include "potato.h"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -33,9 +34,16 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+
 int _perror(const char * x, int y){
     perror(x); 
     exit(y); 
+}
+int readMsg( int p, char* buf, unsigned int sz, int flags){
+    int len =  recv(p, buf, 32, 0);
+    if ( len < 0 ) _perror("recv", 1);
+    buf[len] = '\0';
+    return len; 
 }
 
 int main (int argc, char *argv[])
@@ -50,7 +58,7 @@ int main (int argc, char *argv[])
 
   char buf[512];
   char host[64];
-  while (1) {
+  while (1) { //foreach connection. 
     struct sockaddr_in incoming; 
     int len = sizeof(struct sockaddr);
     int p = accept(s, (struct sockaddr *)&incoming, &len);
@@ -61,10 +69,10 @@ int main (int argc, char *argv[])
  
     /* read and print strings sent over the connection */
     while ( 1 ) {
-      len = recv(p, buf, 32, 0);
-      if ( len < 0 ) _perror("recv", 1); 
-      buf[len] = '\0';
+      if( !readMsg(p, buf, 32, 0))
+          break;
       printf("MSG > %s\n", buf);
+      Potato p = Potato_take(buf); 
       if ( !strcmp("close", buf) )
 	break;
     }
