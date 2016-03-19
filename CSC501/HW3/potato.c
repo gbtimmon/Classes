@@ -31,17 +31,19 @@ Potato Potato_cook(int count) {
      return p; 
 }
 
-Potato Potato_give(Potato p, int id, int stream){
-    dprintf(stream, "potato\n");
-    dprintf(stream, "%d",  p->initial_count);
-    dprintf(stream, ",%d", p->current_count);
-    dprintf(stream, ",%d", p->signature_count + 1);
+Potato Potato_print(Potato p, Stream s ){
 
+    dprintf(s, "potato\n");
+    dprintf(s, "%d",  p->initial_count);
+    dprintf(s, ",%d", p->current_count);
+    dprintf(s, ",%d", p->signature_count);
     for(int i = 0; i < p->signature_count; i++ ) 
-        dprintf(stream, ",%d", p->signature[i]);
-
-    dprintf(stream, ",%d\n", id );
+        dprintf(s, ",%d", p->signature[i]);
     return p; 
+}
+
+String Potato_give( Potato p, int id ) {
+    return "asdf";
 }
 
 String Stream_readline(Stream stream){
