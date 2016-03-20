@@ -5,6 +5,7 @@
 
 #include "socket.h"
 
+#include <time.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -51,6 +52,7 @@ int SocketListener_new(int port) {
     return s; 
 }
 
+#define TIMEOUT 30
 int SocketWriter_new(const char * host, int port){
 
     struct hostent *hp = gethostbyname(host);
@@ -65,20 +67,32 @@ int SocketWriter_new(const char * host, int port){
         return -1;  
     }
 
-    /* set up the address and port */
     struct sockaddr_in sin; 
     sin.sin_family = AF_INET;
     sin.sin_port = htons(port);
     memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
-    /* connect to socket at above addr and port */
-    int rc = connect(s, (struct sockaddr *)&sin, sizeof(struct sockaddr));
-    if ( rc < 0 ) {
-        perror("connect:");
-        return -1;
+    int rc = -1; 
+    int secs = 0;
+
+    while ( 1 ) { 
+
+        int rc = connect(s, (struct sockaddr *)&sin, sizeof(struct sockaddr));
+
+        if( rc >= 0) 
+           break;
+
+        if( ++secs > TIMEOUT ) {
+            fprintf(stderr, "connection timed out, could not connect to server\n"); 
+            exit(1); 
+        }
+       
+        printf("%d\n", secs);
+         
+        sleep(1); 
     }
 
-
+    return s; 
 
 }
 #endif

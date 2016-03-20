@@ -12,8 +12,8 @@ typedef struct potato_t {
 typedef int Stream; 
 typedef char* String; 
 
-Potato Potato_cook(int);
-String Potato_give(Potato, int, Stream);
+Potato Potato_new(int);
+void   Potato_give(Potato,int id, Stream s);
 Potato Potato_take(String); 
 Potato Potato_print(Potato, Stream); 
 void   Potato_free(Potato); 

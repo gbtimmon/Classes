@@ -3,13 +3,7 @@
 #define POTATO_C
 
 #define _GNU_SOURCE
-#define OK     0
-#define NOT_OK 1
 #define BUFFER 512
-
-#define STRING_EQ(x,y)  !strcmp(x,y)
-#define STRING_NEQ(x,y) strcmp(x,y) 
-
 
 #include "potato.h"
 
@@ -18,9 +12,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 
-Potato Potato_cook(int count) {
+
+Potato Potato_new(int count) {
 
      Potato p = malloc(sizeof(struct potato_t));
 
@@ -43,8 +40,34 @@ Potato Potato_print(Potato p, Stream s ){
     return p; 
 }
 
-String Potato_give( Potato p, int id , Stream s) {
-    return "asdf";
+void Potato_give( Potato p, int id, Stream sock ) {
+
+    char s[1024]; 
+    char t[64]; 
+
+    s[0] = '\0';
+    
+    sprintf( t, "%d,%d,%d", 
+             p->initial_count,
+             p->current_count,
+             p->signature_count + 1);
+    
+    strcat(s,t); 
+
+    for( int i = 0; i < p->signature_count; i++ ) {
+         sprintf( t, ",%d", p->signature[i]); 
+         strcat(s,t); 
+    }
+
+
+    sprintf( t, ",%d", id );
+    strcat(s,t); 
+
+    int  len = send(sock, s, strlen(s), 0);
+    if ( len != strlen(s) ) {
+        perror("send");
+        exit(1);
+    }
 }
 
 String Stream_readline(Stream stream){
