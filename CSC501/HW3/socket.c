@@ -4,6 +4,7 @@
 #define _GNU_SOURCE
 #define BUFFER_SIZE 512
 
+#include "connection.h"
 #include "socket.h"
 
 #include <time.h>
@@ -17,9 +18,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int SocketListener_new(int port) { 
+int SocketListener_new( Connection c ) { 
    
-    char hostname[256];
+    char hostname[BUFFER_SIZE];
     gethostname(hostname, sizeof hostname);
  
     struct hostent *hp = gethostbyname(hostname);
@@ -36,7 +37,7 @@ int SocketListener_new(int port) {
      
     struct sockaddr_in sin; 
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
+    sin.sin_port = htons(c->port);
     memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
     int rc = bind(s, &sin, sizeof( struct sockaddr_in ));
@@ -54,11 +55,11 @@ int SocketListener_new(int port) {
 }
 
 #define TIMEOUT 30
-int SocketWriter_new(const char * host, int port){
+int SocketWriter_new( Connection c ){
 
-    struct hostent *hp = gethostbyname(host);
+    struct hostent *hp = gethostbyname( c->host );
     if ( hp == NULL ) {
-        fprintf(stderr, "SocektWriter_new: host not found (%s)\n", host);
+        fprintf( stderr, "SocektWriter_new: host not found (%s)\n", c->host );
         return -1; 
     }
 
@@ -70,7 +71,7 @@ int SocketWriter_new(const char * host, int port){
 
     struct sockaddr_in sin; 
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
+    sin.sin_port = htons( c->port );
     memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
     int rc = -1; 
@@ -110,6 +111,14 @@ void Socket_send( int s, int v){
         exit(1);
     }
 
+}
+
+int Socket_recv( int s ) {
+    char t[512]; 
+    int len =  recv(s, t, 32, 0);
+    if ( len < 0 ) _perror("recv", 1);
+    t[len] = '\0';
+    return atoi(t); 
 }
 
 #endif

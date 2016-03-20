@@ -21,6 +21,7 @@
 /*........................ Include Files ....................................*/
 #define _GNU_SOURCE
 
+#include "connection.h"
 #include "socket.h"
 #include "potato.h"
 
@@ -61,12 +62,10 @@ int getConnection( int s ){
 }
 
 
-#define BUFFER 256
+#define BUFFER 512
 
-int si; 
-int id; 
-
-char host[BUFFER]; 
+char       host[BUFFER]; 
+int        id; 
 
 int main (int argc, char *argv[])
 {
@@ -81,37 +80,60 @@ int main (int argc, char *argv[])
     fprintf(stdout, "num: %s\n", argv[3]); 
  
     id = atoi( argv[1] ); 
-
     gethostname( host, BUFFER ); 
-    int si = SocketListener_new( atoi(argv[1]));
-    if( si < 0 ) exit(1); 
+
+    Connection conn_i = Connection_new(host, id ); 
+    Connection conn_l = Connection_new(host, atoi(argv[2])); 
+    Connection conn_m = Connection_new(host, id); 
+    Connection conn_r = Connection_new(host, id); 
+
 
     if( atoi(argv[3]) > 0 ) {
-        int s = SocketWriter_new( host, atoi(argv[2]));
-        Potato p = Potato_new( atoi(argv[3]) );
-        Potato_give( p, id, s ); 
-        Potato_free(p); 
-        close(s); 
-     }
+        
+        int socket = SocketWriter_new( conn_l );
+        
+        if( socket < 0 )  exit(1); 
+
+        Potato potato = Potato_new( atoi( argv[3] ) );
+        Potato_send( potato, id, socket ); 
+        Potato_free( potato ); 
+        close( socket ); 
+    }
   
+    int socket_in = SocketListener_new( conn_i ); 
     char buf[512];
     while (1) { //foreach connection. 
-        int connection = getConnection(si);
-        while ( 1 ) {
-            if ( !rdMsg(connection, buf, 64, 0) ) break;
-            if ( !strcmp("close", buf) ) break;
 
+        int fd = getConnection( socket_in );
+
+        while ( 1 ) {
+
+            int value = Socket_recv( fd ); 
             printf("MSG > %s\n", buf);
 
-            int s = SocketWriter_new( host, atoi(argv[2]));
-            Potato p = Potato_take(buf); 
-            Potato_give( p, id, s );
-            Potato_free(p); 
-            close(s);
+            if( value == MSG_TYPE_POTATO ) { 
+
+                    Potato p = Potato_recv( fd ); 
+                    Potato_print( p ); 
+                    
+                    int socket = SocketWriter_new( conn_l );
+                    Potato_send( p, id, socket );
+                    Potato_free( p ); 
+                    close( socket ); 
+
+            } else { 
+                    printf("Im confused\n"); 
+                    break;
+            }
         }
-        close(connection);
+        close( fd );
         printf(">> Connection closed\n");
     }
+
+    Connection_free(conn_i); 
+    Connection_free(conn_l); 
+    Connection_free(conn_r); 
+    Connection_free(conn_m); 
     exit(0);
 }
 
