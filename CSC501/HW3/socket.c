@@ -2,6 +2,7 @@
 #define SOCKET_C
 
 #define _GNU_SOURCE
+#define BUFFER_SIZE 512
 
 #include "socket.h"
 
@@ -95,5 +96,21 @@ int SocketWriter_new(const char * host, int port){
     return s; 
 
 }
+
+void Socket_send( int s, int v){
+
+    char t[BUFFER_SIZE];
+
+    sprintf(t, "%d", v);
+
+    int l = send( s, t, strlen(t), 0);
+
+    if( l != strlen(t) ) {
+        perror("send");
+        exit(1);
+    }
+
+}
+
 #endif
 
