@@ -114,6 +114,11 @@ int main (int argc, char *argv[])
             free(s); 
             Potato_print( p ); 
                     
+            if( p->current_count == 0 ){
+                printf("DONE!\n"); 
+                exit(0);
+            }
+
             int socket_out = SocketWriter_new( conn_l );
             Potato_send( p, id, socket_out );
             Potato_free( p ); 
