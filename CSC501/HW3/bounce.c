@@ -55,8 +55,8 @@ int getConnection( int s ){
     if ( p < 0 ) 
         _perror("accept", p);
 
-    //struct hostent* ihp = gethostbyaddr(&incoming.sin_addr, sizeof(struct in_addr), AF_INET);
-    //printf(">> Connected to %s\n", ihp->h_name);
+    struct hostent* ihp = gethostbyaddr(&i.sin_addr, sizeof(struct in_addr), AF_INET);
+    printf(">> Connected to %s\n", ihp->h_name);
     
     return p; 
 }
@@ -101,33 +101,27 @@ int main (int argc, char *argv[])
     }
   
     int socket_in = SocketListener_new( conn_i ); 
-    char buf[512];
     while (1) { //foreach connection. 
 
         int fd = getConnection( socket_in );
+        int value = Socket_recv( fd ); 
+        printf("MSG > %d\n", value);
 
-        while ( 1 ) {
-
-            int value = Socket_recv( fd ); 
-            printf("MSG > %s\n", buf);
-
-            if( value == MSG_TYPE_POTATO ) { 
-
-                    Potato p = Potato_recv( fd ); 
-                    Potato_print( p ); 
+        if( value == MSG_TYPE_POTATO ) { 
+            Potato p = Potato_recv( fd ); 
+            close( fd ); 
+            Potato_print( p ); 
                     
-                    int socket = SocketWriter_new( conn_l );
-                    Potato_send( p, id, socket );
-                    Potato_free( p ); 
-                    close( socket ); 
+            int socket_out = SocketWriter_new( conn_l );
+            Potato_send( p, id, socket_out );
+            Potato_free( p ); 
+            close( socket_out ); 
 
-            } else { 
-                    printf("Im confused\n"); 
-                    break;
-            }
+        } else { 
+             printf("Im confused\n"); 
+             close( fd ); 
+             break;
         }
-        close( fd );
-        printf(">> Connection closed\n");
     }
 
     Connection_free(conn_i); 

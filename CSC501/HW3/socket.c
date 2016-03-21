@@ -102,7 +102,8 @@ void Socket_send( int s, int v){
 
     char t[BUFFER_SIZE];
 
-    sprintf(t, "%d", v);
+    sprintf(t, "%d\n\0", v);
+    printf("SEND> %s\n", t); 
 
     int l = send( s, t, strlen(t), 0);
 
@@ -116,6 +117,7 @@ void Socket_send( int s, int v){
 int Socket_recv( int s ) {
     char t[512]; 
     int len =  recv(s, t, 32, 0);
+    printf("RECV > %s\n", t); 
     if ( len < 0 ) _perror("recv", 1);
     t[len] = '\0';
     return atoi(t); 
