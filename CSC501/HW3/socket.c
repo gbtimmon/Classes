@@ -114,13 +114,19 @@ void Socket_send( int s, int v){
 
 }
 
-int Socket_recv( int s ) {
-    char t[512]; 
-    int len =  recv(s, t, 32, 0);
-    printf("RECV > %s\n", t); 
-    if ( len < 0 ) _perror("recv", 1);
-    t[len] = '\0';
-    return atoi(t); 
+char* Socket_recv( int c ) {
+    char* s = malloc( sizeof(char) * 1024 ); 
+    s[0] = '\0';
+    char t[1024]; 
+
+    while( 1 ) {
+        int len = recv(c, t, 1024, 0); 
+        if( len == 0 ) break;
+        if( len <  0 ) _perror("recv", len);
+        t[len] = '\0';
+        strcat(s, t);    
+    }
+    return s; 
 }
 
 #endif

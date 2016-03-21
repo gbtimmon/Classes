@@ -103,13 +103,15 @@ int main (int argc, char *argv[])
     int socket_in = SocketListener_new( conn_i ); 
     while (1) { //foreach connection. 
 
-        int fd = getConnection( socket_in );
-        int value = Socket_recv( fd ); 
-        printf("MSG > %d\n", value);
+        int   f = getConnection( socket_in );
+        char* s = Socket_recv( f ); 
+        close(f); 
+        char* t = s;
+        int   v = atoi(strsep(&t, "\n")); 
 
-        if( value == MSG_TYPE_POTATO ) { 
-            Potato p = Potato_recv( fd ); 
-            close( fd ); 
+        if( v == MSG_TYPE_POTATO ) { 
+            Potato p = Potato_recv( &t ); 
+            free(s); 
             Potato_print( p ); 
                     
             int socket_out = SocketWriter_new( conn_l );
@@ -119,7 +121,7 @@ int main (int argc, char *argv[])
 
         } else { 
              printf("Im confused\n"); 
-             close( fd ); 
+             close( f ); 
              break;
         }
     }

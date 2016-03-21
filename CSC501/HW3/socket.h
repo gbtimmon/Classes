@@ -8,9 +8,9 @@
 #define MSG_TYPE_LEFT_SOCKET  3
 #define MSG_TYPE_RIGHT_SOCKET 4
 
-void Socket_send(int, int); 
-int  Socket_recv(int); 
-int  SocketListener_new( Connection );
-int  SocketWriter_new( Connection ); 
+void  Socket_send(int, int); 
+char* Socket_recv(int); 
+int   SocketListener_new( Connection );
+int   SocketWriter_new( Connection ); 
 #endif
 
