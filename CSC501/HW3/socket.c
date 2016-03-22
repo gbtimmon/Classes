@@ -136,5 +136,21 @@ char* Socket_recv( int c ) {
     return s; 
 }
 
+char* Socket_get_message( int s ){
+    struct sockaddr_in i;
+    unsigned int l = sizeof(struct sockaddr);
+    int p = accept(s, (struct sockaddr *) &i, &l);
+    if ( p < 0 ){
+        perror("accept"); 
+        exit(p);
+    }
+    struct hostent* ihp = gethostbyaddr(&i.sin_addr, sizeof(struct in_addr), AF_INET);
+    printf(">> Connected to %s\n", ihp->h_name);
+
+    char * ret = Socket_recv( p ); 
+    close(p); 
+    return ret; 
+}
+
 #endif
 

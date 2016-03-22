@@ -1,6 +1,8 @@
 #ifndef MASTER_C
 #define MASTER_C
 
+#define _GNU_SOURCE
+
 #include "socket.h"
 #include "connection.h"
 #include "potato.h"
@@ -8,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 int main ( int argc, char** argv, char** envv) { 
      
@@ -16,5 +19,46 @@ int main ( int argc, char** argv, char** envv) {
         exit(1); 
     }
 
+    int port = atoi(argv[1]); 
+    int cc   = atoi(argv[2]); 
+    int sc   = atoi(argv[3]); 
+
+    Connection children[ cc ];
+    char host[1024];
+    gethostname(host, 1024); 
+    
+    Connection c = Connection_new( host, port, CONN_TYPE_IN);
+    int sin = SocketListener_new( c ); 
+    Connection_free(c); 
+    
+    while( 1 ) { 
+
+        char* s = Socket_get_message( sin );
+        char* t = s;
+        int   v = atoi(strsep(&t, "\n"));
+
+        if( v == MSG_TYPE_POTATO ) {
+            printf("I got the winner\n"); 
+            exit(0); 
+        } else if( v == MSG_TYPE_CONNECTION ) { 
+            Connection c = Connection_recv( &t ); 
+            if( c != CONN_TYPE_CHILD ) {
+                free(s);
+                Connection_free(c); 
+                fprintf(stderr,"I got garbage!\n"); 
+                continue; 
+            } else {
+                //Load the new connection to the arrat
+            }
+                
+
+  
+        }
+        free(s);
+    }
+
+
+    }
+   
 }
 #endif

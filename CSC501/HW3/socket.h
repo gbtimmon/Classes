@@ -13,8 +13,8 @@
 
 void  Socket_sendi(int, int); 
 void  Socket_sends(int, char*); 
-char* Socket_recv(int); 
 int   SocketListener_new( Connection );
 int   SocketWriter_new( Connection ); 
+char* Socket_get_message( int );
 #endif
 

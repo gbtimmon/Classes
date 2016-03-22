@@ -48,20 +48,6 @@ int rdMsg( int p, char* buf, unsigned int sz, int flags){
     return len; 
 }
 
-int getConnection( int s ){
-    struct sockaddr_in i; 
-    unsigned int l = sizeof(struct sockaddr);
-    int p = accept(s, (struct sockaddr *) &i, &l);
-    if ( p < 0 ) 
-        _perror("accept", p);
-
-    struct hostent* ihp = gethostbyaddr(&i.sin_addr, sizeof(struct in_addr), AF_INET);
-    printf(">> Connected to %s\n", ihp->h_name);
-    
-    return p; 
-}
-
-
 #define BUFFER 512
 
 char       host[BUFFER]; 
@@ -103,9 +89,7 @@ int main (int argc, char *argv[])
     int socket_in = SocketListener_new( conn_i ); 
     while (1) { //foreach connection. 
 
-        int   f = getConnection( socket_in );
-        char* s = Socket_recv( f ); 
-        close(f); 
+        char* s = Socket_get_message( socket_in );
         char* t = s;
         int   v = atoi(strsep(&t, "\n")); 
 
@@ -126,9 +110,9 @@ int main (int argc, char *argv[])
 
         } else { 
              printf("Im confused\n"); 
-             close( f ); 
              break;
         }
+        free(s); 
     }
 
     Connection_free(conn_i); 
