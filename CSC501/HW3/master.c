@@ -56,38 +56,18 @@ int main ( int argc, char** argv, char** envv) {
                 if( childn == childc) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
-                     childv[childc++] = Connection_recv( &t );
-                     fprintf(stdout, "FIXME!! : Connected to %s on port %s\n", new_c->host, new_c->port); 
+                     childv[childc] = Connection_recv( &t );
+                     fprintf(stdout, "FIXME!! : Connected to %s on port %d\n", childv[childc]->host, childv[childc]->port); 
+                     childc++;
+ 
                      if( childn == childc) {
                          connectChildren(childn, childv);
-                         startGame(childv, swapn);
+                         startGame(childv[0], swapn);
                      }
                 }
             break; 
-
-
-
-
-        }
-        } else if( v == MSG_TYPE_CONNECTION ) { 
-            Connection c = Connection_recv( &t ); 
-            if( c != CONN_TYPE_CHILD ) {
-                free(s);
-                Connection_free(c); 
-                fprintf(stderr,"I got garbage!\n"); 
-                continue; 
-            } else {
-                //Load the new connection to the arrat
-            }
-                
-
-  
         }
         free(s);
     }
-
-
-    }
-   
 }
 #endif

@@ -36,6 +36,8 @@
 #include <netdb.h>
 
 
+#define DEFAULT_PORT 9999
+
 int _perror(const char * x, int y){
     perror(x); 
     exit(y); 
@@ -51,27 +53,24 @@ int rdMsg( int p, char* buf, unsigned int sz, int flags){
 #define BUFFER 512
 
 char       host[BUFFER]; 
-int        id; 
+int        port; 
 
 int main (int argc, char *argv[])
 {
     /* read port number from command line */
     if ( argc < 3 ) {
-        fprintf(stderr, "Usage: <me> <you> <num>\n");
+        fprintf(stderr, "Usage: <master-machine-name> <master-port-number>\n");
         exit(1);
     }
 
-    fprintf(stdout, "me : %s\n", argv[1]); 
-    fprintf(stdout, "you: %s\n", argv[2]); 
-    fprintf(stdout, "num: %s\n", argv[3]); 
- 
-    id = atoi( argv[1] ); 
     gethostname( host, BUFFER ); 
 
+    Connection conn_m = Connection_new(host, id, CONN_TYPE_MASTER); 
+
+
+    Connection conn_r = Connection_new(host, id, CONN_TYPE_RIGHT); 
     Connection conn_i = Connection_new(host, id, CONN_TYPE_IN); 
     Connection conn_l = Connection_new(host, atoi(argv[2]), CONN_TYPE_LEFT); 
-    Connection conn_m = Connection_new(host, id, CONN_TYPE_MASTER); 
-    Connection conn_r = Connection_new(host, id, CONN_TYPE_RIGHT); 
 
 
     if( atoi(argv[3]) > 0 ) {
