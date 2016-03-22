@@ -52,13 +52,13 @@ Potato Potato_fprint(Potato p, Stream s ){
 }
 
 void Potato_send( Potato p, int i, int s ) {
-    Socket_send(s, MSG_TYPE_POTATO);
-    Socket_send(s, p->initial_count); 
-    Socket_send(s, p->current_count - 1); 
-    Socket_send(s, p->signature_count + 1);
+    Socket_sendi(s, MSG_TYPE_POTATO);
+    Socket_sendi(s, p->initial_count); 
+    Socket_sendi(s, p->current_count - 1); 
+    Socket_sendi(s, p->signature_count + 1);
     for( int j = 0; j < p->signature_count; j++ ) 
-        Socket_send(s, p->signature[j]); 
-    Socket_send(s, i); 
+        Socket_sendi(s, p->signature[j]); 
+    Socket_sendi(s, i); 
 }
 
 Potato Potato_recv(char ** s){

@@ -82,10 +82,10 @@ int main (int argc, char *argv[])
     id = atoi( argv[1] ); 
     gethostname( host, BUFFER ); 
 
-    Connection conn_i = Connection_new(host, id ); 
-    Connection conn_l = Connection_new(host, atoi(argv[2])); 
-    Connection conn_m = Connection_new(host, id); 
-    Connection conn_r = Connection_new(host, id); 
+    Connection conn_i = Connection_new(host, id, CONN_TYPE_IN); 
+    Connection conn_l = Connection_new(host, atoi(argv[2]), CONN_TYPE_LEFT); 
+    Connection conn_m = Connection_new(host, id, CONN_TYPE_MASTER); 
+    Connection conn_r = Connection_new(host, id, CONN_TYPE_RIGHT); 
 
 
     if( atoi(argv[3]) > 0 ) {
