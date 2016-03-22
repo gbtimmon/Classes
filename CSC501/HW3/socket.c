@@ -126,7 +126,17 @@ void Socket_sendi( int s, int v){
 }
 
 void Socket_sends( int s, char* i ){
-    return;
+    int l = send( s, i,  strlen(i), 0);
+    if( l != strlen(i) ) {
+        perror("send");
+        exit(1);
+    }
+
+    l = send( s, "\n", 1, 0);
+    if( l != 1 ) {
+        perror("send");
+        exit(1);
+    }
 }
 
 char* Socket_recv( int c ) {
