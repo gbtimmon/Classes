@@ -69,9 +69,9 @@ int main (int argc, char *argv[])
 
 
     printf("I am listening on port %d!\n", conn_in
-    Connection conn_r = Connection_new(host, port, CONN_TYPE_RIGHT); 
-    Connection conn_i = Connection_new(host, port, CONN_TYPE_IN); 
-    Connection conn_l = Connection_new(host, atoi(argv[2]), CONN_TYPE_LEFT); 
+    /*Connection conn_r = Connection_new(player_host, port, CONN_TYPE_RIGHT); 
+    Connection conn_i = Connection_new(player_host, port, CONN_TYPE_IN); 
+    Connection conn_l = Connection_new(player_host, atoi(argv[2]), CONN_TYPE_LEFT); 
 
 
     if( atoi(argv[3]) > 0 ) {
@@ -118,7 +118,7 @@ int main (int argc, char *argv[])
     Connection_free(conn_i); 
     Connection_free(conn_l); 
     Connection_free(conn_r); 
-    Connection_free(conn_m); 
+    Connection_free(conn_m); */
     exit(0);
 }
 
