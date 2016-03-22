@@ -12,6 +12,14 @@
 #include <string.h>
 #include <unistd.h>
 
+void connectChildren(int childc, Connection* childv ){
+    printf("connect!\n");
+}
+
+void startGame( Connection starter, int swapn ){ 
+    printf("Starting!\n");
+}
+
 int main ( int argc, char** argv, char** envv) { 
      
     if( argc < 4 ) {
@@ -23,11 +31,11 @@ int main ( int argc, char** argv, char** envv) {
     gethostname(host, 1024); 
 
     int port   = atoi(argv[1]); 
-    int nchild = atoi(argv[2]); 
-    int nswap  = atoi(argv[3]); 
-    int cchild = 0; 
+    int childn = atoi(argv[2]); 
+    int swapn  = atoi(argv[3]); 
+    int childc = 0; 
 
-    Connection child[ nchild ];
+    Connection childv[ childn ];
     
     Connection c = Connection_new( host, port, CONN_TYPE_IN);
     int sin = SocketListener_new( c ); 
@@ -40,15 +48,27 @@ int main ( int argc, char** argv, char** envv) {
         int   v = atoi(strsep(&t, "\n"));
 
         switch( v ) { 
-            case 
+            case MSG_TYPE_POTATO :
+                printf("I got the winner\n");
+                exit(0);
+                break;
+            case MSG_TYPE_CONNECTION :
+                if( childn == childc) {
+                     fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
+                } else {
+                     childv[childc++] = Connection_recv( &t );
+                     fprintf(stdout, "FIXME!! : Connected to %s on port %s\n", new_c->host, new_c->port); 
+                     if( childn == childc) {
+                         connectChildren(childn, childv);
+                         startGame(childv, swapn);
+                     }
+                }
+            break; 
 
 
 
 
         }
-        if( v == MSG_TYPE_POTATO ) {
-            printf("I got the winner\n"); 
-            exit(0); 
         } else if( v == MSG_TYPE_CONNECTION ) { 
             Connection c = Connection_recv( &t ); 
             if( c != CONN_TYPE_CHILD ) {
