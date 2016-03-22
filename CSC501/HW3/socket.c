@@ -126,7 +126,10 @@ char* Socket_recv( int c ) {
     while( 1 ) {
         int len = recv(c, t, 1024, 0); 
         if( len == 0 ) break;
-        if( len <  0 ) _perror("recv", len);
+        if( len <  0 ) {
+            perror("recv");
+            return len;
+        }
         t[len] = '\0';
         strcat(s, t);    
     }
