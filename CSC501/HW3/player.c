@@ -37,6 +37,11 @@
 
 
 #define DEFAULT_PORT 9999
+#define HBUFF        512
+
+char       player_host[HBUFF] = "\0";
+char       master_host[HBUFF] = "\0";
+int        id                 = -1;
 
 void reportAddress( Connection reportWhat, Connection reportTo ){
 
@@ -49,11 +54,14 @@ void reportAddress( Connection reportWhat, Connection reportTo ){
 
 }
 
+void passPotato( Potato passWhat, Connection passTo ) {
 
-#define    HBUFF                512
-char       player_host[HBUFF] = "\0";
-char       master_host[HBUFF] = "\0";
-int        id                 = 11;
+     int socket_out = SocketWriter_new( passTo );
+     Potato_send( passWhat, id, socket_out );
+     close(socket_out);   
+     
+
+}
 
 int main (int argc, char *argv[])
 {
@@ -72,8 +80,8 @@ int main (int argc, char *argv[])
     Connection conn_m = Connection_new(master_host, atoi(argv[2]), CONN_TYPE_MASTER); 
     reportAddress( conn_in, conn_m );
     
-    Connection conn_r = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_RIGHT); 
-    Connection conn_l = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_LEFT); 
+    Connection conn_r = NULL;
+    Connection conn_l = NULL;
 
   
     while (1) { //foreach connection. 
@@ -82,26 +90,41 @@ int main (int argc, char *argv[])
         char* t = s;
         int   v = atoi(strsep(&t, "\n")); 
 
-        if( v == MSG_TYPE_POTATO ) { 
-            Potato p = Potato_recv( &t ); 
-            free(s); 
-            Potato_print( p ); 
-                    
-            if( p->current_count == 0 ){
-                printf("DONE!\n"); 
-                exit(0);
+        switch (v ) { 
+            case MSG_TYPE_POTATO :
+            {
+                if ( conn_l == NULL || conn_r == NULL ) {
+                    fprintf(stderr, "I recieved a potatoe too soon I an not initalized!\n");
+                    exit(1); 
+                }
+
+                Potato p = Potato_recv( &t ); 
+                Potato_print( p ); 
+
+                Connection targ;
+                if( p->current_count == 0 ){
+                     targ = conn_m;
+                } else if ( random() % 2 ) {
+                     targ = conn_r; 
+                } else {
+                     targ = conn_l; 
+                }
+                passPotato(p, targ);
+                Potato_free( p ); 
+                break;
             }
-
-            int socket_out = SocketWriter_new( conn_l );
-            Potato_send( p, id, socket_out );
-            Potato_free( p ); 
-            close( socket_out ); 
-
-        } else { 
-             printf("Im confused\n"); 
-             break;
+            case MSG_TYPE_CONNECTION :
+            {
+                Connection c = Connection_recv( &t );
+                if( c->type == CONN_TYPE_LEFT )
+                    conn_l = c; 
+                else if (c->type == CONN_TYPE_RIGHT )
+                    conn_r = c; 
+                break;
+            }
         }
         free(s); 
+
     }
 
     Connection_free(conn_in); 
