@@ -2,8 +2,9 @@
 #define CONNECTION_H
 
 typedef struct connection {
-    char * host;
-    int port; 
+    int  type; 
+    char *host;
+    int  port; 
 } * Connection; 
 
 Connection Connection_new( const char *, int); 

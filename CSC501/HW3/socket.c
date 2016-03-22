@@ -98,7 +98,7 @@ int SocketWriter_new( Connection c ){
 
 }
 
-void Socket_send( int s, int v){
+void Socket_sendi( int s, int v){
 
     char t[BUFFER_SIZE];
 
@@ -112,6 +112,10 @@ void Socket_send( int s, int v){
         exit(1);
     }
 
+}
+
+void Socket_sends( int s, char* i ){
+    return;
 }
 
 char* Socket_recv( int c ) {
