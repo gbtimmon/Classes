@@ -12,6 +12,13 @@
 #include <string.h>
 #include <unistd.h>
 
+void nameChild( Connection child, int name ) {
+    int sock = SocketWriter_new( child );
+    Socket_sendi( sock, MSG_TYPE_CHILD_NAME );
+    Socket_sendi( sock, name );
+    close(sock);    
+}
+
 void connectChildren(int childc, Connection* childv ){
     printf("connect!\n");
 }
@@ -56,9 +63,11 @@ int main ( int argc, char** argv, char** envv) {
                 if( childn == childc) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
-                     childv[childc] = Connection_recv( &t );
-                     Connection_print(childv[childc]);
-                     fprintf(stdout, "FIXME!! : Connected to %s on port %d\n", childv[childc]->host, childv[childc]->port); 
+                     Connection cc = Connection_recv( &t );
+                     childv[childc] = cc;
+                     Connection_print(cc);
+                     fprintf(stdout, "FIXME!! : Connected to %s on port %d\n", cc->host, cc->port); 
+                     nameChild(cc, childc);
                      childc++;
  
                      if( childn == childc) {
