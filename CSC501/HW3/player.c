@@ -59,7 +59,6 @@ void passPotato( Potato passWhat, Connection passTo ) {
      int socket_out = SocketWriter_new( passTo );
      Potato_send( passWhat, id, socket_out );
      close(socket_out);   
-     
 
 }
 
@@ -121,6 +120,11 @@ int main (int argc, char *argv[])
                 else if (c->type == CONN_TYPE_RIGHT )
                     conn_r = c; 
                 break;
+            }
+            case MSG_TYPE_CHILD_NAME :
+            {
+                id = atoi(strsep( &t, "\n") );
+                printf( "I have been named %d\n", id); 
             }
         }
         free(s); 
