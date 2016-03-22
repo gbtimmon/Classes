@@ -17,5 +17,6 @@ Connection Connection_new( const char *, int, int);
 void       Connection_free( Connection );
 void       Connection_send( Connection, int ); 
 Connection Connection_recv( char ** ); 
+void       Connection_print( Connection ); 
 
 #endif

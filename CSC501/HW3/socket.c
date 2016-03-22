@@ -7,8 +7,8 @@
 #include "connection.h"
 #include "socket.h"
 
-#include <time.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -16,6 +16,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 int SocketListener_new( Connection c ) { 
@@ -45,14 +46,18 @@ int SocketListener_new( Connection c ) {
         memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
         rc = bind(s, &sin, sizeof( struct sockaddr_in ));
-        if( rc < 0 ) {
+        if( rc < 0 && errno != EADDRINUSE ){
             perror("bind:");
             exit (1); 
+        } else if( rc < 0 ) {
+            target_port = target_port + (random() % 50);
         } else {
             break;
         }
     }
         
+    c->port = target_port; 
+
     rc =  listen( s, 5);
     if( rc < 0 ) {
         perror("listen:");
@@ -81,7 +86,6 @@ int SocketWriter_new( Connection c ){
     sin.sin_port = htons( c->port );
     memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
-    int rc = -1; 
     int secs = 0;
 
     while ( 1 ) { 
@@ -109,7 +113,7 @@ void Socket_sendi( int s, int v){
 
     char t[BUFFER_SIZE];
 
-    sprintf(t, "%d\n\0", v);
+    sprintf(t, "%d\n", v);
     printf("SEND> %s\n", t); 
 
     int l = send( s, t, strlen(t), 0);
@@ -135,7 +139,7 @@ char* Socket_recv( int c ) {
         if( len == 0 ) break;
         if( len <  0 ) {
             perror("recv");
-            return len;
+            exit (len);
         }
         t[len] = '\0';
         strcat(s, t);    

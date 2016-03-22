@@ -5,6 +5,7 @@
 #include "socket.h"
 #include "connection.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,6 +37,11 @@ Connection Connection_recv(char ** s){
      char* host = strsep(s,"\n");
      int port = atoi(strsep(s,"\n"));
      return Connection_new( host, port, type); 
+}
+
+void Connection_print( Connection c ) {
+     printf("<connection port=\"%d\" host=\"%s\" type=\"%d\" />", c->port, c->host, c->type); 
+
 }
 
 

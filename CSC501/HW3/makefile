@@ -13,7 +13,7 @@ goc: ./player.c ./potato.o ./socket.o ./connection.o
 ./potato.o: ./potato.c
 	${CC} ${Static} ${CFlags} ./potato.c ${Inc} -o ./potato.o
 
-./socekt.o: ./socket.c
+./socket.o: ./socket.c
 	${CC} ${Static} ${CFlags} ./socket.c ${Inc} -o ./socket.o
 
 ./connection.o: ./connection.c

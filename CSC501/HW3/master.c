@@ -57,6 +57,7 @@ int main ( int argc, char** argv, char** envv) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
                      childv[childc] = Connection_recv( &t );
+                     Connection_print(childv[childc]);
                      fprintf(stdout, "FIXME!! : Connected to %s on port %d\n", childv[childc]->host, childv[childc]->port); 
                      childc++;
  

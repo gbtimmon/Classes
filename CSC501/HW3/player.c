@@ -38,17 +38,17 @@
 
 #define DEFAULT_PORT 9999
 
-int _perror(const char * x, int y){
-    perror(x); 
-    exit(y); 
+void reportAddress( Connection reportWhat, Connection reportTo ){
+
+     int socket_mast = SocketWriter_new( reportTo );
+     Connection myAddressReport = Connection_new( reportWhat->host, reportWhat->port, CONN_TYPE_CHILD);
+     Connection_print( myAddressReport );
+     Connection_send( myAddressReport, socket_mast );
+     Connection_free( myAddressReport );
+     close( socket_mast );
+
 }
 
-int rdMsg( int p, char* buf, unsigned int sz, int flags){
-    int len =  recv(p, buf, 32, 0);
-    if ( len < 0 ) _perror("recv", 1);
-    buf[len] = '\0';
-    return len; 
-}
 
 #define    HBUFF                512
 char       player_host[HBUFF] = "\0";
@@ -67,15 +67,15 @@ int main (int argc, char *argv[])
     strcpy(master_host, argv[1]);
 
     Connection conn_in = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_IN ); 
+    int socket_in = SocketListener_new( conn_in ); 
 
-
-    printf("I am listening on port %d!\n", conn_in->port); 
+    Connection conn_m = Connection_new(master_host, atoi(argv[2]), CONN_TYPE_MASTER); 
+    reportAddress( conn_in, conn_m );
+    
     Connection conn_r = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_RIGHT); 
-    Connection conn_m = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_IN); 
     Connection conn_l = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_LEFT); 
 
   
-    int socket_in = SocketListener_new( conn_in ); 
     while (1) { //foreach connection. 
 
         char* s = Socket_get_message( socket_in );
