@@ -1,12 +1,14 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-#define CONN_TYPE_IN     0
-#define CONN_TYPE_LEFT   1
-#define CONN_TYPE_RIGHT  2
-#define CONN_TYPE_MASTER 3
+#define  CONN_TYPE_CHILD  0
+#define  CONN_TYPE_IN     1
+#define  CONN_TYPE_LEFT   2
+#define  CONN_TYPE_RIGHT  3
+#define  CONN_TYPE_MASTER 4
+
 typedef struct connection {
-    int  type; 
+    int type; 
     char *host;
     int  port; 
 } * Connection; 
