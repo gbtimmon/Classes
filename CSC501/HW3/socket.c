@@ -34,16 +34,23 @@ int SocketListener_new( Connection c ) {
         perror("socket:");
         return -1; 
     }
-     
-    struct sockaddr_in sin; 
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(c->port);
-    memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
+    
+    int rc; 
+    int target_port = c->port;
+    while(1) {
+    
+        struct sockaddr_in sin; 
+        sin.sin_family = AF_INET;
+        sin.sin_port = htons(target_port);
+        memcpy(&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 
-    int rc = bind(s, &sin, sizeof( struct sockaddr_in ));
-    if( rc < 0 ) {
-        perror("bind:");
-        return -1; 
+        rc = bind(s, &sin, sizeof( struct sockaddr_in ));
+        if( rc < 0 ) {
+            perror("bind:");
+            exit (1); 
+        } else {
+            break;
+        }
     }
         
     rc =  listen( s, 5);

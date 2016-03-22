@@ -20,3 +20,6 @@ goc: ./player.c ./potato.o ./socket.o ./connection.o
 	${CC} ${Static} ${CFlags} ./connection.c ${Inc} -o ./connection.o
 
 
+./random.o : ./random.c
+	${CC} ${Static} ${CFlags} ./random.c ${Inc} -o ./random.o
+

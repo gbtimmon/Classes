@@ -53,6 +53,7 @@ int rdMsg( int p, char* buf, unsigned int sz, int flags){
 #define    HBUFF                512
 char       player_host[HBUFF] = "\0";
 char       master_host[HBUFF] = "\0";
+int        id                 = 11;
 
 int main (int argc, char *argv[])
 {
@@ -68,25 +69,13 @@ int main (int argc, char *argv[])
     Connection conn_in = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_IN ); 
 
 
-    printf("I am listening on port %d!\n", conn_in
-    /*Connection conn_r = Connection_new(player_host, port, CONN_TYPE_RIGHT); 
-    Connection conn_i = Connection_new(player_host, port, CONN_TYPE_IN); 
-    Connection conn_l = Connection_new(player_host, atoi(argv[2]), CONN_TYPE_LEFT); 
+    printf("I am listening on port %d!\n", conn_in->port); 
+    Connection conn_r = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_RIGHT); 
+    Connection conn_m = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_IN); 
+    Connection conn_l = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_LEFT); 
 
-
-    if( atoi(argv[3]) > 0 ) {
-        
-        int socket = SocketWriter_new( conn_l );
-        
-        if( socket < 0 )  exit(1); 
-
-        Potato potato = Potato_new( atoi( argv[3] ) );
-        Potato_send( potato, id, socket ); 
-        Potato_free( potato ); 
-        close( socket ); 
-    }
   
-    int socket_in = SocketListener_new( conn_i ); 
+    int socket_in = SocketListener_new( conn_in ); 
     while (1) { //foreach connection. 
 
         char* s = Socket_get_message( socket_in );
@@ -115,10 +104,10 @@ int main (int argc, char *argv[])
         free(s); 
     }
 
-    Connection_free(conn_i); 
+    Connection_free(conn_in); 
     Connection_free(conn_l); 
     Connection_free(conn_r); 
-    Connection_free(conn_m); */
+    Connection_free(conn_m);
     exit(0);
 }
 
