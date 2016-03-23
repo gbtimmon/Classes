@@ -13,6 +13,7 @@ typedef int Stream;
 typedef char* String; 
 
 Potato Potato_new(int);
+void   Potato_start(int, int);
 void   Potato_send(Potato p,int i, int socket);
 Potato Potato_recv(char**); 
 Potato Potato_print(Potato); 

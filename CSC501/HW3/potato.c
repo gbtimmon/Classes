@@ -51,6 +51,13 @@ Potato Potato_fprint(Potato p, Stream s ){
     return p; 
 }
 
+void Potato_start( int c, int s ) {
+    Socket_sendi(s, MSG_TYPE_POTATO);
+    Socket_sendi(s, c);
+    Socket_sendi(s, c); 
+    Socket_sendi(s, 0);
+}
+
 void Potato_send( Potato p, int i, int s ) {
     Socket_sendi(s, MSG_TYPE_POTATO);
     Socket_sendi(s, p->initial_count); 

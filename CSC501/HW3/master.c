@@ -44,7 +44,9 @@ void connectChildren(int childc, Connection* childv ){
 }
 
 void startGame( Connection starter, int swapn ){ 
-    printf("Starting!\n");
+    int sock = SocketWriter_new( starter ); 
+    Potato_start( swapn, sock ); 
+    close( sock );        
 }
 
 int main ( int argc, char** argv, char** envv) { 
