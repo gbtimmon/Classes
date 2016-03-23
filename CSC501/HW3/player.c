@@ -36,8 +36,9 @@
 #include <netdb.h>
 
 
-#define DEFAULT_PORT 9999
-#define HBUFF        512
+#define DEFAULT_PORT  9999
+#define DEFAULT_PORT2 99999
+#define HBUFF         512
 
 char       player_host[HBUFF] = "\0";
 char       master_host[HBUFF] = "\0";
@@ -73,7 +74,10 @@ int main (int argc, char *argv[])
     gethostname( player_host, HBUFF ); 
     strcpy(master_host, argv[1]);
 
-    Connection conn_in = Connection_new(player_host, DEFAULT_PORT, CONN_TYPE_IN ); 
+    int defaultPort = ( DEFAULT_PORT != atoi(argv[2])) ? DEFAULT_PORT : DEFAULT_PORT2; 
+
+    printf( " [[[ %d ]]]\n", defaultPort ); 
+    Connection conn_in = Connection_new(player_host, defaultPort, CONN_TYPE_IN ); 
     int socket_in = SocketListener_new( conn_in ); 
 
     Connection conn_m = Connection_new(master_host, atoi(argv[2]), CONN_TYPE_MASTER); 

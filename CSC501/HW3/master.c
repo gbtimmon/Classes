@@ -42,6 +42,7 @@ void connectChildren(int childn, Connection* childv ){
 
 void startGame( int childn, Connection * childv, int swapn ){ 
     int offset = random() % childn;
+    printf("All players present, sending potato to player %d\n", offset + 1); 
     Connection starter = childv[offset];
     int sock = SocketWriter_new( starter ); 
     Potato_start( swapn, sock ); 
@@ -75,6 +76,12 @@ int main ( int argc, char** argv, char** envv) {
     
     Connection c = Connection_new( host, port, CONN_TYPE_IN);
     int sin = SocketListener_new( c ); 
+   
+    if( c->port != port ) {
+       fprintf(stderr, "Master port unavailable, please try again.\n");
+       exit(1);
+    }
+  
     Connection_free(c); 
     
     printf("Potato Master on %s\n", host);
@@ -103,9 +110,8 @@ int main ( int argc, char** argv, char** envv) {
                 } else {
                      Connection cc = Connection_recv( &t );
                      childv[childc] = cc;
-                     Connection_print(cc);
-                     fprintf(stdout, "Player %d is on %s\n", childc, cc->host); 
-                     nameChild(cc, childc);
+                     fprintf(stdout, "player %d is on %s\n", childc + 1, cc->host); 
+                     nameChild(cc, childc + 1);
                      childc++;
  
                      if( childn == childc) {

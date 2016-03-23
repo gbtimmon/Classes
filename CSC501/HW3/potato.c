@@ -39,15 +39,11 @@ Potato Potato_print(Potato p){
 }
 
 Potato Potato_fprint(Potato p, Stream s ){
-    dprintf(s, "<potato>\n");
-    dprintf(s, "\t<initial_count>%d</initial_count>\n",  p->initial_count);
-    dprintf(s, "\t<current_count>%d</current_count>\n", p->current_count);
-    dprintf(s, "\t<signature_count>%d</signature_count>\n", p->signature_count);
-    dprintf(s, "\t<signatures>\n");
-    for(int i = 0; i < p->signature_count; i++ ) 
-        dprintf(s, "\t\t<signature>%d</signature>\n", p->signature[i]);
-    dprintf(s, "\t</signatures>\n");
-    dprintf(s, "</potato>\n"); 
+    dprintf(s, "Trace of potato\n");
+    dprintf(s, "%d", p->signature[0] );
+    for(int i = 1; i < p->signature_count; i++ ) 
+        dprintf(s, ",%d", p->signature[i]);
+    dprintf(s, "\n");
     return p; 
 }
 
