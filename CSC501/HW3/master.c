@@ -27,23 +27,22 @@ void nameChild( Connection child, int name ) {
     close(sock);    
 }
 
-void connectChildren(int childc, Connection* childv ){
-    printf("Set lefts\n"); 
-    for( int i = 0; i < childc; i++ ) {
-       int offset = ( i + 1 ) % childc; 
+void connectChildren(int childn, Connection* childv ){
+    for( int i = 0; i < childn; i++ ) {
+       int offset = ( i + 1 ) % childn; 
        makeConnection(childv[i], childv[offset], CONN_TYPE_LEFT);
     }
 
-    printf("Set rights\n");
-    for( int i = 0; i < childc; i++ ) {
-       int offset = ( i - 1 ) % childc; 
-       if( offset == -1 ) offset = childc - 1;
+    for( int i = 0; i < childn; i++ ) {
+       int offset = ( i - 1 ) % childn; 
+       if( offset == -1 ) offset = childn - 1;
        makeConnection(childv[i], childv[offset], CONN_TYPE_RIGHT);
     }
-
 }
 
-void startGame( Connection starter, int swapn ){ 
+void startGame( int childn, Connection * childv, int swapn ){ 
+    int offset = random() % childn;
+    Connection starter = childv[offset];
     int sock = SocketWriter_new( starter ); 
     Potato_start( swapn, sock ); 
     close( sock );        
@@ -111,7 +110,7 @@ int main ( int argc, char** argv, char** envv) {
  
                      if( childn == childc) {
                          connectChildren(childn, childv);
-                         startGame(childv[0], swapn);
+                         startGame(childn, childv, swapn);
                      }
                 }
                 break; 
