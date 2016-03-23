@@ -125,6 +125,12 @@ int main (int argc, char *argv[])
             case MSG_TYPE_CHILD_NAME :
             {
                 id = atoi(strsep( &t, "\n") );
+                break;
+            }
+            case MSG_TYPE_CLOSE : 
+            {
+                exit(0);
+                break;
             }
         }
         free(s); 

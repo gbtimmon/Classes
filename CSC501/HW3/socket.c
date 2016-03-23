@@ -112,7 +112,6 @@ void Socket_sendi( int s, int v){
     char t[BUFFER_SIZE];
 
     sprintf(t, "%d\n", v);
-    printf("SEND> %s", t); 
 
     int l = send( s, t, strlen(t), 0);
 
@@ -124,7 +123,6 @@ void Socket_sendi( int s, int v){
 }
 
 void Socket_sends( int s, char* i ){
-    printf("SEND> %s\n",i);
     int l = send( s, i,  strlen(i), 0);
     if( l != strlen(i) ) {
         perror("send");
@@ -164,9 +162,6 @@ char* Socket_get_message( int s ){
         perror("accept"); 
         exit(p);
     }
-    struct hostent* ihp = gethostbyaddr(&i.sin_addr, sizeof(struct in_addr), AF_INET);
-    printf(">> Connected to %s\n", ihp->h_name);
-
     char * ret = Socket_recv( p ); 
     close(p); 
     return ret; 

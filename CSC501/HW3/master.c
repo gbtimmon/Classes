@@ -49,6 +49,14 @@ void startGame( Connection starter, int swapn ){
     close( sock );        
 }
 
+void closeChildren( int childc, Connection* childv) {
+    for( int i = 0; i < childc; i++ ) {
+        int sock = SocketWriter_new( childv[i] );
+        Socket_sendi( sock, MSG_TYPE_CLOSE );
+        close(sock);
+    }
+}
+
 int main ( int argc, char** argv, char** envv) { 
      
     if( argc < 4 ) {
@@ -70,29 +78,34 @@ int main ( int argc, char** argv, char** envv) {
     int sin = SocketListener_new( c ); 
     Connection_free(c); 
     
+    printf("Potato Master on %s\n", host);
+    printf("Players = %d\n", childn);
+    printf("Hops = %d\n", swapn); 
     while( 1 ) { 
 
         char* s = Socket_get_message( sin );
         char* t = s;
         int   v = atoi(strsep(&t, "\n"));
-        printf("reciveing\n");
         switch( v ) { 
             case MSG_TYPE_POTATO :
             {
-                printf("I got the winner\n");
+                Potato p = Potato_recv( &t ); 
+                Potato_print( p ); 
+                Potato_free( p ); 
+   
+                closeChildren( childc, childv ); 
                 exit(0);
                 break;
             }
             case MSG_TYPE_CONNECTION :
             {
-                printf("recieving a connection\n");
                 if( childn == childc) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
                      Connection cc = Connection_recv( &t );
                      childv[childc] = cc;
                      Connection_print(cc);
-                     fprintf(stdout, "FIXME!! : Connected to %s on port %d\n", cc->host, cc->port); 
+                     fprintf(stdout, "Player %d is on %s\n", childc, cc->host); 
                      nameChild(cc, childc);
                      childc++;
  
