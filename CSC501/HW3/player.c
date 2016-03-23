@@ -115,6 +115,7 @@ int main (int argc, char *argv[])
             case MSG_TYPE_CONNECTION :
             {
                 Connection c = Connection_recv( &t );
+                printf("Setting connection \n");
                 if( c->type == CONN_TYPE_LEFT )
                     conn_l = c; 
                 else if (c->type == CONN_TYPE_RIGHT )
@@ -124,7 +125,6 @@ int main (int argc, char *argv[])
             case MSG_TYPE_CHILD_NAME :
             {
                 id = atoi(strsep( &t, "\n") );
-                printf( "I have been named %d\n", id); 
             }
         }
         free(s); 

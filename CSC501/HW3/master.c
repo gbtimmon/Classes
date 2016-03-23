@@ -12,6 +12,14 @@
 #include <string.h>
 #include <unistd.h>
 
+void makeConnection( Connection connFrom, Connection connTo, int type ) {
+    int sock = SocketWriter_new(connFrom);
+    Connection c = Connection_new( connTo->host, connTo->port, type );
+    Connection_send( c, sock ); 
+    Connection_free( c ); 
+    close(sock); 
+}
+
 void nameChild( Connection child, int name ) {
     int sock = SocketWriter_new( child );
     Socket_sendi( sock, MSG_TYPE_CHILD_NAME );
@@ -20,7 +28,19 @@ void nameChild( Connection child, int name ) {
 }
 
 void connectChildren(int childc, Connection* childv ){
-    printf("connect!\n");
+    printf("Set lefts\n"); 
+    for( int i = 0; i < childc; i++ ) {
+       int offset = ( i + 1 ) % childc; 
+       makeConnection(childv[i], childv[offset], CONN_TYPE_LEFT);
+    }
+
+    printf("Set rights\n");
+    for( int i = 0; i < childc; i++ ) {
+       int offset = ( i - 1 ) % childc; 
+       if( offset == -1 ) offset = childc - 1;
+       makeConnection(childv[i], childv[offset], CONN_TYPE_RIGHT);
+    }
+
 }
 
 void startGame( Connection starter, int swapn ){ 
@@ -53,13 +73,17 @@ int main ( int argc, char** argv, char** envv) {
         char* s = Socket_get_message( sin );
         char* t = s;
         int   v = atoi(strsep(&t, "\n"));
-
+        printf("reciveing\n");
         switch( v ) { 
             case MSG_TYPE_POTATO :
+            {
                 printf("I got the winner\n");
                 exit(0);
                 break;
+            }
             case MSG_TYPE_CONNECTION :
+            {
+                printf("recieving a connection\n");
                 if( childn == childc) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
@@ -75,7 +99,8 @@ int main ( int argc, char** argv, char** envv) {
                          startGame(childv[0], swapn);
                      }
                 }
-            break; 
+                break; 
+            }
         }
         free(s);
     }

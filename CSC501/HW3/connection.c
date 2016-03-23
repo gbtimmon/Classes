@@ -40,7 +40,7 @@ Connection Connection_recv(char ** s){
 }
 
 void Connection_print( Connection c ) {
-     printf("<connection port=\"%d\" host=\"%s\" type=\"%d\" />", c->port, c->host, c->type); 
+     printf("<connection port=\"%d\" host=\"%s\" type=\"%d\" />\n", c->port, c->host, c->type); 
 
 }
 
