@@ -14,7 +14,7 @@
 
 void makeConnection( Connection connFrom, Connection connTo, int type ) {
     int sock = SocketWriter_new(connFrom);
-    Connection c = Connection_new( connTo->host, connTo->port, type );
+    Connection c = Connection_new( connTo->host, connTo->port, type, connTo->num );
     Connection_send( c, sock ); 
     Connection_free( c ); 
     close(sock); 
@@ -74,7 +74,7 @@ int main ( int argc, char** argv, char** envv) {
 
     Connection childv[ childn ];
     
-    Connection c = Connection_new( host, port, CONN_TYPE_IN);
+    Connection c = Connection_new( host, port, CONN_TYPE_IN, -1);
     int sin = SocketListener_new( c ); 
    
     if( c->port != port ) {
@@ -109,6 +109,7 @@ int main ( int argc, char** argv, char** envv) {
                      fprintf(stderr,"%d connections already recieved, and I recieved annother. Refusing connection\n", childn);
                 } else {
                      Connection cc = Connection_recv( &t );
+                     cc->num = childc + 1; 
                      childv[childc] = cc;
                      fprintf(stdout, "player %d is on %s\n", childc + 1, cc->host); 
                      nameChild(cc, childc + 1);

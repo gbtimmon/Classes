@@ -21,6 +21,7 @@
 /*........................ Include Files ....................................*/
 #define _GNU_SOURCE
 
+#include "random.h"
 #include "connection.h"
 #include "socket.h"
 #include "potato.h"
@@ -47,8 +48,7 @@ int        id                 = -1;
 void reportAddress( Connection reportWhat, Connection reportTo ){
 
      int socket_mast = SocketWriter_new( reportTo );
-     Connection myAddressReport = Connection_new( reportWhat->host, reportWhat->port, CONN_TYPE_CHILD);
-     Connection_print( myAddressReport );
+     Connection myAddressReport = Connection_new( reportWhat->host, reportWhat->port, CONN_TYPE_CHILD, -1);
      Connection_send( myAddressReport, socket_mast );
      Connection_free( myAddressReport );
      close( socket_mast );
@@ -76,11 +76,10 @@ int main (int argc, char *argv[])
 
     int defaultPort = ( DEFAULT_PORT != atoi(argv[2])) ? DEFAULT_PORT : DEFAULT_PORT2; 
 
-    printf( " [[[ %d ]]]\n", defaultPort ); 
-    Connection conn_in = Connection_new(player_host, defaultPort, CONN_TYPE_IN ); 
+    Connection conn_in = Connection_new(player_host, defaultPort, CONN_TYPE_IN, -1 ); 
     int socket_in = SocketListener_new( conn_in ); 
 
-    Connection conn_m = Connection_new(master_host, atoi(argv[2]), CONN_TYPE_MASTER); 
+    Connection conn_m = Connection_new(master_host, atoi(argv[2]), CONN_TYPE_MASTER, -1); 
     reportAddress( conn_in, conn_m );
     
     Connection conn_r = NULL;
@@ -102,15 +101,16 @@ int main (int argc, char *argv[])
                 }
 
                 Potato p = Potato_recv( &t ); 
-                Potato_print( p ); 
-
                 Connection targ;
                 if( p->current_count == 0 ){
+                     printf("I'm it\n");
                      targ = conn_m;
-                } else if ( random() % 2 ) {
+                } else if ( idrandom( id ) % 2 ) {
                      targ = conn_r; 
+                     printf("Sending potato to %d\n", targ->num);
                 } else {
                      targ = conn_l; 
+                     printf("Sending potato to %d\n", targ->num);
                 }
                 passPotato(p, targ);
                 Potato_free( p ); 
@@ -119,7 +119,6 @@ int main (int argc, char *argv[])
             case MSG_TYPE_CONNECTION :
             {
                 Connection c = Connection_recv( &t );
-                printf("Setting connection \n");
                 if( c->type == CONN_TYPE_LEFT )
                     conn_l = c; 
                 else if (c->type == CONN_TYPE_RIGHT )
@@ -129,6 +128,7 @@ int main (int argc, char *argv[])
             case MSG_TYPE_CHILD_NAME :
             {
                 id = atoi(strsep( &t, "\n") );
+                printf("Connected as player %d\n", id);
                 break;
             }
             case MSG_TYPE_CLOSE : 

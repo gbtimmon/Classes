@@ -4,11 +4,11 @@ CFlags=-Wall -Werror -pedantic -std=c99
 Inc=-I .
 Static=-fPIC -c
 
-gom: ./master.c ./potato.o ./socket.o ./connection.o goc
-	${CC} ${CFlags} ./master.c ./potato.o ./socket.o ./connection.o ${Inc} -o ./master
+gom: ./master.c ./potato.o ./socket.o ./connection.o ./random.o goc
+	${CC} ${CFlags} ./master.c ./potato.o ./socket.o ./connection.o ./random.o ${Inc} -o ./master
 
-goc: ./player.c ./potato.o ./socket.o ./connection.o
-	${CC} ${CFlags} ./player.c ./potato.o ./socket.o ./connection.o ${Inc} -o ./player
+goc: ./player.c ./potato.o ./socket.o ./connection.o ./random.o
+	${CC} ${CFlags} ./player.c ./potato.o ./socket.o ./connection.o ./random.o ${Inc} -o ./player
 
 ./potato.o: ./potato.c
 	${CC} ${Static} ${CFlags} ./potato.c ${Inc} -o ./potato.o
@@ -18,7 +18,6 @@ goc: ./player.c ./potato.o ./socket.o ./connection.o
 
 ./connection.o: ./connection.c
 	${CC} ${Static} ${CFlags} ./connection.c ${Inc} -o ./connection.o
-
 
 ./random.o : ./random.c
 	${CC} ${Static} ${CFlags} ./random.c ${Inc} -o ./random.o

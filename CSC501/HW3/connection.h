@@ -11,9 +11,10 @@ typedef struct connection {
     int type; 
     char *host;
     int  port; 
+    int num;
 } * Connection; 
 
-Connection Connection_new( const char *, int, int); 
+Connection Connection_new( const char *, int, int, int); 
 void       Connection_free( Connection );
 void       Connection_send( Connection, int ); 
 Connection Connection_recv( char ** ); 

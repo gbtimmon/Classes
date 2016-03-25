@@ -2,8 +2,9 @@
 #define SOCKET_C
 
 #define _GNU_SOURCE
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 5000
 
+#include "random.h"
 #include "connection.h"
 #include "socket.h"
 
@@ -50,7 +51,7 @@ int SocketListener_new( Connection c ) {
             perror("bind:");
             exit (1); 
         } else if( rc < 0 ) {
-            target_port = target_port + (random() % 50);
+            target_port = target_port + (nlrandom() % 50);
         } else {
             break;
         }
