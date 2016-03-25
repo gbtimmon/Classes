@@ -116,7 +116,12 @@ int main ( int argc, char** argv, char** envv) {
  
                      if( childn == childc) {
                          connectChildren(childn, childv);
-                         startGame(childn, childv, swapn);
+                         if(swapn > 0 ){
+                             startGame(childn, childv, swapn);
+                         } else {
+                             closeChildren( childc, childv );
+                             exit(0);
+                         }
                      }
                 }
                 break; 
