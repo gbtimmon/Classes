@@ -23,7 +23,6 @@
 #define OK           0
 #define NOT_OK       1
 
-#define PROMPT()     printf("%s%%", hostname)
 #define RC_FILE      "/.ushrc"
 #define DEFAULT_MODE S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 
@@ -78,12 +77,15 @@ int doPipe(Pipe p){
 }
 
 int batch() {
-    Pipe p = parse();
-    while( p ) { 
-        doPipe(p);
-        p = parse();
+    while(1){
+        Pipe p = parse();
+        if ( p ) {
+           if( !strcmp( "end",  p->head->args[0] ) )
+               return OK;
+           doPipe( p );
+        }
     }
-    return OK;
+    return NOT_OK;
 }
 
 int main(int argc, char** args, char** env){
@@ -98,20 +100,33 @@ int main(int argc, char** args, char** env){
     gethostname(hostname, BUFFER_SIZE);
 
     int rc_fd = open( getRCPath(), O_RDONLY); 
-
     if( rc_fd < 0 ) {
         dprintf( STDERR_FD, "Failed to open config %s. Errno %d [%s]\n",  getRCPath(), errno, strerror(errno));
     }else {
+        int save_real_stdin = STDIN_FD;
+        STDIN_FD = rc_fd;
+
         close(STDIN_FILENO);
         dup2( rc_fd, STDIN_FILENO); 
+
         batch();
+
         close(STDIN_FILENO);
+        STDIN_FD = save_real_stdin; 
         dup2( dup(STDIN_FD), STDIN_FILENO);
     }
-
-    while( PROMPT() ) { 
+    
+    int isa = isatty(STDIN_FILENO);
+    while(1){
+        if( isa ) dprintf(STDOUT_FD, "%s%%", hostname);
         fflush( NULL );
-        doPipe(parse());
-    }      
+        Pipe p = parse();
+        if ( p ) {
+           if( !strcmp( "end",  p->head->args[0] ) )
+               return OK;
+           doPipe( p );
+        }
+    }
+
 }
 #endif
