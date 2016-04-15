@@ -1,12 +1,10 @@
-#define _GNU_SOURCE
 #define FUSE_USE_VERSION 26
 
 #include <stdio.h>
 #include <unistd.h>
 #include <fuse.h>
 
-typedef struct fuse_operations* Oper;
-Oper operations; 
+#include "operations.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +16,7 @@ int main(int argc, char *argv[])
     }
 
     
-    //fuse_stat = fuse_main(argc, argv, &bb_oper, bb_data);
+    fuse_stat = fuse_main(argc, argv, &gfs_oper, NULL);
     fprintf(stdout, "yo dog\n");
     
     return fuse_stat;
