@@ -3,6 +3,7 @@
 
 #include <fuse.h>
 
+static int gfs_getattr(const char *path, struct stat *stbuf);
 int gfs_open(const char * path, struct fuse_file_info *fi);
 int gfs_read(const char * path, char * buf, size_t size, off_t offset, struct fuse_file_info *fi);
 int gfs_write(const char * path, const char * buf, size_t size, off_t offset, struct fuse_file_info *fi);
@@ -21,6 +22,7 @@ static struct fuse_operations gfs_oper = {
         .mkdir          = gfs_mkdir,
         .unlink         = gfs_unlink,
         .rmdir          = gfs_rmdir,
+        .getattr        = gfs_getattr,
 };
 
 #endif
