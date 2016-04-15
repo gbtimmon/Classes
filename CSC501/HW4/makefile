@@ -1,7 +1,7 @@
 #!/bin/make 
 
 CC=gcc
-CFlags=-Wall -Werror -pedantic -std=c99 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+CFlags=-Wall -Werror -pedantic -std=c99
 Inc=-I . -I /fuse-2.9.3/include
 Static=-fPIC -c
 Lib=-L /fuse-2.9.3/lib -pthread -lfuse

@@ -1,4 +1,4 @@
-#define FUSE_USE_VERSION 26
+#include "params.h"
 
 #include <stdio.h>
 #include <unistd.h>

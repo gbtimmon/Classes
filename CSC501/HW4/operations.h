@@ -1,6 +1,7 @@
 #ifndef _OPERATIONS_H
 #define _OPERATIONS_H
 
+#include "params.h"
 #include <fuse.h>
 
 int gfs_getattr(const char *path, struct stat *stbuf);
@@ -13,7 +14,7 @@ int gfs_rmdir(const char * path);
 int gfs_opendir(const char * path, struct fuse_file_info *fi);
 int gfs_readdir(const char * path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi);
 
-static struct fuse_operations gfs_oper = {
+struct fuse_operations gfs_oper = {
         .readdir        = gfs_readdir,
         .open           = gfs_open,
         .read           = gfs_read,
