@@ -5,6 +5,9 @@
 #include <fuse.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 
 int gfs_open(const char * path, struct fuse_file_info *fi){
     printf("Dude I aint dont this shit.... fuck off\n");
@@ -39,7 +42,7 @@ int gfs_readdir(const char * path, void *buf, fuse_fill_dir_t filler, off_t offs
     return -1; 
 }
 
-static int gfs_getattr(const char *path, struct stat *stbuf)
+int gfs_getattr(const char *path, struct stat *stbuf)
 {
         int res = 0;
 
@@ -47,10 +50,10 @@ static int gfs_getattr(const char *path, struct stat *stbuf)
         if (strcmp(path, "/") == 0) {
                 stbuf->st_mode = S_IFDIR | 0755;
                 stbuf->st_nlink = 2;
-        } else if (strcmp(path, hello_path) == 0) {
- /              stbuf->st_mode = S_IFREG | 0444;
-                stbuf->st_nlink = 1;
-                stbuf->st_size = strlen(hello_str);
+  //      } else if (strcmp(path, hello_path) == 0) {
+ //              stbuf->st_mode = S_IFREG | 0444;
+  //              stbuf->st_nlink = 1;
+   //             stbuf->st_size = strlen(hello_str);
         } else
                 res = -ENOENT;
 

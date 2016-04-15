@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	return 1;
     }
 
-    
+    fprintf(stdout, "yo dog nignog\n");   
     fuse_stat = fuse_main(argc, argv, &gfs_oper, NULL);
     fprintf(stdout, "yo dog\n");
     
