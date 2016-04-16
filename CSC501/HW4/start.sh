@@ -1,11 +1,12 @@
-MT=~/mnt
-RT=~/rt
+#!/bin/bash
+
+MT=${1}
+if [ X$MT = X ]; then
+    MT=~/mnt
+fi 
+  
 rm -fR ${MT}/*
 rmdir  ${MT}
 mkdir  ${MT}
 
-rm -fR ${RT}/*
-rmdir  ${RT} 
-mkdir  ${RT}
-
-./greg_fs ${MT} ${RT}
+./greg_fs ${MT} 

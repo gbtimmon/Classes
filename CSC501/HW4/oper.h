@@ -1,5 +1,11 @@
+#ifndef _OPER_H
+#define _OPER_H
+
 #include "params.h"
 #include <fuse.h>
+
+
+struct fuse_operations gfs_oper; 
 
 /** Get file attributes.
  *
@@ -7,7 +13,7 @@
  * ignored. The 'st_ino' field is ignored except if the 'use_ino'
  * mount option is given.
  */
-//int gfs_getattr (const char *, struct stat *);
+int gfs_getattr (const char *, struct stat *);
 
 /** Read the target of a symbolic link
  *
@@ -373,7 +379,6 @@
  * If this flag is set these operations continue to work on
  * unlinked files even if "-ohard_remove" option was specified.
  */
-unsigned int flag_nullpath_ok:1;
 
 /**
  * Flag indicating that the path need not be calculated for
@@ -387,18 +392,15 @@ unsigned int flag_nullpath_ok:1;
  * wasn't unlinked.  However the path can still be non-NULL if
  * it needs to be calculated for some other reason.
  */
-unsigned int flag_nopath:1;
 
 /**
  * Flag indicating that the filesystem accepts special
  * UTIME_NOW and UTIME_OMIT values in its utimens operation.
  */
-unsigned int flag_utime_omit_ok:1;
 
 /**
  * Reserved flags, don't set
  */
-unsigned int flag_reserved:29;
 
 /**
  * Ioctl
@@ -493,3 +495,5 @@ unsigned int flag_reserved:29;
  * Introduced in version 2.9.1
  */
 //int gfs_fallocate (const char *, int, off_t, off_t, struct fuse_file_info *);
+//
+#endif

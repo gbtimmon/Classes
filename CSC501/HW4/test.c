@@ -1,10 +1,8 @@
 #include "params.h"
+#include "oper.h"
 
 #include <stdio.h>
 #include <unistd.h>
-#include <fuse.h>
-
-#include "operations.h"
 
 int main(int argc, char *argv[])
 {

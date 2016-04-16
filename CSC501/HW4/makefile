@@ -6,10 +6,10 @@ Inc=-I . -I /fuse-2.9.3/include
 Static=-fPIC -c
 Lib=-L /fuse-2.9.3/lib -pthread -lfuse
 
-greg_fs : test.c operations.o
-	${CC} ${CFlags} ./test.c ./operations.o ${Inc} ${Lib} -o greg_fs
+greg_fs : test.c oper.o
+	${CC} ${CFlags} ./test.c ./oper.o ${Inc} ${Lib} -o greg_fs
 
-operations.o: operations.c
-	${CC} ${Static} ${CFlags} ./operations.c ${Inc} ${Lib} -o operations.o
+oper.o: oper.c
+	${CC} ${Static} ${CFlags} ./oper.c ${Inc} ${Lib} -o oper.o
 
 
