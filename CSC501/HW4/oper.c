@@ -1,4 +1,4 @@
-#include "params.h"
+#include "global.h"
 #include "oper.h"
 #include "log.h"
 

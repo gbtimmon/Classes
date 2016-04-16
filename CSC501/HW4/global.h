@@ -15,8 +15,17 @@
 
 #include <stdio.h>
 
-typedef struct fs_state * {
+typedef struct fs_state {
     FILE *logfile;
-} FSState;
+} * State;
+
+State State_new(const char *);
+State getState();
+int State_del( State ); 
+
+
+FILE* Log_open(const char *);
+void  Log_msg(const char *, ...);
+
 
 #endif

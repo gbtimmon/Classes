@@ -1,7 +1,7 @@
 #ifndef _OPER_H
 #define _OPER_H
 
-#include "params.h"
+#include "global.h"
 #include <fuse.h>
 
 
