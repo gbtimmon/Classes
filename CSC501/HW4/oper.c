@@ -1,5 +1,6 @@
 #include "params.h"
 #include "oper.h"
+#include "log.h"
 
 #include <fuse.h>
 #include <stdio.h>
@@ -95,7 +96,8 @@ struct fuse_operations gfs_oper = {
 
 int gfs_getattr (const char * path, struct stat * stbuf) { 
 
-        printf("\ngfs_getattr(path=\"%s\",)\n", path);
+        log_msg("\nbb_getattr(path=\"%s\", statbuf=0x%08x)\n", path, stbuf);
+
         int res = 0;
 
         memset(stbuf, 0, sizeof(struct stat));
