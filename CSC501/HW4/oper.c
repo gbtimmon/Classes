@@ -1,6 +1,5 @@
 #include "global.h"
 #include "oper.h"
-#include "log.h"
 
 #include <fuse.h>
 #include <stdio.h>
@@ -94,9 +93,9 @@ struct fuse_operations gfs_oper = {
 };
 
 
-int gfs_getattr (const char * path, struct stat * stbuf) { 
-
-        log_msg("\nbb_getattr(path=\"%s\", statbuf=0x%08x)\n", path, stbuf);
+int gfs_getattr (const char * path, struct stat * stbuf) 
+{ 
+        Log_msg("gfs_getattr(path=\"%s\")\n", path);
 
         int res = 0;
 
@@ -111,6 +110,8 @@ int gfs_getattr (const char * path, struct stat * stbuf) {
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
+        Log_msg("gfs_readdir(path=\"%s\")\n", path);
+
         (void) offset;
         (void) fi;
 

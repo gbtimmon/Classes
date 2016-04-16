@@ -12,10 +12,14 @@
 
 #include "global.h"
 #include <fuse.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdarg.h>
 
-State State_new( const char * logfile ) {
+State State_new( const char * logpath ) {
     State newState = malloc( sizeof( struct fs_state ) ); 
-    newState->logfile = log_open( ); 
+    newState->logfile = Log_open( logpath ); 
+    return newState; 
 }
 
 State getState() {
@@ -23,12 +27,12 @@ State getState() {
 }
 
 int State_del( State s ){
-    close(s->logfile);
+    fclose(s->logfile);
     free(s); 
     return EXIT_SUCCESS;
 }
 
-FILE *log_open(const char * path)
+FILE* Log_open(const char * path)
 {
     FILE * logfile = fopen(path, "w");
     if ( ! logfile) {
@@ -42,11 +46,11 @@ FILE *log_open(const char * path)
     return logfile;
 }
 
-void log_msg(const char *format, ...)
+void Log_msg(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    vfprintf( fs_getState()->logfile, format, ap);
+    vfprintf( getState()->logfile, format, ap);
 }
 
 #endif
