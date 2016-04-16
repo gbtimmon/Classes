@@ -15,6 +15,6 @@ oper.o: oper.c
 global.o: global.c
 	${CC} ${Static} ${CFlags} ./global.c ${Inc} ${Lib} -o global.o
 
-file.o : file.o
+file.o : file.c
 	${CC} ${Static} ${CFlags} ./file.c   ${Inc} ${Lib} -o file.o
 

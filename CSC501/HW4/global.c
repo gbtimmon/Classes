@@ -11,14 +11,19 @@
 #define _GLOBAL_C
 
 #include "global.h"
+#include "file.h"
+
 #include <fuse.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
 
 State State_new( const char * logpath ) {
-    State newState = malloc( sizeof( struct fs_state ) ); 
+
+    State newState    = malloc( sizeof( struct fs_state ) ); 
     newState->logfile = Log_open( logpath ); 
+    newState->root    = File_new_root(); 
+
     return newState; 
 }
 

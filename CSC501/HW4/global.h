@@ -13,10 +13,13 @@
 #define _GNU_SOURCE
 #define FUSE_USE_VERSION 26
 
+#include "file.h"
+
 #include <stdio.h>
 
 typedef struct fs_state {
     FILE *logfile;
+    File root; 
 } * State;
 
 State State_new(const char *);
