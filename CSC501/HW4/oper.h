@@ -7,7 +7,7 @@
  * ignored. The 'st_ino' field is ignored except if the 'use_ino'
  * mount option is given.
  */
-int gfs_getattr (const char *, struct stat *);
+//int gfs_getattr (const char *, struct stat *);
 
 /** Read the target of a symbolic link
  *
@@ -17,10 +17,10 @@ int gfs_getattr (const char *, struct stat *);
  * buffer, it should be truncated.The return value should be 0
  * for success.
  */
-int gfs_readlink (const char *, char *, size_t);
+//int gfs_readlink (const char *, char *, size_t);
 
 /* Deprecated, use readdir() instead */
-int gfs_getdir (const char *, fuse_dirh_t, fuse_dirfil_t);
+//int gfs_getdir (const char *, fuse_dirh_t, fuse_dirfil_t);
 
 /** Create a file node
  *
@@ -28,7 +28,7 @@ int gfs_getdir (const char *, fuse_dirh_t, fuse_dirfil_t);
  * nodes.  If the filesystem defines a create() method, then for
  * regular files that will be called instead.
  */
-int gfs_mknod (const char *, mode_t, dev_t);
+//int gfs_mknod (const char *, mode_t, dev_t);
 
 /** Create a directory 
  *
@@ -36,37 +36,37 @@ int gfs_mknod (const char *, mode_t, dev_t);
  * bits set, i.e. S_ISDIR(mode) can be false.  To obtain the
  * correct directory type bits use  mode|S_IFDIR
  * */
-int gfs_mkdir (const char *, mode_t);
+//int gfs_mkdir (const char *, mode_t);
 
 /** Remove a file */
-int gfs_unlink (const char *);
+//int gfs_unlink (const char *);
 
 /** Remove a directory */
-int gfs_rmdir (const char *);
+//int gfs_rmdir (const char *);
 
 /** Create a symbolic link */
-int gfs_symlink (const char *, const char *);
+//int gfs_symlink (const char *, const char *);
 
 /** Rename a file */
-int gfs_rename (const char *, const char *);
+//int gfs_rename (const char *, const char *);
 
 /** Create a hard link to a file */
-int gfs_link (const char *, const char *);
+//int gfs_link (const char *, const char *);
 
 /** Change the permission bits of a file */
-int gfs_chmod (const char *, mode_t);
+//int gfs_chmod (const char *, mode_t);
 
 /** Change the owner and group of a file */
-int gfs_chown (const char *, uid_t, gid_t);
+//int gfs_chown (const char *, uid_t, gid_t);
 
 /** Change the size of a file */
-int gfs_truncate (const char *, off_t);
+//int gfs_truncate (const char *, off_t);
 
 /** Change the access and/or modification times of a file
  *
  * Deprecated, use utimens() instead.
  */
-int gfs_utime (const char *, struct utimbuf *);
+//int gfs_utime (const char *, struct utimbuf *);
 
 /** File open operation
  *
@@ -85,7 +85,7 @@ int gfs_utime (const char *, struct utimbuf *);
  *
  * Changed in version 2.2
  */
-int gfs_open (const char *, struct fuse_file_info *);
+//int gfs_open (const char *, struct fuse_file_info *);
 
 /** Read data from an open file
  *
@@ -96,10 +96,8 @@ int gfs_open (const char *, struct fuse_file_info *);
  * value of the read system call will reflect the return value of
  * this operation.
  *
- * Changed in version 2.2
- */
-int gfs_read (const char *, char *, size_t, off_t,
-     struct fuse_file_info *);
+ * Changed in version 2.2 */
+//int gfs_read (const char *, char *, size_t, off_t, struct fuse_file_info *);
 
 /** Write data to an open file
  *
@@ -109,8 +107,7 @@ int gfs_read (const char *, char *, size_t, off_t,
  *
  * Changed in version 2.2
  */
-int gfs_write (const char *, const char *, size_t, off_t,
-      struct fuse_file_info *);
+//int gfs_write (const char *, const char *, size_t, off_t, struct fuse_file_info *);
 
 /** Get file system statistics
  *
@@ -119,7 +116,7 @@ int gfs_write (const char *, const char *, size_t, off_t,
  * Replaced 'struct statfs' parameter with 'struct statvfs' in
  * version 2.5
  */
-int gfs_statfs (const char *, struct statvfs *);
+//int gfs_statfs (const char *, struct statvfs *);
 
 /** Possibly flush cached data
  *
@@ -144,7 +141,7 @@ int gfs_statfs (const char *, struct statvfs *);
  *
  * Changed in version 2.2
  */
-int gfs_flush (const char *, struct fuse_file_info *);
+//int gfs_flush (const char *, struct fuse_file_info *);
 
 /** Release an open file
  *
@@ -160,7 +157,7 @@ int gfs_flush (const char *, struct fuse_file_info *);
  *
  * Changed in version 2.2
  */
-int gfs_release (const char *, struct fuse_file_info *);
+//int gfs_release (const char *, struct fuse_file_info *);
 
 /** Synchronize file contents
  *
@@ -169,19 +166,19 @@ int gfs_release (const char *, struct fuse_file_info *);
  *
  * Changed in version 2.2
  */
-int gfs_fsync (const char *, int, struct fuse_file_info *);
+//int gfs_fsync (const char *, int, struct fuse_file_info *);
 
 /** Set extended attributes */
-int gfs_setxattr (const char *, const char *, const char *, size_t, int);
+//int gfs_setxattr (const char *, const char *, const char *, size_t, int);
 
 /** Get extended attributes */
-int gfs_getxattr (const char *, const char *, char *, size_t);
+//int gfs_getxattr (const char *, const char *, char *, size_t);
 
 /** List extended attributes */
-int gfs_listxattr (const char *, char *, size_t);
+//int gfs_listxattr (const char *, char *, size_t);
 
 /** Remove extended attributes */
-int gfs_removexattr (const char *, const char *);
+//int gfs_removexattr (const char *, const char *);
 
 /** Open directory
  *
@@ -193,7 +190,7 @@ int gfs_removexattr (const char *, const char *);
  *
  * Introduced in version 2.3
  */
-int gfs_opendir (const char *, struct fuse_file_info *);
+//int gfs_opendir (const char *, struct fuse_file_info *);
 
 /** Read directory
  *
@@ -216,14 +213,13 @@ int gfs_opendir (const char *, struct fuse_file_info *);
  *
  * Introduced in version 2.3
  */
-int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t,
-struct fuse_file_info *);
+//int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
 
 /** Release directory
  *
  * Introduced in version 2.3
  */
-int gfs_releasedir (const char *, struct fuse_file_info *);
+//int gfs_releasedir (const char *, struct fuse_file_info *);
 
 /** Synchronize directory contents
  *
@@ -232,7 +228,7 @@ int gfs_releasedir (const char *, struct fuse_file_info *);
  *
  * Introduced in version 2.3
  */
-int gfs_fsyncdir (const char *, int, struct fuse_file_info *);
+//int gfs_fsyncdir (const char *, int, struct fuse_file_info *);
 
 /**
  * Initialize filesystem
@@ -244,7 +240,7 @@ int gfs_fsyncdir (const char *, int, struct fuse_file_info *);
  * Introduced in version 2.3
  * Changed in version 2.6
  */
-void *gfs_init (struct fuse_conn_info *conn);
+//void *gfs_init (struct fuse_conn_info *conn);
 
 /**
  * Clean up filesystem
@@ -253,7 +249,7 @@ void *gfs_init (struct fuse_conn_info *conn);
  *
  * Introduced in version 2.3
  */
-void gfs_destroy (void *);
+//void gfs_destroy (void *);
 
 /**
  * Check file access permissions
@@ -266,7 +262,7 @@ void gfs_destroy (void *);
  *
  * Introduced in version 2.5
  */
-int gfs_access (const char *, int);
+//int gfs_access (const char *, int);
 
 /**
  * Create and open a file
@@ -280,7 +276,7 @@ int gfs_access (const char *, int);
  *
  * Introduced in version 2.5
  */
-int gfs_create (const char *, mode_t, struct fuse_file_info *);
+//int gfs_create (const char *, mode_t, struct fuse_file_info *);
 
 /**
  * Change the size of an open file
@@ -294,7 +290,7 @@ int gfs_create (const char *, mode_t, struct fuse_file_info *);
  *
  * Introduced in version 2.5
  */
-int gfs_ftruncate (const char *, off_t, struct fuse_file_info *);
+//int gfs_ftruncate (const char *, off_t, struct fuse_file_info *);
 
 /**
  * Get attributes from an open file
@@ -308,7 +304,7 @@ int gfs_ftruncate (const char *, off_t, struct fuse_file_info *);
  *
  * Introduced in version 2.5
  */
-int gfs_fgetattr (const char *, struct stat *, struct fuse_file_info *);
+//int gfs_fgetattr (const char *, struct stat *, struct fuse_file_info *);
 
 /**
  * Perform POSIX file locking operation
@@ -342,8 +338,7 @@ int gfs_fgetattr (const char *, struct stat *, struct fuse_file_info *);
  *
  * Introduced in version 2.6
  */
-int gfs_lock (const char *, struct fuse_file_info *, int cmd,
-     struct flock *);
+//int gfs_lock (const char *, struct fuse_file_info *, int cmd, struct flock *);
 
 /**
  * Change the access and modification times of a file with
@@ -356,7 +351,7 @@ int gfs_lock (const char *, struct fuse_file_info *, int cmd,
  *
  * Introduced in version 2.6
  */
-int gfs_utimens (const char *, const struct timespec tv[2]);
+//int gfs_utimens (const char *, const struct timespec tv[2]);
 
 /**
  * Map block index within file to block index within device
@@ -366,7 +361,7 @@ int gfs_utimens (const char *, const struct timespec tv[2]);
  *
  * Introduced in version 2.6
  */
-int gfs_bmap (const char *, size_t blocksize, uint64_t *idx);
+//int gfs_bmap (const char *, size_t blocksize, uint64_t *idx);
 
 /**
  * Flag indicating that the filesystem can accept a NULL path
@@ -417,8 +412,7 @@ unsigned int flag_reserved:29;
  *
  * Introduced in version 2.8
  */
-int gfs_ioctl (const char *, int cmd, void *arg,
-      struct fuse_file_info *, unsigned int flags, void *data);
+//int gfs_ioctl (const char *, int cmd, void *arg, struct fuse_file_info *, unsigned int flags, void *data);
 
 /**
  * Poll for IO readiness events
@@ -437,7 +431,7 @@ int gfs_ioctl (const char *, int cmd, void *arg,
  *
  * Introduced in version 2.8
  */
-int gfs_poll (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
+//int gfs_poll (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
 
 /** Write contents of buffer to an open file
  *
@@ -447,7 +441,7 @@ int gfs_poll (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph,
  *
  * Introduced in version 2.9
  */
-int gfs_write_buf (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
+//int gfs_write_buf (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
 
 /** Store data from an open file in a buffer
  *
@@ -465,7 +459,7 @@ int gfs_write_buf (const char *, struct fuse_bufvec *buf, off_t off, struct fuse
  *
  * Introduced in version 2.9
  */
-int gfs_read_buf (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
+//int gfs_read_buf (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
 /**
  * Perform BSD file locking operation
  *
@@ -486,7 +480,7 @@ int gfs_read_buf (const char *, struct fuse_bufvec **bufp, size_t size, off_t of
  *
  * Introduced in version 2.9
  */
-int gfs_flock (const char *, struct fuse_file_info *, int op);
+//int gfs_flock (const char *, struct fuse_file_info *, int op);
 
 /**
  * Allocates space for an open file
@@ -498,4 +492,4 @@ int gfs_flock (const char *, struct fuse_file_info *, int op);
  *
  * Introduced in version 2.9.1
  */
-int gfs_fallocate (const char *, int, off_t, off_t, struct fuse_file_info *);
+//int gfs_fallocate (const char *, int, off_t, off_t, struct fuse_file_info *);
