@@ -1,6 +1,53 @@
 #include "params.h"
 #include <fuse.h>
 
+struct fuse_operations gfs_oper = {
+     .getattr = gfs_getattr,
+//     .readlink = gfs_readlink,
+//     .getdir = gfs_getdir,
+//     .mknod = gfs_mknod,
+//     .mkdir = gfs_mkdir,
+//     .unlink = gfs_unlink,
+//     .rmdir = gfs_rmdir,
+//     .symlink = gfs_symlink,
+//     .rename = gfs_rename,
+//     .link = gfs_link,
+//     .chmod = gfs_chmod,
+//     .chown = gfs_chown,
+//     .truncate = gfs_truncate,
+//     .utime = gfs_utime,
+//     .open = gfs_open,
+//     .read = gfs_read,
+//     .write = gfs_write,
+//     .statfs = gfs_statfs,
+//     .flush = gfs_flush,
+//     .release = gfs_release,
+//     .fsync = gfs_fsync,
+//     .setxattr = gfs_setxattr,
+//     .getxattr = gfs_getxattr,
+//     .listxattra = gfs_listxattra,
+//     .removexattr = gfs_removexattr,
+//     .opendir = gfs_opendir,
+//     .readdir = gfs_readdir,
+//     .releasedir = gfs_releasedir,
+//     .fsyncdir = gfs_fsyncdir,
+//     .destroy = gfs_destroy,
+//     .access = gfs_access,
+//     .create = gfs_create,
+//     .ftruncate = gfs_ftruncate,
+//     .fgetattr = gfs_fgetattr,
+//     .lock = gfs_lock,
+//     .utimens = gfs_utimens,
+//     .bmap = gfs_bmap,
+//     .ioctl = gfs_ioctl,
+//     .poll = gfs_poll,
+//     .write_buf = gfs_write_buf,
+//     .read_buf = gfs_read_buf,
+//     .flock = gfs_flock,
+//     .fallocate = gfs_fallocate,
+};
+
+
 unsigned int flag_nullpath_ok:1;
 unsigned int flag_nopath:1;
 unsigned int flag_utime_omit_ok:1;
