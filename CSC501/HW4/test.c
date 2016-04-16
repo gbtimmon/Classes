@@ -1,4 +1,5 @@
 #include "global.h"
+#include "file.h"
 #include "oper.h"
 
 #include <stdlib.h>

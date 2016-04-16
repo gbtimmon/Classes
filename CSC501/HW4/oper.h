@@ -219,7 +219,7 @@ int gfs_getattr (const char *, struct stat *);
  *
  * Introduced in version 2.3
  */
-//int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
+int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
 
 /** Release directory
  *

@@ -1,18 +1,20 @@
 #!/bin/make 
 
-CC=gcc
-CFlags=-Wall -Werror -pedantic -std=c99
-Inc=-I . -I /fuse-2.9.3/include
-Static=-fPIC -c
-Lib=-L /fuse-2.9.3/lib -pthread -lfuse
+CC     =gcc
+CFlags =-Wall -Werror -pedantic -std=c99
+Inc    =-I . -I /fuse-2.9.3/include
+Static =-fPIC -c
+Lib    =-L /fuse-2.9.3/lib -pthread -lfuse
 
-greg_fs : test.c global.o oper.o
-	${CC} ${CFlags} ./test.c ./oper.o ./global.o ${Inc} ${Lib} -o greg_fs
+greg_fs : test.c global.o oper.o file.o
+	${CC} ${CFlags} ./test.c ./oper.o ./global.o ./file.o ${Inc} ${Lib} -o greg_fs
 
 oper.o: oper.c 
-	${CC} ${Static} ${CFlags} ./oper.c ${Inc} ${Lib} -o oper.o
+	${CC} ${Static} ${CFlags} ./oper.c   ${Inc} ${Lib} -o oper.o
 
 global.o: global.c
 	${CC} ${Static} ${CFlags} ./global.c ${Inc} ${Lib} -o global.o
 
+file.o : file.o
+	${CC} ${Static} ${CFlags} ./file.c   ${Inc} ${Lib} -o file.o
 
