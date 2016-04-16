@@ -4,7 +4,9 @@
 #include "global.h"
 #include "file.h"
 
+#include <sys/stat.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -48,6 +50,7 @@ File File_new_dir( File parent, const char * name ) {
     dir->type = FILE_TYPE_DIR;
     dir->name = copyString(name, &name_size); 
     dir->up   = parent;
+    dir->mode = S_IFDIR | 0755;
     dir->next = NULL;
     dir->last = NULL;
     dir->head = NULL;

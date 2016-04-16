@@ -42,7 +42,7 @@ int gfs_getattr (const char *, struct stat *);
  * bits set, i.e. S_ISDIR(mode) can be false.  To obtain the
  * correct directory type bits use  mode|S_IFDIR
  * */
-//int gfs_mkdir (const char *, mode_t);
+int gfs_mkdir (const char *, mode_t);
 
 /** Remove a file */
 //int gfs_unlink (const char *);

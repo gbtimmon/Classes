@@ -29,7 +29,7 @@ struct fuse_operations gfs_oper = {
 //     .link = gfs_link,
 //     .listxattra = gfs_listxattra,
 //     .lock = gfs_lock,
-//     .mkdir = gfs_mkdir,
+     .mkdir = gfs_mkdir,
 //     .mknod = gfs_mknod,
 //     .opendir = gfs_opendir,
 //     .open = gfs_open,
@@ -111,17 +111,31 @@ int gfs_getattr (const char * path, struct stat * stbuf)
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
-        Log_msg("gfs_readdir(path=\"%s\")\n", path);
+    Log_msg("gfs_readdir(path=\"%s\")\n", path);
+    
+    (void) offset;
+    (void) fi;
 
-        (void) offset;
-        (void) fi;
+    File dir = getState()->root; 
 
-        filler(buf, ".", NULL, 0);
-        filler(buf, "..", NULL, 0);
+    filler(buf, ".", NULL, 0);
+    filler(buf, "..", NULL, 0);
 
-        return 0;
+    while( dir != NULL ) {
+        filler(buf, dir->name, NULL, 0); 
+        dir = dir->next; 
+    }
+
+    return 0;
 }
 
+int gfs_mkdir (const char * path, mode_t mode) {
+    
+    Log_msg("gfs_mkdir(path=\"%s\")\n", path);
+    File_new_dir(getState()->root, "test");
+
+    return 0;
+}
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
@@ -141,7 +155,6 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 //int    gfs_link        (const char *, const char *)
 //int    gfs_listxattra  (const char *, char *, size_t)
 //int    gfs_lock        (const char *, struct fuse_file_info *, int cmd, struct flock *)
-//int    gfs_mkdir       (const char *, mode_t)
 //int    gfs_mknod       (const char *, mode_t, dev_t)
 //int    gfs_open        (const char *, struct fuse_file_info *)
 //int    gfs_opendir     (const char *, struct fuse_file_info *)
