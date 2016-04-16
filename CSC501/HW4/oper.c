@@ -116,7 +116,7 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     (void) offset;
     (void) fi;
 
-    File dir = getState()->root; 
+    File dir = getState()->root->head; 
 
     filler(buf, ".", NULL, 0);
     filler(buf, "..", NULL, 0);
