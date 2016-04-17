@@ -26,6 +26,7 @@ char * copyString( const char * os, size_t * size){
 
 File File_find( const char * path ) {
      
+    errno = 0; 
     File current  = getState()->root->head;
     char * string = copyString(path, NULL); 
     char * start  = string; 
@@ -80,7 +81,7 @@ File File_find( const char * path ) {
     }
 }
 
-char * File_dirname( const char * in ) {
+char * File_dirname( const char * in, char ** filename ) {
 
     int i    = 0;
     int last = -1;
@@ -99,7 +100,13 @@ char * File_dirname( const char * in ) {
     if( last == -1 ) { 
         char * out = malloc( sizeof(char) * 2 ); 
         strncpy( out, ".", 1); 
+ 
+        if( out ) { 
+            char * filenamep = 
+
+        }
         return out; 
+
     }
 
     char * out = malloc( ( sizeof(char) * last ) + 1 ) ;

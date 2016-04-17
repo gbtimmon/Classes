@@ -5,6 +5,8 @@
 #define FILE_TYPE_DIR  1 
 #define FILE_TYPE_ROOT 2
 
+#define ISDIR(x) ( x->type == FILE_TYPE_DIR || x->type == FILE_TYPE_ROOT)
+
 #include <stdlib.h>
 
 typedef struct fs_file { 

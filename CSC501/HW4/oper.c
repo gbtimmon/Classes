@@ -98,14 +98,17 @@ int gfs_getattr (const char * path, struct stat * stbuf)
 { 
     Log_msg("gfs_getattr(path=\"%s\")\n", path);
 
+    File fattr = File_find( path ); 
     memset(stbuf, 0, sizeof(struct stat));
-    if (strcmp(path, "/") == 0) {
-        stbuf->st_mode = S_IFDIR | 0755;
-        stbuf->st_nlink = 2;
-        stbuf->st_size = strlen(path);
+
+    if ( fattr ) {
+        stbuf->st_mode = fattr->mode;
+        stbuf->st_nlink = 1;
+        stbuf->st_size = fattr->sz; 
         return 0; 
     } 
-    return -2;
+
+    return -2; 
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
@@ -115,11 +118,18 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     (void) offset;
     (void) fi;
 
-    File dir = getState()->root->head; 
+    File dir = File_find( path ); 
+    
+    if( !dir ){
+        return errno; 
+    }
 
+    if( !ISDIR(dir) ){
+        return ENOTDIR; 
+    }
+    
     filler(buf, ".", NULL, 0);
     filler(buf, "..", NULL, 0);
-
     while( dir != NULL ) {
         filler(buf, dir->name, NULL, 0); 
         dir = dir->next; 
@@ -131,7 +141,15 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 int gfs_mkdir (const char * path, mode_t mode) {
     
     Log_msg("gfs_mkdir(path=\"%s\")\n", path);
-    File_new_dir(getState()->root, "test");
+
+    char * filename; 
+    char * dir_path = File_dirname( path, &filename ); 
+    File dir  = File_find( dir_path ); 
+
+    if( !dir ) {
+        return errno;
+    }
+    File_new_dir(dir, "test");
     Log_msg("returned\n");
     return 0;
 }
