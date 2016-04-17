@@ -149,7 +149,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
     if( !dir ) {
         return errno;
     }
-    File_new_dir(dir, "test");
+    File_new_dir(dir, filename);
     Log_msg("returned\n");
     return 0;
 }
