@@ -12,6 +12,7 @@
 
 char * copyString( const char * os, size_t * size){
 
+    Log_msg("copy sstirng\n");
     *size = sizeof(char) * strlen(os);
 
     char * ns = malloc( *size ); 
@@ -19,6 +20,34 @@ char * copyString( const char * os, size_t * size){
     return ns; 
 
 }
+
+File File_find( const char * path ) {
+     
+    char * string = copyString(path); 
+    char * start  = string; 
+    char * end    = string;
+
+    File current = getState()->root; 
+    while(1) {  
+        while(1) {
+
+            if ( *end == '/' ) {
+                *end = '\0';
+            printf("%s\n", path);
+            break;
+        } else if( *end == '\0' ){
+            printf("%s\n", path);
+            return;
+        }
+        end++;
+    }
+    
+    
+    
+
+    free(str); 
+}
+
 File File_new_root( ) { 
 
     File root = malloc( sizeof( struct fs_file ) ); 
@@ -38,7 +67,7 @@ File File_new_root( ) {
 
 File File_new_dir( File parent, const char * name ) { 
 
-    if ( parent->type != FILE_TYPE_DIR ) {
+    if ( parent->type != FILE_TYPE_DIR && parent->type != FILE_TYPE_ROOT ) {
         Log_msg("Error: Tried to create file in non-directory object\n");
         errno = ENOTDIR;   
         return NULL;
@@ -61,7 +90,9 @@ File File_new_dir( File parent, const char * name ) {
     File node = parent->head; 
     parent->head = dir; 
     dir->next    = node; 
-    node->last   = dir; 
+    if( node != NULL ) 
+        node->last = dir; 
+
     return dir;
 }
 

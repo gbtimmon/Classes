@@ -21,5 +21,7 @@ typedef struct fs_file {
 
 
 File File_new_root(); 
-File File_new_dir( File parent, const char * name ); 
+File File_find( const char * ); 
+File File_find_parent( const char * ) ; 
+File File_new_dir( File , const char * ); 
 #endif

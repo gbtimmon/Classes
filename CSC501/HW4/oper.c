@@ -96,17 +96,16 @@ struct fuse_operations gfs_oper = {
 
 int gfs_getattr (const char * path, struct stat * stbuf) 
 { 
-        Log_msg("gfs_getattr(path=\"%s\")\n", path);
+    Log_msg("gfs_getattr(path=\"%s\")\n", path);
 
-        int res = 0;
-
-        memset(stbuf, 0, sizeof(struct stat));
-        if (strcmp(path, "/") == 0) {
-                stbuf->st_mode = S_IFDIR | 0755;
-                stbuf->st_nlink = 2;
-                stbuf->st_size = strlen(path);
-        } 
-        return res;
+    memset(stbuf, 0, sizeof(struct stat));
+    if (strcmp(path, "/") == 0) {
+        stbuf->st_mode = S_IFDIR | 0755;
+        stbuf->st_nlink = 2;
+        stbuf->st_size = strlen(path);
+        return 0; 
+    } 
+    return -2;
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
@@ -133,7 +132,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
     
     Log_msg("gfs_mkdir(path=\"%s\")\n", path);
     File_new_dir(getState()->root, "test");
-
+    Log_msg("returned\n");
     return 0;
 }
 //int    gfs_access      (const char *, int)
