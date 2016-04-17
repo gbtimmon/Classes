@@ -20,8 +20,8 @@ typedef struct fs_file {
 } * File;
 
 
-File File_new_root(); 
-File File_find( const char * ); 
-File File_find_parent( const char * ) ; 
-File File_new_dir( File , const char * ); 
+char* File_dirname( const char * ); 
+File  File_find( const char * ); 
+File  File_new_dir( File , const char * ); 
+File  File_new_root(); 
 #endif

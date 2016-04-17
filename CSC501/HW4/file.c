@@ -56,14 +56,21 @@ File File_find( const char * path ) {
 
             if( current == NULL ) {
                 free(string); 
+                errno = ENOENT; 
                 return NULL;
             }
 
             if( strcmp(start, current->name ) == 0 ) { 
+
                 if(end_found) {
                     free(string); 
                     return current;
                 } else {
+                    if( current->type != FILE_TYPE_DIR 
+                     || current->type != FILE_TYPE_ROOT ) {
+                        errno = ENOTDIR;
+                        return NULL;
+                    }
                     break; 
                 }
             } else {
@@ -73,7 +80,31 @@ File File_find( const char * path ) {
     }
 }
 
-File File_find_parent( const char * path ) {
+char * File_dirname( const char * in ) {
+
+    int i    = 0;
+    int last = -1;
+
+    while(1) {
+        if( in[i] == '/' ) {
+            if( in[ i+1 ] == '\0' )
+                break;
+            last = i;
+        } else if ( in[i] == '\0' ) {
+            break;
+        }
+        i++;
+    }
+
+    if( last == -1 ) { 
+        char * out = malloc( sizeof(char) * 2 ); 
+        strncpy( out, ".", 1); 
+        return out; 
+    }
+
+    char * out = malloc( ( sizeof(char) * last ) + 1 ) ;
+    strncpy( out, in, last);
+    return out;
 
 }
 
@@ -93,7 +124,6 @@ File File_new_root( ) {
 
     return root;
 }
-ot->head;
 
 File File_new_dir( File parent, const char * name ) { 
 
