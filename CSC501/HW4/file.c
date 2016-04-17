@@ -81,14 +81,18 @@ File File_find( const char * path ) {
     }
 }
 
-char * File_dirname( const char * in, char ** filename ) {
+char * dirname( const char * in, char ** filename ) {
     int i    = 0;
     int last = -1;
 
     while(1) {
         if( in[i] == '/' ) {
-            if( in[ i+1 ] == '\0' )
+            if( in[ i+1 ] == '\0' ){
+                if( i == 0 ) {
+                    last = 0;
+                }
                 break;
+            }
             last = i;
         } else if ( in[i] == '\0' ) {
             break;
@@ -102,20 +106,30 @@ char * File_dirname( const char * in, char ** filename ) {
 
         if( filename ) {
             char * fil = malloc( sizeof(char) * strlen(in) );
-            strcpy( fil, in + 1);
+            strcpy( fil, in + ((last == -1 ) ? 0 : 1) );
             *filename = fil;
+
+            while( *fil != '\0' ) {
+                if( *fil == '/' ) *fil = '\0';
+                fil++;
+            }
         }
 
         return dir;
 
     }
-    char * dir = malloc( ( sizeof(char) * last ) + 1 ) ;
+    char * dir = malloc( ( sizeof(char) * last ) +  1 ) ;
     strncpy( dir, in, last);
 
     if( filename ) {
         char * fil = malloc( sizeof(char) * strlen( in + last ) );
-        strcpy( fil, in + last + 1 );
+        strcpy( fil, in + last + ((last == -1 ) ? 0 : 1) );
         *filename = fil;
+
+        while( *fil != '\0' ) {
+            if( *fil == '/' ) *fil = '\0';
+            fil++;
+        }
     }
 
     return dir;
