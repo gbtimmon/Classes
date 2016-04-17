@@ -33,6 +33,10 @@ File File_find( const char * path ) {
     char * end    = string;
     int end_found = 0;
 
+    if( strcmp( path, "/" ) == 0 ) { 
+        return getState()->root;
+    }
+
     while(1) {
         start = end;
 
@@ -81,7 +85,7 @@ File File_find( const char * path ) {
     }
 }
 
-char * dirname( const char * in, char ** filename ) {
+char * File_dirname( const char * in, char ** filename ) {
     int i    = 0;
     int last = -1;
 
