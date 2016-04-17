@@ -106,22 +106,17 @@ int gfs_getattr (const char * path, struct stat * stbuf)
         stbuf->st_mode = fattr->mode; 
         stbuf->st_nlink = 2;
         stbuf->st_size = strlen(fattr->name); 
-        Log_msg("gfs_getattr: exit (path=\"%s\")\n", path);
         return 0; 
     } 
 
-    Log_msg("gfs_getattr:exit no file found", path);
     return -2; 
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
     Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
-    
-    (void) offset;
-    (void) fi;
 
-    File dir = File_find( path ); 
+    File dir = (File) fi->fh; 
     
     if( !dir ){
         return errno; 
@@ -136,10 +131,13 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     filler(buf, ".", NULL, 0);
     filler(buf, "..", NULL, 0);
     while( head != NULL ) {
+        Log_msg("Seg1??\n"); 
         filler(buf, head->name, NULL, 0); 
-        dir = dir->next; 
+        Log_msg("Seg2??\n"); 
+        head = head->next; 
+        Log_msg("Seg3??\n"); 
     }
-
+    Log_msg("ret.\n");
     return 0;
 }
 
@@ -155,19 +153,27 @@ int gfs_mkdir (const char * path, mode_t mode) {
         return errno;
     }
     File_new_dir(dir, filename);
-    Log_msg("returned\n");
     return 0;
 }
 
-int gfs_opendir(const char * path, fuse_file_info *fi ) {
+int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
 
     Log_msg("gfs_opendir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ; 
 
     if ( dir == NULL ) { 
-        
-       
+       Log_msg("gfs_opendir ERROR : No Such File\n"); 
+       return -ENOENT;
+    }
+
+    if( !ISDIR(dir) ) {
+       Log_msg("gfs_opendir ERROR : Not a directory\n");
+       return -ENOTDIR; 
+    }
+
+    fi->fh = (unsigned long ) dir; 
+    return 0; 
 }
 
 //int    gfs_access      (const char *, int)

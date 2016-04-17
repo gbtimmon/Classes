@@ -24,20 +24,20 @@ char * copyString( const char * os, size_t * size){
 }
 
 File File_find( const char * path ) {
+   
+    Log_msg("\tFILE: Searching for %s\n", path); 
      
-    Log_msg("FILE : Finding file : %s\n", path ); 
-
     if( strcmp( path, "(null)" ) == 0 || strcmp( path, "/" ) == 0 ) { 
-        Log_msg("FILE : Found file name %s with root path\n", getState()->root );
+        Log_msg("\tFILE : Found file name %s with root path\n", getState()->root );
         return getState()->root;
     }
 
     errno = 0; 
     File current  = getState()->root->head;
     char * string = copyString(path, NULL); 
-    char * start  = string; 
-    char * end    = string;
-    int end_found = 0;
+    char * start  = string + 1; //all of my non root file start with / 
+    char * end    = string + 1; //I can ignore that first / and root "/" only
+    int end_found = 0;          //wont mkae it here. 
 
 
     while(1) {
@@ -59,10 +59,12 @@ File File_find( const char * path ) {
 
             }
         }
+        Log_msg("\tFILE: Searching for token %s\n", start); 
 
         while( 1 ) {
 
             if( current == NULL ) {
+                Log_msg("\tFILE: File not Found\n"); 
                 free(string); 
                 errno = ENOENT; 
                 return NULL;
@@ -72,15 +74,18 @@ File File_find( const char * path ) {
                 
                 if(end_found) {
                     free(string); 
-                    Log_msg("FILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
+                    Log_msg("\tFILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
                     return current;
                 } else {
                     if( ! ISDIR(current) ) {
-                        
+                        Log_msg("\tFILE: Trying to search file. Fatal \n");
                         errno = ENOTDIR;
                         return NULL;
+                    } else {
+                        Log_msg("\tFILE: Dir found, going down. \n");
+                        current = current->head; 
+                        break; 
                     }
-                    break; 
                 }
             } else {
                 current = current->next; 
