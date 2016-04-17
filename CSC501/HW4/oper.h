@@ -48,7 +48,7 @@ int gfs_mkdir (const char *, mode_t);
 //int gfs_unlink (const char *);
 
 /** Remove a directory */
-//int gfs_rmdir (const char *);
+int gfs_rmdir (const char *);
 
 /** Create a symbolic link */
 //int gfs_symlink (const char *, const char *);
