@@ -12,7 +12,6 @@
 
 char * copyString( const char * os, size_t * size){
 
-    Log_msg("copy sstirng\n");
     size_t sz = sizeof(char) * strlen(os);
 
     char * ns = malloc( sz ); 
@@ -26,6 +25,13 @@ char * copyString( const char * os, size_t * size){
 
 File File_find( const char * path ) {
      
+    Log_msg("FILE : Finding file : %s\n", path ); 
+
+    if( strcmp( path, "(null)" ) == 0 || strcmp( path, "/" ) == 0 ) { 
+        Log_msg("FILE : Found file name %s with root path\n", getState()->root );
+        return getState()->root;
+    }
+
     errno = 0; 
     File current  = getState()->root->head;
     char * string = copyString(path, NULL); 
@@ -33,9 +39,6 @@ File File_find( const char * path ) {
     char * end    = string;
     int end_found = 0;
 
-    if( strcmp( path, "/" ) == 0 ) { 
-        return getState()->root;
-    }
 
     while(1) {
         start = end;
@@ -66,13 +69,14 @@ File File_find( const char * path ) {
             }
 
             if( strcmp(start, current->name ) == 0 ) { 
-
+                
                 if(end_found) {
                     free(string); 
+                    Log_msg("FILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
                     return current;
                 } else {
-                    if( current->type != FILE_TYPE_DIR 
-                     || current->type != FILE_TYPE_ROOT ) {
+                    if( ! ISDIR(current) ) {
+                        
                         errno = ENOTDIR;
                         return NULL;
                     }
@@ -145,7 +149,8 @@ File File_new_root( ) {
     File root = malloc( sizeof( struct fs_file ) ); 
 
     root->type = FILE_TYPE_ROOT; 
-    root->name = "root";   
+    root->mode = S_IFDIR | 0755;
+    root->name = "/";   
     root->up   = NULL;
     root->next = NULL;
     root->last = NULL;

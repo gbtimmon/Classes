@@ -1,4 +1,6 @@
 gfs_getattr(path="/")
-copy sstirng
+FILE : Finding file : /
+FILE : Found file name  with root path
 gfs_getattr(path="/")
-copy sstirng
+gfs_readdir(path="(null)")
+FILE : Finding file : (null)

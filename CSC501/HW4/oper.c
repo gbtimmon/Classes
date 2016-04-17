@@ -99,15 +99,18 @@ int gfs_getattr (const char * path, struct stat * stbuf)
     Log_msg("gfs_getattr(path=\"%s\")\n", path);
 
     File fattr = File_find( path ); 
+
     memset(stbuf, 0, sizeof(struct stat));
 
     if ( fattr ) {
-        stbuf->st_mode = fattr->mode;
-        stbuf->st_nlink = 1;
-        stbuf->st_size = fattr->sz; 
+        stbuf->st_mode = fattr->mode; 
+        stbuf->st_nlink = 2;
+        stbuf->st_size = strlen(fattr->name); 
+        Log_msg("gfs_getattr(path=\"%s\")\n", path);
         return 0; 
     } 
 
+    Log_msg("gfs_getattr(path=\"%s\")\n", path);
     return -2; 
 }
 
@@ -127,11 +130,13 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     if( !ISDIR(dir) ){
         return ENOTDIR; 
     }
+
+    File head = dir->head; 
     
     filler(buf, ".", NULL, 0);
     filler(buf, "..", NULL, 0);
-    while( dir != NULL ) {
-        filler(buf, dir->name, NULL, 0); 
+    while( head != NULL ) {
+        filler(buf, head->name, NULL, 0); 
         dir = dir->next; 
     }
 
