@@ -22,7 +22,7 @@ typedef struct fs_file {
 } * File;
 
 
-char* File_dirname( const char * ); 
+char* File_dirname( const char *, char ** ); 
 File  File_find( const char * ); 
 File  File_new_dir( File , const char * ); 
 File  File_new_root(); 

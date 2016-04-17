@@ -82,7 +82,6 @@ File File_find( const char * path ) {
 }
 
 char * File_dirname( const char * in, char ** filename ) {
-
     int i    = 0;
     int last = -1;
 
@@ -97,21 +96,30 @@ char * File_dirname( const char * in, char ** filename ) {
         i++;
     }
 
-    if( last == -1 ) { 
-        char * out = malloc( sizeof(char) * 2 ); 
-        strncpy( out, ".", 1); 
- 
-        if( out ) { 
-            char * filenamep = 
+    printf("last=%d\n", last);
+    if( last < 1 ) {
+        char * dir = malloc( sizeof(char) * 2 );
+        strcpy( dir,( last == -1 ) ? ".": "/" );
 
+        if( filename ) {
+            char * fil = malloc( sizeof(char) * strlen(in) );
+            strcpy( fil, in + 1);
+            *filename = fil;
         }
-        return out; 
+
+        return dir;
 
     }
+    char * dir = malloc( ( sizeof(char) * last ) + 1 ) ;
+    strncpy( dir, in, last);
 
-    char * out = malloc( ( sizeof(char) * last ) + 1 ) ;
-    strncpy( out, in, last);
-    return out;
+    if( filename ) {
+        char * fil = malloc( sizeof(char) * strlen( in + last ) );
+        strcpy( fil, in + last + 1 );
+        *filename = fil;
+    }
+
+    return dir;
 
 }
 
