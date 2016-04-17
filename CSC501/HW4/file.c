@@ -96,7 +96,6 @@ char * File_dirname( const char * in, char ** filename ) {
         i++;
     }
 
-    printf("last=%d\n", last);
     if( last < 1 ) {
         char * dir = malloc( sizeof(char) * 2 );
         strcpy( dir,( last == -1 ) ? ".": "/" );

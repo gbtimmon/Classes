@@ -1,0 +1,4 @@
+gfs_getattr(path="/")
+copy sstirng
+gfs_getattr(path="/")
+copy sstirng
