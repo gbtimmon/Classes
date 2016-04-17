@@ -13,39 +13,68 @@
 char * copyString( const char * os, size_t * size){
 
     Log_msg("copy sstirng\n");
-    *size = sizeof(char) * strlen(os);
+    size_t sz = sizeof(char) * strlen(os);
 
-    char * ns = malloc( *size ); 
+    char * ns = malloc( sz ); 
     strcpy(ns, os); 
-    return ns; 
 
+    if( size != NULL ) 
+        *size = sz; 
+
+    return ns; 
 }
 
 File File_find( const char * path ) {
      
-    char * string = copyString(path); 
+    File current  = getState()->root->head;
+    char * string = copyString(path, NULL); 
     char * start  = string; 
     char * end    = string;
+    int end_found = 0;
 
-    File current = getState()->root; 
-    while(1) {  
+    while(1) {
+        start = end;
+
         while(1) {
-
             if ( *end == '/' ) {
                 *end = '\0';
-            printf("%s\n", path);
-            break;
-        } else if( *end == '\0' ){
-            printf("%s\n", path);
-            return;
-        }
-        end++;
-    }
-    
-    
-    
+                end++;
+                break;
 
-    free(str); 
+            } else if( *end == '\0' ){
+               end_found = 1;
+               end++;
+               break;
+
+            } else {
+                end++;
+
+            }
+        }
+
+        while( 1 ) {
+
+            if( current == NULL ) {
+                free(string); 
+                return NULL;
+            }
+
+            if( strcmp(start, current->name ) == 0 ) { 
+                if(end_found) {
+                    free(string); 
+                    return current;
+                } else {
+                    break; 
+                }
+            } else {
+                current = current->next; 
+            }
+        }
+    }
+}
+
+File File_find_parent( const char * path ) {
+
 }
 
 File File_new_root( ) { 
@@ -64,6 +93,7 @@ File File_new_root( ) {
 
     return root;
 }
+ot->head;
 
 File File_new_dir( File parent, const char * name ) { 
 
