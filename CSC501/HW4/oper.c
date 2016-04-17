@@ -23,7 +23,7 @@ struct fuse_operations gfs_oper = {
 //     .fsync = gfs_fsync,
 //     .ftruncate = gfs_ftruncate,
      .getattr = gfs_getattr,
-//     .getdir = gfs_getdir,
+     .getdir = NULL,
 //     .getxattr = gfs_getxattr,
 //     .ioctl = gfs_ioctl,
 //     .link = gfs_link,
@@ -31,7 +31,7 @@ struct fuse_operations gfs_oper = {
 //     .lock = gfs_lock,
      .mkdir = gfs_mkdir,
 //     .mknod = gfs_mknod,
-//     .opendir = gfs_opendir,
+     .opendir = gfs_opendir,
 //     .open = gfs_open,
 //     .poll = gfs_poll,
 //     .read_buf = gfs_read_buf,
@@ -106,17 +106,17 @@ int gfs_getattr (const char * path, struct stat * stbuf)
         stbuf->st_mode = fattr->mode; 
         stbuf->st_nlink = 2;
         stbuf->st_size = strlen(fattr->name); 
-        Log_msg("gfs_getattr(path=\"%s\")\n", path);
+        Log_msg("gfs_getattr: exit (path=\"%s\")\n", path);
         return 0; 
     } 
 
-    Log_msg("gfs_getattr(path=\"%s\")\n", path);
+    Log_msg("gfs_getattr:exit no file found", path);
     return -2; 
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
-    Log_msg("gfs_readdir(path=\"%s\")\n", path);
+    Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
     
     (void) offset;
     (void) fi;
@@ -158,6 +158,18 @@ int gfs_mkdir (const char * path, mode_t mode) {
     Log_msg("returned\n");
     return 0;
 }
+
+int gfs_opendir(const char * path, fuse_file_info *fi ) {
+
+    Log_msg("gfs_opendir(path=\"%s\")\n", path);
+
+    File dir = File_find( path ) ; 
+
+    if ( dir == NULL ) { 
+        
+       
+}
+
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
@@ -179,7 +191,6 @@ int gfs_mkdir (const char * path, mode_t mode) {
 //int    gfs_lock        (const char *, struct fuse_file_info *, int cmd, struct flock *)
 //int    gfs_mknod       (const char *, mode_t, dev_t)
 //int    gfs_open        (const char *, struct fuse_file_info *)
-//int    gfs_opendir     (const char *, struct fuse_file_info *)
 //int    gfs_poll        (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp)
 //int    gfs_read_buf    (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *)
 //int    gfs_read        (const char *, char *, size_t, off_t, struct fuse_file_info *)

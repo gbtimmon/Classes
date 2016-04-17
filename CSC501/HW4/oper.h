@@ -196,7 +196,7 @@ int gfs_mkdir (const char *, mode_t);
  *
  * Introduced in version 2.3
  */
-//int gfs_opendir (const char *, struct fuse_file_info *);
+int gfs_opendir (const char *, struct fuse_file_info *);
 
 /** Read directory
  *

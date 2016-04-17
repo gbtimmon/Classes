@@ -11,7 +11,7 @@
 
 #define _FILE_OFFSET_BITS 64
 #define _GNU_SOURCE
-#define FUSE_USE_VERSION 26
+#define FUSE_USE_VERSION 25
 
 #include "file.h"
 
