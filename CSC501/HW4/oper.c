@@ -184,8 +184,6 @@ int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
 }
 
 int gfs_rmdir (const char * path ) { 
-
-    errno = 0;     
     Log_msg("gfs_rmdir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ;
@@ -194,7 +192,7 @@ int gfs_rmdir (const char * path ) {
        Log_msg("\tError:File lookup failed\n");
        //inhierit the error of the failed find. 
 
-
+    if ( !ISDIR(dir) ) { 
        Log_msg("\tError:Not a directory\n");
        errno = ENOTDIR; 
 
@@ -212,7 +210,8 @@ int gfs_rmdir (const char * path ) {
 
         if( dir->up->head == dir)
             dir->up->head = dir->next; 
-
+        
+        errno = 0; 
     }
     return -errno;
 }
