@@ -169,7 +169,7 @@ File File_new_root( ) {
 
 File File_new_dir( File parent, const char * name ) { 
 
-    if ( parent->type != FILE_TYPE_DIR && parent->type != FILE_TYPE_ROOT ) {
+    if ( ! ISDIR(parent) ) {
         Log_msg("Error: Tried to create file in non-directory object\n");
         errno = ENOTDIR;   
         return NULL;
@@ -179,7 +179,7 @@ File File_new_dir( File parent, const char * name ) {
     size_t name_size; 
     File dir  = malloc( sizeof( struct fs_file ) );
     dir->type = FILE_TYPE_DIR;
-    dir->name = copyString(name, &name_size); 
+    dir->name = copyString( name, &name_size ); 
     dir->up   = parent;
     dir->mode = S_IFDIR | 0755;
     dir->next = NULL;
@@ -189,13 +189,44 @@ File File_new_dir( File parent, const char * name ) {
     dir->sz   = sizeof(struct fs_file ) + name_size;
 
     //attach the file.
-    File node = parent->head; 
+    if( parent->head )
+        parent->head->last = dir; 
+
+    dir->next    = parent->head; 
     parent->head = dir; 
-    dir->next    = node; 
-    if( node != NULL ) 
-        node->last = dir; 
 
     return dir;
+}
+
+File File_new( File dir, const char * name  ) { 
+
+    if ( ! ISDIR(dir) ) {
+        Log_msg("Error: Tried to create file in non-directory object\n");
+        errno = ENOTDIR;   
+        return NULL;
+    }
+
+    size_t name_size; 
+
+    File node = malloc( sizeof( struct fs_file ) ); 
+    node->type = FILE_TYPE_FILE; 
+    node->name = copyString( name, &name_size ); 
+    node->up   = dir; 
+    node->mode = S_IFREG | 0755; 
+    node->next = NULL; 
+    node->last = NULL; 
+    node->head = NULL; 
+    node->buf  = NULL;
+    node->sz   = sizeof(struct fs_file ) + name_size;
+
+    //ATTACH THE FILE 
+    if( dir->head )  
+        dir->head->last = node; 
+
+    node->next = dir->head; 
+    dir->head  = node; 
+
+    return node; 
 }
 
 #endif

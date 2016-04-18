@@ -1,6 +1,18 @@
 gfs_getattr(path="/")
-FILE : Finding file : /
-FILE : Found file name  with root path
-gfs_getattr: exit (path="/")
-gfs_readdir(path="(null)", buf=0xfc000af0, filler=0x03454d80, offset=0, fi=0x03420c50)
-FILE : Finding file : (null)
+gfs_opendir(path="/")
+gfs_readdir(path="(null)", buf=0xa4000af0, filler=0xaa0ded80, offset=0, fi=0xaa0aac50)
+gfs_getattr(path="/f1")
+	FILE: File not Found
+	Error:No Such File
+gfs_mkdir(path="/f1")
+gfs_getattr(path="/f1")
+gfs_getattr(path="/")
+gfs_opendir(path="/")
+gfs_readdir(path="(null)", buf=0x9c000990, filler=0xaa0ded80, offset=0, fi=0xaa0aac50)
+gfs_getattr(path="/test")
+	FILE: File not Found
+	Error:No Such File
+gfs_create(path="/test" mode="33188", fi="0x7f20aa0aacc0")
+gfs_getattr(path="/test")
+	FILE: File not Found
+	Error:No Such File

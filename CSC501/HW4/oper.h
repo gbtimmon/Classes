@@ -282,7 +282,7 @@ int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_
  *
  * Introduced in version 2.5
  */
-//int gfs_create (const char *, mode_t, struct fuse_file_info *);
+int gfs_create (const char *, mode_t, struct fuse_file_info *);
 
 /**
  * Change the size of an open file

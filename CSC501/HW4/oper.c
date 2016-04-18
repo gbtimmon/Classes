@@ -13,7 +13,7 @@ struct fuse_operations gfs_oper = {
 //     .bmap = gfs_bmap,
 //     .chmod = gfs_chmod,
 //     .chown = gfs_chown,
-//     .create = gfs_create,
+     .create = gfs_create,
 //     .destroy = gfs_destroy,
 //     .fallocate = gfs_fallocate,
 //     .fgetattr = gfs_fgetattr,
@@ -78,7 +78,7 @@ struct fuse_operations gfs_oper = {
  * it needs to be calculated for some other reason.
  */
 
-     .flag_nopath = 0,
+     .flag_nopath = 1,
 
 /**
  * Flag indicating that the filesystem accepts special
@@ -209,11 +209,16 @@ int gfs_rmdir (const char * path ) {
     return 0;
 }
 
+int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
+
+    Log_msg("gfs_create(path=\"%s\" mode=\"%d\", fi=\"%p\")\n", path, mode, (void*) fi); 
+
+    return 0 ; 
+}
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
 //int    gfs_chown       (const char *, uid_t, gid_t)
-//int    gfs_create      (const char *, mode_t, struct fuse_file_info *)
 //int    gfs_fallocate   (const char *, int, off_t, off_t, struct fuse_file_info *)
 //int    gfs_fgetattr    (const char *, struct stat *, struct fuse_file_info *)
 //int    gfs_flock       (const char *, struct fuse_file_info *, int op)
