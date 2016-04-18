@@ -97,20 +97,21 @@ struct fuse_operations gfs_oper = {
 int gfs_getattr (const char * path, struct stat * stbuf) 
 { 
     Log_msg("gfs_getattr(path=\"%s\")\n", path);
+    memset(stbuf, 0, sizeof(struct stat));
 
     File fattr = File_find( path ); 
 
-    memset(stbuf, 0, sizeof(struct stat));
-
-    if ( fattr ) {
+    if( fattr == NULL ) {
+        Log_msg("\tError:File look up failed\n"); 
+        //inhierit the failed lookup error. 
+    }else {
         stbuf->st_mode = fattr->mode; 
         stbuf->st_nlink = 2;
         stbuf->st_size = strlen(fattr->name); 
-        return 0; 
+        errno = 0; 
     } 
 
-    Log_msg("\tError:No Such File\n"); 
-    return -ENOENT; 
+    return -errno; 
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
@@ -118,101 +119,109 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
 
     File dir = (File) fi->fh; 
-    
-    if( !dir ){
+    if( dir == NULL ){ 
+        //really shouldnt happen since already checke din dir open, but sanity check. 
         Log_msg("\tError:Failed to find destination dir\n"); 
-        return errno; 
-    }
+        errno = ENOENT; 
 
-    if( !ISDIR(dir) ){
+    } else if( !ISDIR(dir) ){ 
+        //really shount happen since already checked in dir open, but sanity check. 
         Log_msg("\tError:Not a dir\n"); 
-        return ENOTDIR; 
-    }
+        errno = ENOTDIR; 
+    } else {
+        filler(buf, ".", NULL, 0);
+        filler(buf, "..", NULL, 0);
 
-    File head = dir->head; 
-    
-    filler(buf, ".", NULL, 0);
-    filler(buf, "..", NULL, 0);
-    while( head != NULL ) {
-        filler(buf, head->name, NULL, 0); 
-        head = head->next; 
+        File ele = dir->head;
+        while( ele != NULL ) {
+            filler(buf, ele->name, NULL, 0); 
+            ele = ele->next; 
+        }
     }
-    return 0;
+    return -errno;
 }
 
 int gfs_mkdir (const char * path, mode_t mode) {
     
     Log_msg("gfs_mkdir(path=\"%s\")\n", path);
 
-    char * filename; 
-    char * dir_path = File_dirname( path, &filename ); 
-    File dir  = File_find( dir_path ); 
+    char* filename; 
+    char* dirpath = File_dirname( path, &filename ); 
+    File  dir = File_find( dirpath ); 
 
-    if( !dir ) {
+    if( dir == NULL ) {
         Log_msg("\tError:Failed to find destination dir\n"); 
-        return errno;
+        //inhierit the File find error. 
+    } else if {
+        File_new_dir(dir, filename);
+        errno = 0;
     }
-    File_new_dir(dir, filename);
-    return 0;
+
+    free(dirpath); 
+    free(filename); 
+    return -errno; 
 }
 
 int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
-
     Log_msg("gfs_opendir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ; 
 
     if ( dir == NULL ) { 
-       Log_msg("\tError:No Such File\n"); 
-       return -ENOENT;
-    }
-
-    if( !ISDIR(dir) ) {
+       Log_msg("\tError: File lookup failed\n"); 
+       //inhierit the error of the failed find. 
+       
+    } else if( !ISDIR(dir) ) {
        Log_msg("\tError:Not a directory\n");
-       return -ENOTDIR; 
+       errno = ENOTDIR; 
+
+    } else {
+       fi->fh = (unsigned long ) dir; 
+       errno = 0; 
     }
 
-    fi->fh = (unsigned long ) dir; 
-    return 0; 
+    return -errno; 
 }
 
 int gfs_rmdir (const char * path ) { 
-    
+
+    errno = 0;     
     Log_msg("gfs_rmdir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ;
 
     if ( dir == NULL ) {
-       Log_msg("\tError:No Such File\n");
-       return -ENOENT;
-    }
+       Log_msg("\tError:File lookup failed\n");
+       //inhierit the error of the failed find. 
 
-    if( !ISDIR(dir) ) {
+
        Log_msg("\tError:Not a directory\n");
-       return -ENOTDIR;
-    }
+       errno = ENOTDIR; 
 
-    if( dir->head != NULL ) {
+    } else if( dir->head != NULL ) {
         Log_msg("\tError:Cant delete non empty dir.\n"); 
-        return -EPERM;
+        errno = EPERM;
+
+    } else {
+
+        if( dir->last != NULL )
+            dir->last->next = dir->next;
+
+        if( dir->next != NULL )  
+            dir->next->last = dir->last; 
+
+        if( dir->up->head == dir)
+            dir->up->head = dir->next; 
+
     }
-
-    if( dir->last != NULL )
-        dir->last->next = dir->next;
-
-    if( dir->next != NULL )  
-        dir->next->last = dir->last; 
-
-    if( dir->up->head == dir)
-        dir->up->head = dir->next; 
-
-    return 0;
+    return -errno;
 }
 
 int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
 
     Log_msg("gfs_create(path=\"%s\" mode=\"%d\", fi=\"%p\")\n", path, mode, (void*) fi); 
-
+ 
+    char * dir_path = File_dirname( path, 
     return 0 ; 
 }
 //int    gfs_access      (const char *, int)

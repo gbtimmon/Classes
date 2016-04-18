@@ -29,6 +29,7 @@ File File_find( const char * path ) {
      
     if( strcmp( path, "(null)" ) == 0 || strcmp( path, "/" ) == 0 ) { 
         //Log_msg("\tFILE : Found file name %s with root path\n", getState()->root );
+        errno = 0; 
         return getState()->root;
     }
 
@@ -75,6 +76,7 @@ File File_find( const char * path ) {
                 if(end_found) {
                     free(string); 
                     //Log_msg("\tFILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
+                    errno = 0; 
                     return current;
                 } else {
                     if( ! ISDIR(current) ) {
