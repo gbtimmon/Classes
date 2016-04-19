@@ -1,18 +1,13 @@
 gfs_getattr(path="/")
 gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0xa4000af0, filler=0xaa0ded80, offset=0, fi=0xaa0aac50)
-gfs_getattr(path="/f1")
+gfs_readdir(path="(null)", buf=0x34000af0, filler=0x3ba41d80, offset=0, fi=0x3afeac50)
+gfs_getattr(path="/test")
 	FILE: File not Found
-	Error:No Such File
-gfs_mkdir(path="/f1")
-gfs_getattr(path="/f1")
+	Error:File look up failed
+gfs_create(path="/test" mode="33188", fi="0x7f3a3afeacc0")
+gfs_getattr(path="/test")
 gfs_getattr(path="/")
 gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0x9c000990, filler=0xaa0ded80, offset=0, fi=0xaa0aac50)
+gfs_readdir(path="(null)", buf=0x2c000990, filler=0x3ba41d80, offset=0, fi=0x3ba0dc50)
 gfs_getattr(path="/test")
-	FILE: File not Found
-	Error:No Such File
-gfs_create(path="/test" mode="33188", fi="0x7f20aa0aacc0")
 gfs_getattr(path="/test")
-	FILE: File not Found
-	Error:No Such File

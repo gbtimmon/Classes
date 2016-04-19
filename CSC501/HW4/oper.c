@@ -47,7 +47,7 @@ struct fuse_operations gfs_oper = {
 //     .statfs = gfs_statfs,
 //     .symlink = gfs_symlink,
 //     .truncate = gfs_truncate,
-//     .unlink = gfs_unlink,
+     .unlink = gfs_unlink,
 //     .utime = gfs_utime,
 //     .utimens = gfs_utimens,
 //     .write_buf = gfs_write_buf,
@@ -245,6 +245,30 @@ int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
     free(dirpath); 
     return -errno ; 
 }
+
+int gfs_unlink (const char * path) {
+    
+    errno = 0;
+    Log_msg("gfs_unlink(path=\"%s\")\n"); 
+   
+    File node = File_find( path ); 
+
+    if( node == NULL ) { 
+        Log_msg("\tError:File lookup failed\n");
+        //inhierit the error of the failed find.
+
+    } else if ( ISDIR(node) ) {
+        Log_msg("\tError:File is a directory\n"); 
+        errno = EISDIR; 
+
+    } else {
+        File_unlink( node );
+        File_free( node ); 
+        errno = 0; 
+    }
+
+    return -errno; 
+}
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
@@ -277,7 +301,6 @@ int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
 //int    gfs_statfs      (const char *, struct statvfs *)
 //int    gfs_symlink     (const char *, const char *)
 //int    gfs_truncate    (const char *, off_t)
-//int    gfs_unlink      (const char *)
 //int    gfs_utime       (const char *, struct utimbuf *)
 //int    gfs_utimens     (const char *, const struct timespec tv[2])
 //int    gfs_write_buf   (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *)

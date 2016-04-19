@@ -45,7 +45,7 @@ int gfs_getattr (const char *, struct stat *);
 int gfs_mkdir (const char *, mode_t);
 
 /** Remove a file */
-//int gfs_unlink (const char *);
+int gfs_unlink (const char *);
 
 /** Remove a directory */
 int gfs_rmdir (const char *);
@@ -223,7 +223,7 @@ int gfs_readdir (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_
 
 /** Release directory
  *
- * Introduced in version 2.3
+ m Introduced in version 2.3
  */
 //int gfs_releasedir (const char *, struct fuse_file_info *);
 
@@ -368,40 +368,7 @@ int gfs_create (const char *, mode_t, struct fuse_file_info *);
  * Introduced in version 2.6
  */
 //int gfs_bmap (const char *, size_t blocksize, uint64_t *idx);
-
-/**
- * Flag indicating that the filesystem can accept a NULL path
- * as the first argument for the following operations:
- *
- * read, write, flush, release, fsync, readdir, releasedir,
- * fsyncdir, ftruncate, fgetattr, lock, ioctl and poll
- *
- * If this flag is set these operations continue to work on
- * unlinked files even if "-ohard_remove" option was specified.
- */
-
-/**
- * Flag indicating that the path need not be calculated for
- * the following operations:
- *
- * read, write, flush, release, fsync, readdir, releasedir,
- * fsyncdir, ftruncate, fgetattr, lock, ioctl and poll
- *
- * Closely related to flag_nullpath_ok, but if this flag is
- * set then the path will not be calculaged even if the file
- * wasn't unlinked.  However the path can still be non-NULL if
- * it needs to be calculated for some other reason.
- */
-
-/**
- * Flag indicating that the filesystem accepts special
- * UTIME_NOW and UTIME_OMIT values in its utimens operation.
- */
-
-/**
- * Reserved flags, don't set
- */
-
+//
 /**
  * Ioctl
  *

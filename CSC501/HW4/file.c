@@ -231,4 +231,22 @@ File File_new( File dir, const char * name  ) {
     return node; 
 }
 
+int File_unlink( File node ) { 
+    
+    if( node->next ) node->next->last = node->last; 
+    if( node->last ) node->last->next = node->next; 
+    if( node->up->head == node) node->up->head = node->next; 
+
+    return 0; 
+}
+
+int File_free( File node ) {
+
+    if( node ) free(node->buf); 
+    if( node ) free(node->name); 
+    free(node); 
+    
+    return 0; 
+} 
+
 #endif

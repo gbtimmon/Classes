@@ -27,4 +27,7 @@ File  File_find( const char * );
 File  File_new_dir( File , const char * ); 
 File  File_new( File, const char * ); 
 File  File_new_root(); 
+
+int   File_unlink( File ); 
+int   File_free( File ); 
 #endif
