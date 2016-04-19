@@ -152,7 +152,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
     if( dir == NULL ) {
         Log_msg("\tError:Failed to find destination dir\n"); 
         //inhierit the File find error. 
-    } else if {
+    } else {
         File_new_dir(dir, filename);
         errno = 0;
     }
