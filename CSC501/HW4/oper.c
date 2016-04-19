@@ -283,6 +283,7 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     errno = 0; 
     Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
+    
     return -errno; 
 }
 

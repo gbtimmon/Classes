@@ -157,16 +157,17 @@ char * File_dirname( const char * in, char ** filename ) {
 
 File File_new_root( ) { 
 
-    File root = malloc( sizeof( struct fs_file ) ); 
+    File root    = malloc( sizeof( struct fs_file ) ); 
 
-    root->type = FILE_TYPE_ROOT; 
-    root->mode = S_IFDIR | 0755;
-    root->name = "/";   
-    root->up   = NULL;
-    root->next = NULL;
-    root->last = NULL;
-    root->head = NULL;
-    root->buf  = NULL;
+    root->type   = FILE_TYPE_ROOT; 
+    root->mode   = S_IFDIR | 0755;
+    root->name   = "/";   
+    root->up     = NULL;
+    root->next   = NULL;
+    root->last   = NULL;
+    root->head   = NULL;
+    root->buf    = NULL;
+    root->buf_sz = 0; 
   
     root->sz   = sizeof(struct fs_file ); 
 
@@ -183,16 +184,19 @@ File File_new_dir( File parent, const char * name ) {
 
     //create new file. 
     size_t name_size; 
-    File dir  = malloc( sizeof( struct fs_file ) );
-    dir->type = FILE_TYPE_DIR;
-    dir->name = copyString( name, &name_size ); 
-    dir->up   = parent;
-    dir->mode = S_IFDIR | 0755;
-    dir->next = NULL;
-    dir->last = NULL;
-    dir->head = NULL;
-    dir->buf  = NULL;
-    dir->sz   = sizeof(struct fs_file ) + name_size;
+    File dir    = malloc( sizeof( struct fs_file ) );
+
+    dir->type   = FILE_TYPE_DIR;
+    dir->name   = copyString( name, &name_size ); 
+    dir->up     = parent;
+    dir->mode   = S_IFDIR | 0755;
+    dir->next   = NULL;
+    dir->last   = NULL;
+    dir->head   = NULL;
+    dir->buf    = NULL;
+
+    dir->buf_sz = 0; 
+    dir->sz     = sizeof(struct fs_file ) + name_size;
 
     //attach the file.
     if( parent->head )
@@ -214,16 +218,18 @@ File File_new( File dir, const char * name  ) {
 
     size_t name_size; 
 
-    File node = malloc( sizeof( struct fs_file ) ); 
-    node->type = FILE_TYPE_FILE; 
-    node->name = copyString( name, &name_size ); 
-    node->up   = dir; 
-    node->mode = S_IFREG | 0755; 
-    node->next = NULL; 
-    node->last = NULL; 
-    node->head = NULL; 
-    node->buf  = NULL;
-    node->sz   = sizeof(struct fs_file ) + name_size;
+    File node    = malloc( sizeof( struct fs_file ) ); 
+
+    node->type   = FILE_TYPE_FILE; 
+    node->name   = copyString( name, &name_size ); 
+    node->up     = dir; 
+    node->mode   = S_IFREG | 0755; 
+    node->next   = NULL; 
+    node->last   = NULL; 
+    node->head   = NULL; 
+    node->buf    = NULL;
+    node->buf_sz = 0; 
+    node->sz     = sizeof(struct fs_file ) + name_size;
 
     //ATTACH THE FILE 
     if( dir->head )  
