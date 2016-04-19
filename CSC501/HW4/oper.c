@@ -192,7 +192,7 @@ int gfs_rmdir (const char * path ) {
        Log_msg("\tError:File lookup failed\n");
        //inhierit the error of the failed find. 
 
-    if ( !ISDIR(dir) ) { 
+    } else if ( !ISDIR(dir) ) { 
        Log_msg("\tError:Not a directory\n");
        errno = ENOTDIR; 
 
@@ -218,10 +218,32 @@ int gfs_rmdir (const char * path ) {
 
 int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
 
+    errno = 0; 
     Log_msg("gfs_create(path=\"%s\" mode=\"%d\", fi=\"%p\")\n", path, mode, (void*) fi); 
  
-    char * dir_path = File_dirname( path, 
-    return 0 ; 
+    char * filename; 
+    char * dirpath = File_dirname( path, &filename ) ; 
+
+    File dir = File_find( dirpath); 
+
+    if ( dir == NULL ) {
+        Log_msg("\tError:File lookup failed\n");
+        //inhierit the error of the failed find. 
+
+    } else if ( !ISDIR(dir) ) { 
+        Log_msg("\tError:Not a directory\n");
+        errno = ENOTDIR; 
+
+    } else { 
+        File newf = File_new( dir, filename ); 
+        fi->fh = (unsigned long) newf; 
+        errno = 0; 
+    }
+
+
+    free(filename); 
+    free(dirpath); 
+    return -errno ; 
 }
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
