@@ -91,7 +91,7 @@ int gfs_rmdir (const char *);
  *
  * Changed in version 2.2
  */
-//int gfs_open (const char *, struct fuse_file_info *);
+int gfs_open (const char *, struct fuse_file_info *);
 
 /** Read data from an open file
  *
@@ -103,7 +103,7 @@ int gfs_rmdir (const char *);
  * this operation.
  *
  * Changed in version 2.2 */
-//int gfs_read (const char *, char *, size_t, off_t, struct fuse_file_info *);
+int gfs_read (const char *, char *, size_t, off_t, struct fuse_file_info *);
 
 /** Write data to an open file
  *
@@ -113,7 +113,7 @@ int gfs_rmdir (const char *);
  *
  * Changed in version 2.2
  */
-//int gfs_write (const char *, const char *, size_t, off_t, struct fuse_file_info *);
+int gfs_write (const char *, const char *, size_t, off_t, struct fuse_file_info *);
 
 /** Get file system statistics
  *

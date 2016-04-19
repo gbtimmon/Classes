@@ -32,11 +32,11 @@ struct fuse_operations gfs_oper = {
      .mkdir = gfs_mkdir,
 //     .mknod = gfs_mknod,
      .opendir = gfs_opendir,
-//     .open = gfs_open,
+     .open = gfs_open,
 //     .poll = gfs_poll,
 //     .read_buf = gfs_read_buf,
      .readdir = gfs_readdir,
-//     .read = gfs_read,
+     .read = gfs_read,
 //     .readlink = gfs_readlink,
 //     .releasedir = gfs_releasedir,
 //     .release = gfs_release,
@@ -51,7 +51,7 @@ struct fuse_operations gfs_oper = {
 //     .utime = gfs_utime,
 //     .utimens = gfs_utimens,
 //     .write_buf = gfs_write_buf,
-//     .write = gfs_write,
+     .write = gfs_write,
 
 /**
  * Flag indicating that the filesystem can accept a NULL path
@@ -269,6 +269,32 @@ int gfs_unlink (const char * path) {
 
     return -errno; 
 }
+
+int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_file_info * fi){
+    
+    errno = 0; 
+    Log_msg("gfs_read(path=\"%s\")\n"); 
+
+    return -errno; 
+}
+
+int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct fuse_file_info * fi ) {
+
+    errno = 0; 
+    Log_msg("gfs_unlink(path=\"%s\")\n"); 
+
+    return -errno; 
+}
+
+int gfs_open (const char * path , struct fuse_file_info * fi){
+
+    errno = 0; 
+    Log_msg("gfs_open(path=\"%s\", fi=\"%p\")\n", path, (void*) fi); 
+
+
+    return -errno; 
+}
+
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
@@ -288,10 +314,8 @@ int gfs_unlink (const char * path) {
 //int    gfs_listxattra  (const char *, char *, size_t)
 //int    gfs_lock        (const char *, struct fuse_file_info *, int cmd, struct flock *)
 //int    gfs_mknod       (const char *, mode_t, dev_t)
-//int    gfs_open        (const char *, struct fuse_file_info *)
 //int    gfs_poll        (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp)
 //int    gfs_read_buf    (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *)
-//int    gfs_read        (const char *, char *, size_t, off_t, struct fuse_file_info *)
 //int    gfs_readlink    (const char *, char *, size_t)
 //int    gfs_release     (const char *, struct fuse_file_info *)
 //int    gfs_releasedir  (const char *, struct fuse_file_info *)
@@ -304,6 +328,5 @@ int gfs_unlink (const char * path) {
 //int    gfs_utime       (const char *, struct utimbuf *)
 //int    gfs_utimens     (const char *, const struct timespec tv[2])
 //int    gfs_write_buf   (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *)
-//int    gfs_write       (const char *, const char *, size_t, off_t, struct fuse_file_info *)
 //void   gfs_destroy     (void *)
 //void * gfs_init        (struct fuse_conn_info *conn)
