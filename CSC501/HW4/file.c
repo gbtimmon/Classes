@@ -25,10 +25,10 @@ char * copyString( const char * os, size_t * size){
 
 File File_find( const char * path ) {
    
-    Log_msg("\tFILE: Searching for %s\n", path); 
+    //Log_msg("\tFILE: Searching for %s\n", path); 
      
     if( strcmp( path, "(null)" ) == 0 || strcmp( path, "/" ) == 0 ) { 
-        Log_msg("\tFILE : Found file name %s with root path\n", getState()->root );
+        //Log_msg("\tFILE : Found file name %s with root path\n", getState()->root );
         errno = 0; 
         return getState()->root;
     }
@@ -60,12 +60,12 @@ File File_find( const char * path ) {
 
             }
         }
-        Log_msg("\tFILE: Searching for token %s\n", start); 
+        //Log_msg("\tFILE: Searching for token %s\n", start); 
 
         while( 1 ) {
 
             if( current == NULL ) {
-                Log_msg("\tFILE: File not Found\n"); 
+                //Log_msg("\tFILE: File not Found\n"); 
                 free(string); 
                 errno = ENOENT; 
                 return NULL;
@@ -75,16 +75,16 @@ File File_find( const char * path ) {
                 
                 if(end_found) {
                     free(string); 
-                    Log_msg("\tFILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
+                    //Log_msg("\tFILE : Found file name %s in %s\n", current->name, (current->up)? current->up->name : "NULL"); 
                     errno = 0; 
                     return current;
                 } else {
                     if( ! ISDIR(current) ) {
-                        Log_msg("\tFILE: Trying to search file. Fatal \n");
+                        //Log_msg("\tFILE: Trying to search file. Fatal \n");
                         errno = ENOTDIR;
                         return NULL;
                     } else {
-                        Log_msg("\tFILE: Dir found, going down. \n");
+                        //Log_msg("\tFILE: Dir found, going down. \n");
                         current = current->head; 
                         break; 
                     }
