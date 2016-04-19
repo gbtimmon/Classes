@@ -1,6 +1,6 @@
 gfs_getattr(path="/")
 gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0x54000af0, filler=0x5bb6cd80, offset=0, fi=0x5bb38c50)
+gfs_readdir(path="(null)", buf=0x78000af0, filler=0x7ef04d80, offset=0, fi=0x7eed0c50)
 gfs_getattr(path="/d1")
 	Error:File look up failed
 gfs_mkdir(path="/d1")
@@ -25,35 +25,35 @@ gfs_mkdir(path="/d4")
 gfs_getattr(path="/d4")
 gfs_getattr(path="/f1")
 	Error:File look up failed
-gfs_create(path="/f1" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/f1" mode="33188", fi="0x7f467e4adcc0")
 gfs_getattr(path="/f1")
 gfs_getattr(path="/f2")
 	Error:File look up failed
-gfs_create(path="/f2" mode="33188", fi="0x7f4d5bb38cc0")
+gfs_create(path="/f2" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/f2")
 gfs_getattr(path="/f3")
 	Error:File look up failed
-gfs_create(path="/f3" mode="33188", fi="0x7f4d5bb38cc0")
+gfs_create(path="/f3" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/f3")
 gfs_getattr(path="/f4")
 	Error:File look up failed
-gfs_create(path="/f4" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/f4" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/f4")
 gfs_getattr(path="/d1/f1")
 	Error:File look up failed
-gfs_create(path="/d1/f1" mode="33188", fi="0x7f4d5bb38cc0")
+gfs_create(path="/d1/f1" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/d1/f1")
 gfs_getattr(path="/d1/f2")
 	Error:File look up failed
-gfs_create(path="/d1/f2" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/d1/f2" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/d1/f2")
 gfs_getattr(path="/d1/f3")
 	Error:File look up failed
-gfs_create(path="/d1/f3" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/d1/f3" mode="33188", fi="0x7f467e4adcc0")
 gfs_getattr(path="/d1/f3")
 gfs_getattr(path="/d1/f4")
 	Error:File look up failed
-gfs_create(path="/d1/f4" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/d1/f4" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/d1/f4")
 gfs_getattr(path="/d1/d1")
 	Error:File look up failed
@@ -61,24 +61,23 @@ gfs_mkdir(path="/d1/d1")
 gfs_getattr(path="/d1/d1")
 gfs_getattr(path="/d1/d1/f1")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f1" mode="33188", fi="0x7f4d5bb38cc0")
+gfs_create(path="/d1/d1/f1" mode="33188", fi="0x7f467e4adcc0")
 gfs_getattr(path="/d1/d1/f1")
 gfs_getattr(path="/d1/d1/f2")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f2" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/d1/d1/f2" mode="33188", fi="0x7f467e4adcc0")
 gfs_getattr(path="/d1/d1/f2")
 gfs_getattr(path="/d1/d1/f3")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f3" mode="33188", fi="0x7f4d5bb38cc0")
+gfs_create(path="/d1/d1/f3" mode="33188", fi="0x7f467eed0cc0")
 gfs_getattr(path="/d1/d1/f3")
 gfs_getattr(path="/d1/d1/f4")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f4" mode="33188", fi="0x7f4d5b115cc0")
+gfs_create(path="/d1/d1/f4" mode="33188", fi="0x7f467e4adcc0")
 gfs_getattr(path="/d1/d1/f4")
-gfs_getattr(path="/write")
+gfs_getattr(path="/asdf")
 	Error:File look up failed
-gfs_create(path="/write" mode="33188", fi="0x7f4d5bb38cc0")
-gfs_getattr(path="/write")
+gfs_create(path="/asdf" mode="33188", fi="0x7f467eed0cc0")
+gfs_getattr(path="/asdf")
 gfs_unlink(path="test
 ")
-gfs_getattr(path="/write")

@@ -273,7 +273,7 @@ int gfs_unlink (const char * path) {
 int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_file_info * fi){
     
     errno = 0; 
-    Log_msg("gfs_read(path=\"%s\")\n"); 
+    Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
     return -errno; 
 }
@@ -281,7 +281,7 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
 int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct fuse_file_info * fi ) {
 
     errno = 0; 
-    Log_msg("gfs_unlink(path=\"%s\")\n"); 
+    Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
     return -errno; 
 }
