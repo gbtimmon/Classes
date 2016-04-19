@@ -91,7 +91,7 @@ int gfs_rmdir (const char *);
  *
  * Changed in version 2.2
  */
-int gfs_open (const char *, struct fuse_file_info *);
+//int gfs_open (const char *, struct fuse_file_info *);
 
 /** Read data from an open file
  *

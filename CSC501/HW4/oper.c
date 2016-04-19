@@ -32,7 +32,7 @@ struct fuse_operations gfs_oper = {
      .mkdir = gfs_mkdir,
 //     .mknod = gfs_mknod,
      .opendir = gfs_opendir,
-     .open = gfs_open,
+//     .open = gfs_open,
 //     .poll = gfs_poll,
 //     .read_buf = gfs_read_buf,
      .readdir = gfs_readdir,
@@ -286,14 +286,6 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     return -errno; 
 }
 
-int gfs_open (const char * path , struct fuse_file_info * fi){
-
-    errno = 0; 
-    Log_msg("gfs_open(path=\"%s\", fi=\"%p\")\n", path, (void*) fi); 
-
-
-    return -errno; 
-}
 
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
@@ -314,6 +306,7 @@ int gfs_open (const char * path , struct fuse_file_info * fi){
 //int    gfs_listxattra  (const char *, char *, size_t)
 //int    gfs_lock        (const char *, struct fuse_file_info *, int cmd, struct flock *)
 //int    gfs_mknod       (const char *, mode_t, dev_t)
+//int    gfs_open        (const char *, path , struct fuse_file_info * fi);
 //int    gfs_poll        (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp)
 //int    gfs_read_buf    (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *)
 //int    gfs_readlink    (const char *, char *, size_t)
