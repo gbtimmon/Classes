@@ -6,16 +6,31 @@ if [ "X${1}" = "X" ]; then
 fi
 
 mkdir ${MT}
-echo
-echo GREG_FS
 ./greg_fs ${MT} 
-echo 
-echo LS
 ls -ls ${MT};
-echo MKDIR
-mkdir ${MT}/f1
-echo LS2
-ls -ls ${MT}; 
-echo 
-echo CAT LOG
-cat *.log
+mkdir ${MT}/d1
+mkdir ${MT}/d2
+mkdir ${MT}/d3
+mkdir ${MT}/d4
+mkdir ${MT}/d2 #dup dir
+rmdir ${MT}/d3 #rmdir
+rmdir ${MT}/d4 #rm and recreate dir
+mkdir ${MT}/d4
+
+> ${MT}/f1
+> ${MT}/f2
+> ${MT}/f3
+> ${MT}/f4
+
+> ${MT}/d1/f1
+> ${MT}/d1/f2
+> ${MT}/d1/f3
+> ${MT}/d1/f4
+
+mkdir ${MT}/d1/d1
+
+> ${MT}/d1/d1/f1
+> ${MT}/d1/d1/f2
+> ${MT}/d1/d1/f3
+> ${MT}/d1/d1/f4
+

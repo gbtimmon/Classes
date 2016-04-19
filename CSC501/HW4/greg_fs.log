@@ -1,13 +1,318 @@
 gfs_getattr(path="/")
+	FILE: Searching for /
+	FILE : Found file name  with root path
 gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0x34000af0, filler=0x3ba41d80, offset=0, fi=0x3afeac50)
-gfs_getattr(path="/test")
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_readdir(path="(null)", buf=0x04000af0, filler=0x0a3ccd80, offset=0, fi=0x0a398c50)
+gfs_getattr(path="/d1")
+	FILE: Searching for /d1
+	FILE: Searching for token d1
 	FILE: File not Found
 	Error:File look up failed
-gfs_create(path="/test" mode="33188", fi="0x7f3a3afeacc0")
-gfs_getattr(path="/test")
-gfs_getattr(path="/")
-gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0x2c000990, filler=0x3ba41d80, offset=0, fi=0x3ba0dc50)
-gfs_getattr(path="/test")
-gfs_getattr(path="/test")
+gfs_mkdir(path="/d1")
+DIRNAME returned path / and filename d1
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/d1")
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d2")
+	FILE: Searching for /d2
+	FILE: Searching for token d2
+	FILE: File not Found
+	Error:File look up failed
+gfs_mkdir(path="/d2")
+DIRNAME returned path / and filename d2
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/d2")
+	FILE: Searching for /d2
+	FILE: Searching for token d2
+	FILE : Found file name d2 in /
+gfs_getattr(path="/d3")
+	FILE: Searching for /d3
+	FILE: Searching for token d3
+	FILE: File not Found
+	Error:File look up failed
+gfs_mkdir(path="/d3")
+DIRNAME returned path / and filename d3
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/d3")
+	FILE: Searching for /d3
+	FILE: Searching for token d3
+	FILE : Found file name d3 in /
+gfs_getattr(path="/d4")
+	FILE: Searching for /d4
+	FILE: Searching for token d4
+	FILE: File not Found
+	Error:File look up failed
+gfs_mkdir(path="/d4")
+DIRNAME returned path / and filename d4
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/d4")
+	FILE: Searching for /d4
+	FILE: Searching for token d4
+	FILE : Found file name d4 in /
+gfs_rmdir(path="/d3")
+	FILE: Searching for /d3
+	FILE: Searching for token d3
+	FILE : Found file name d3 in /
+gfs_rmdir(path="/d4")
+	FILE: Searching for /d4
+	FILE: Searching for token d4
+	FILE : Found file name d4 in /
+gfs_getattr(path="/d4")
+	FILE: Searching for /d4
+	FILE: Searching for token d4
+	FILE: File not Found
+	Error:File look up failed
+gfs_mkdir(path="/d4")
+DIRNAME returned path / and filename d4
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/d4")
+	FILE: Searching for /d4
+	FILE: Searching for token d4
+	FILE : Found file name d4 in /
+gfs_getattr(path="/f1")
+	FILE: Searching for /f1
+	FILE: Searching for token f1
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/f1" mode="33188", fi="0x7fe809975cc0")
+DIRNAME returned path / and filename f1
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/f1")
+	FILE: Searching for /f1
+	FILE: Searching for token f1
+	FILE : Found file name f1 in /
+gfs_getattr(path="/f2")
+	FILE: Searching for /f2
+	FILE: Searching for token f2
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/f2" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path / and filename f2
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/f2")
+	FILE: Searching for /f2
+	FILE: Searching for token f2
+	FILE : Found file name f2 in /
+gfs_getattr(path="/f3")
+	FILE: Searching for /f3
+	FILE: Searching for token f3
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/f3" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path / and filename f3
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/f3")
+	FILE: Searching for /f3
+	FILE: Searching for token f3
+	FILE : Found file name f3 in /
+gfs_getattr(path="/f4")
+	FILE: Searching for /f4
+	FILE: Searching for token f4
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/f4" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path / and filename f4
+	FILE: Searching for /
+	FILE : Found file name  with root path
+gfs_getattr(path="/f4")
+	FILE: Searching for /f4
+	FILE: Searching for token f4
+	FILE : Found file name f4 in /
+gfs_getattr(path="/d1/f1")
+	FILE: Searching for /d1/f1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f1
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/f1" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path /d1 and filename f1
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d1/f1")
+	FILE: Searching for /d1/f1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f1
+	FILE : Found file name f1 in d1
+gfs_getattr(path="/d1/f2")
+	FILE: Searching for /d1/f2
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f2
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/f2" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path /d1 and filename f2
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d1/f2")
+	FILE: Searching for /d1/f2
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f2
+	FILE : Found file name f2 in d1
+gfs_getattr(path="/d1/f3")
+	FILE: Searching for /d1/f3
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f3
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/f3" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path /d1 and filename f3
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d1/f3")
+	FILE: Searching for /d1/f3
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f3
+	FILE : Found file name f3 in d1
+gfs_getattr(path="/d1/f4")
+	FILE: Searching for /d1/f4
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f4
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/f4" mode="33188", fi="0x7fe80a398cc0")
+DIRNAME returned path /d1 and filename f4
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d1/f4")
+	FILE: Searching for /d1/f4
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f4
+	FILE : Found file name f4 in d1
+gfs_getattr(path="/d1/d1")
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: File not Found
+	Error:File look up failed
+gfs_mkdir(path="/d1/d1")
+DIRNAME returned path /d1 and filename d1
+	FILE: Searching for /d1
+	FILE: Searching for token d1
+	FILE : Found file name d1 in /
+gfs_getattr(path="/d1/d1")
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE : Found file name d1 in d1
+gfs_getattr(path="/d1/d1/f1")
+	FILE: Searching for /d1/d1/f1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f1
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/d1/f1" mode="33188", fi="0x7fe809975cc0")
+DIRNAME returned path /d1/d1 and filename f1
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE : Found file name d1 in d1
+gfs_getattr(path="/d1/d1/f1")
+	FILE: Searching for /d1/d1/f1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f1
+	FILE : Found file name f1 in d1
+gfs_getattr(path="/d1/d1/f2")
+	FILE: Searching for /d1/d1/f2
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f2
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/d1/f2" mode="33188", fi="0x7fe809975cc0")
+DIRNAME returned path /d1/d1 and filename f2
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE : Found file name d1 in d1
+gfs_getattr(path="/d1/d1/f2")
+	FILE: Searching for /d1/d1/f2
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f2
+	FILE : Found file name f2 in d1
+gfs_getattr(path="/d1/d1/f3")
+	FILE: Searching for /d1/d1/f3
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f3
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/d1/f3" mode="33188", fi="0x7fe809975cc0")
+DIRNAME returned path /d1/d1 and filename f3
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE : Found file name d1 in d1
+gfs_getattr(path="/d1/d1/f3")
+	FILE: Searching for /d1/d1/f3
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f3
+	FILE : Found file name f3 in d1
+gfs_getattr(path="/d1/d1/f4")
+	FILE: Searching for /d1/d1/f4
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f4
+	FILE: File not Found
+	Error:File look up failed
+gfs_create(path="/d1/d1/f4" mode="33188", fi="0x7fe809975cc0")
+DIRNAME returned path /d1/d1 and filename f4
+	FILE: Searching for /d1/d1
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE : Found file name d1 in d1
+gfs_getattr(path="/d1/d1/f4")
+	FILE: Searching for /d1/d1/f4
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token d1
+	FILE: Dir found, going down. 
+	FILE: Searching for token f4
+	FILE : Found file name f4 in d1
