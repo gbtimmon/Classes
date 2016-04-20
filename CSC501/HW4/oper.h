@@ -66,7 +66,7 @@ int gfs_rmdir (const char *);
 //int gfs_chown (const char *, uid_t, gid_t);
 
 /** Change the size of a file */
-//int gfs_truncate (const char *, off_t);
+int gfs_truncate (const char *, off_t);
 
 /** Change the access and/or modification times of a file
  *

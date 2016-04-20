@@ -296,15 +296,12 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         Log_msg("\tMallocing a new buffer\n"); 
         file->buf    = calloc( sizeof(char), end_of_write ); 
         file->buf_sz = end_of_write;  
-        for( int i = 0; i < end_of_write; i++ ) Log_msg("index %i : [%c]", i, file->buf[i] ); 
 
     } else if( file->buf_sz < end_of_write) {
         Log_msg("\tReallocing a larger file\n"); 
         file->buf    = realloc(file->buf, sizeof(char) * end_of_write); 
         file->buf_sz = end_of_write;
         memset( file->buf + file->buf_sz, 0, end_of_write - file->buf_sz ); 
-
-        for( int i = 0; i < end_of_write; i++ ) Log_msg("index %i : [%c]", i, file->buf[i] ); 
 
     } else {   
         Log_msg("\tFile seems to be large enough"); 
@@ -343,6 +340,32 @@ int gfs_open( const char * path, struct fuse_file_info * fi ) {
 }
 
 
+int gfs_truncate ( const char * path, off_t off ) { 
+ 
+    errno = 0; 
+    Log_msg( "gfs_truncate(path=\"%s\" off=\"%d\")\n", path, off); 
+
+    File file = File_find( path ); 
+
+    if ( file == NULL ) {
+        Log_msg("\tError: File lookup failed\n");
+        //inhierit the error of the failed find.
+    } else if( ISDIR(file) ) {
+        Log_msg("\tError:File is a directory  \n");
+        errno = EISDIR;
+
+    }  else {
+        file->buf    = realloc(file->buf, sizeof(char) * off );     
+        file->buf_sz = off; 
+
+        if( off > file->buf_sz ) 
+            memset( file->buf + file->buf_sz, 0, sizeof(char) * (off - file->buf_sz) ); 
+
+        errno = 0; 
+    }
+
+    return -errno; 
+}
 //int    gfs_access      (const char *, int)
 //int    gfs_bmap        (const char *, size_t blocksize, uint64_t *idx)
 //int    gfs_chmod       (const char *, mode_t)
@@ -373,7 +396,6 @@ int gfs_open( const char * path, struct fuse_file_info * fi ) {
 //int    gfs_setxattr    (const char *, const char *, const char *, size_t, int)
 //int    gfs_statfs      (const char *, struct statvfs *)
 //int    gfs_symlink     (const char *, const char *)
-//int    gfs_truncate    (const char *, off_t)
 //int    gfs_utime       (const char *, struct utimbuf *)
 //int    gfs_utimens     (const char *, const struct timespec tv[2])
 //int    gfs_write_buf   (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *)
