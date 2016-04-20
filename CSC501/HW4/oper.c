@@ -46,7 +46,7 @@ struct fuse_operations gfs_oper = {
 //     .setxattr = gfs_setxattr,
 //     .statfs = gfs_statfs,
 //     .symlink = gfs_symlink,
-//     .truncate = gfs_truncate,
+     .truncate = gfs_truncate,
      .unlink = gfs_unlink,
 //     .utime = gfs_utime,
 //     .utimens = gfs_utimens,
@@ -275,6 +275,24 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
     errno = 0; 
     Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
+    File file = (file) fi->fh; 
+    
+    if( file == NULL ) {
+        Log_msg("Error:File lookup failed\n")
+        errno = ENOENT; 
+
+    }else if( ISDIR(file) {
+        Log_msg("\tError:File is a directory\n");
+        errno = EISDIR;
+
+    }else if( off  > file->buf_sz )  {
+        Log_msg("\tError:Illegal Access\n"); 
+        errno = ENFILE;
+
+    } else {
+        int digitstoread = file
+
+    }
     
     return -errno; 
 }
@@ -291,6 +309,7 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
 
     if( file == NULL ) { 
         Log_msg("Error:File lookup failed\n");
+        errno = ENOENT; 
         
     } else if( file->buf == NULL ) { 
         Log_msg("\tMallocing a new buffer\n"); 
