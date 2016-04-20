@@ -275,6 +275,7 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
     errno = 0; 
     Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
+    
     return -errno; 
 }
 
@@ -283,7 +284,26 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     errno = 0; 
     Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
-    
+    File file = (File) fi->fh; 
+
+    size_t end_of_write = off + sz; 
+
+    if( file->buf == NULL ) { 
+        Log_msg("\tMallocing a new buffer\n"); 
+        file->buf = calloc( sizeof(char), end_of_write ); 
+
+    } else if( file->buf_sz < end_of_write) {
+        Log_msg("\tReallocing a larger file\n"); 
+        file->buf = realloc(file->buf, end_of_write); 
+        memset( ( (char*) file->buf ) + file->buf_sz, 0, end_of_write - file->buf_sz); 
+
+    } else {   
+        Log_msg("\tFile seems to be large enough"); 
+    }
+
+    for( int i = 0; i < sz; i++){
+        file->buf[ off + i ] = buf[i]; 
+    }
     return -errno; 
 }
 

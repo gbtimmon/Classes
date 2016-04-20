@@ -135,8 +135,7 @@ char * File_dirname( const char * in, char ** filename ) {
         return dir;
 
     }
-    char * dir = malloc( ( sizeof(char) * last ) +  2 ) ;
-    memset( dir, '\0', ( sizeof(char) * last ) +  2 );
+    char * dir = calloc(  sizeof(char),  last +  2 ) ;
     strncpy( dir, in, last);
 
     if( filename ) {
