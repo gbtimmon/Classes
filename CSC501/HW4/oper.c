@@ -294,8 +294,8 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
 
     } else if( file->buf_sz < end_of_write) {
         Log_msg("\tReallocing a larger file\n"); 
-        file->buf = realloc(file->buf, end_of_write); 
-        memset( ( (char*) file->buf ) + file->buf_sz, 0, end_of_write - file->buf_sz); 
+        file->buf = realloc(file->buf, sizeof(char) * end_of_write); 
+        memset( file->buf + file->buf_sz, 0, end_of_write - file->buf_sz ); 
 
     } else {   
         Log_msg("\tFile seems to be large enough"); 
@@ -304,6 +304,8 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     for( int i = 0; i < sz; i++){
         file->buf[ off + i ] = buf[i]; 
     }
+
+    Log_msg("\tFILE CONTENTS : [%s]\n", file->buf ); 
     return -errno; 
 }
 
