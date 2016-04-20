@@ -32,7 +32,7 @@ struct fuse_operations gfs_oper = {
      .mkdir = gfs_mkdir,
 //     .mknod = gfs_mknod,
      .opendir = gfs_opendir,
-//     .open = gfs_open,
+     .open = gfs_open,
 //     .poll = gfs_poll,
 //     .read_buf = gfs_read_buf,
      .readdir = gfs_readdir,
@@ -285,10 +285,12 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
 
     File file = (File) fi->fh; 
-
     size_t end_of_write = off + sz; 
 
-    if( file->buf == NULL ) { 
+    if( file == NULL ) { 
+        Log_msg("Error:File lookup failed\n");
+        
+    } else if( file->buf == NULL ) { 
         Log_msg("\tMallocing a new buffer\n"); 
         file->buf = calloc( sizeof(char), end_of_write ); 
 
@@ -305,7 +307,31 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         file->buf[ off + i ] = buf[i]; 
     }
 
-    Log_msg("\tFILE CONTENTS : [%s]\n", file->buf ); 
+    Log_msg("\terrno = [%d]\n\tFILE CONTENTS : [%s]\n",errno, file->buf ); 
+    return (errno == 0 ) ? sz : errno; 
+}
+
+int gfs_open( const char * path, struct fuse_file_info * fi ) {
+
+    errno = 0; 
+    Log_msg( "gfs_open(path=\"%s\" fi=\"%p\")\n", path, (void*) fi);
+
+    File file = File_find( path ); 
+
+    if ( file == NULL ) { 
+       Log_msg("\tError: File lookup failed\n"); 
+       //inhierit the error of the failed find. 
+       
+    } else if( ISDIR(file) ) {
+       Log_msg("\tError:File is a directory  \n");
+       errno = EISDIR; 
+
+    }  else { 
+        fi->fh = (unsigned long) file;
+        errno = 0; 
+
+    }
+   
     return -errno; 
 }
 

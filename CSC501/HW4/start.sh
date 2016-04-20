@@ -34,3 +34,5 @@ mkdir ${MT}/d1/d1
 > ${MT}/d1/d1/f3
 > ${MT}/d1/d1/f4
 
+echo test > ${MT}/test_file
+
