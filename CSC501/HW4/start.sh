@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function L {
+   echo "START_SCRIPT ############"  >> ./greg_fs.log
+   echo "#    ${1}" >> ./greg_fs.log
+   echo "#########################"  >> ./greg_fs.log
+}
 MT=${1}
 if [ "X${1}" = "X" ]; then 
    exit 1; 
@@ -8,6 +13,7 @@ fi
 mkdir ${MT}
 ./greg_fs ${MT} 
 ls -ls ${MT};
+
 mkdir ${MT}/d1
 mkdir ${MT}/d2
 mkdir ${MT}/d3
@@ -35,4 +41,5 @@ mkdir ${MT}/d1/d1
 > ${MT}/d1/d1/f4
 
 echo test > ${MT}/test_file
+echo test2 >> ${MT}/test_file
 

@@ -107,7 +107,7 @@ int gfs_getattr (const char * path, struct stat * stbuf)
     }else {
         stbuf->st_mode = fattr->mode; 
         stbuf->st_nlink = 2;
-        stbuf->st_size = strlen(fattr->name); 
+        stbuf->st_size =  fattr->buf_sz;
         errno = 0; 
     } 
 
@@ -287,17 +287,24 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     File file = (File) fi->fh; 
     size_t end_of_write = off + sz; 
 
+    Log_msg("\tFILE CONTENTS : [%s]\n", file->buf );
+
     if( file == NULL ) { 
         Log_msg("Error:File lookup failed\n");
         
     } else if( file->buf == NULL ) { 
         Log_msg("\tMallocing a new buffer\n"); 
-        file->buf = calloc( sizeof(char), end_of_write ); 
+        file->buf    = calloc( sizeof(char), end_of_write ); 
+        file->buf_sz = end_of_write;  
+        for( int i = 0; i < end_of_write; i++ ) Log_msg("index %i : [%c]", i, file->buf[i] ); 
 
     } else if( file->buf_sz < end_of_write) {
         Log_msg("\tReallocing a larger file\n"); 
-        file->buf = realloc(file->buf, sizeof(char) * end_of_write); 
+        file->buf    = realloc(file->buf, sizeof(char) * end_of_write); 
+        file->buf_sz = end_of_write;
         memset( file->buf + file->buf_sz, 0, end_of_write - file->buf_sz ); 
+
+        for( int i = 0; i < end_of_write; i++ ) Log_msg("index %i : [%c]", i, file->buf[i] ); 
 
     } else {   
         Log_msg("\tFile seems to be large enough"); 
