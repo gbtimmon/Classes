@@ -1,6 +1,6 @@
 gfs_getattr(path="/")
 gfs_opendir(path="/")
-gfs_readdir(path="(null)", buf=0x44000af0, filler=0x4ab3fd80, offset=0, fi=0x4ab0bc50)
+gfs_readdir(path="(null)", buf=0x58000af0, filler=0x5f014d80, offset=0, fi=0x5efe0c50)
 gfs_getattr(path="/d1")
 	Error:File look up failed
 gfs_mkdir(path="/d1")
@@ -25,35 +25,35 @@ gfs_mkdir(path="/d4")
 gfs_getattr(path="/d4")
 gfs_getattr(path="/f1")
 	Error:File look up failed
-gfs_create(path="/f1" mode="33188", fi="0x7f434a0e8cc0")
+gfs_create(path="/f1" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/f1")
 gfs_getattr(path="/f2")
 	Error:File look up failed
-gfs_create(path="/f2" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/f2" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/f2")
 gfs_getattr(path="/f3")
 	Error:File look up failed
-gfs_create(path="/f3" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/f3" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/f3")
 gfs_getattr(path="/f4")
 	Error:File look up failed
-gfs_create(path="/f4" mode="33188", fi="0x7f434a0e8cc0")
+gfs_create(path="/f4" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/f4")
 gfs_getattr(path="/d1/f1")
 	Error:File look up failed
-gfs_create(path="/d1/f1" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/d1/f1" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/d1/f1")
 gfs_getattr(path="/d1/f2")
 	Error:File look up failed
-gfs_create(path="/d1/f2" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/d1/f2" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/d1/f2")
 gfs_getattr(path="/d1/f3")
 	Error:File look up failed
-gfs_create(path="/d1/f3" mode="33188", fi="0x7f434a0e8cc0")
+gfs_create(path="/d1/f3" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/d1/f3")
 gfs_getattr(path="/d1/f4")
 	Error:File look up failed
-gfs_create(path="/d1/f4" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/d1/f4" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/d1/f4")
 gfs_getattr(path="/d1/d1")
 	Error:File look up failed
@@ -61,54 +61,50 @@ gfs_mkdir(path="/d1/d1")
 gfs_getattr(path="/d1/d1")
 gfs_getattr(path="/d1/d1/f1")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f1" mode="33188", fi="0x7f434a0e8cc0")
+gfs_create(path="/d1/d1/f1" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/d1/d1/f1")
 gfs_getattr(path="/d1/d1/f2")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f2" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/d1/d1/f2" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/d1/d1/f2")
 gfs_getattr(path="/d1/d1/f3")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f3" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/d1/d1/f3" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/d1/d1/f3")
 gfs_getattr(path="/d1/d1/f4")
 	Error:File look up failed
-gfs_create(path="/d1/d1/f4" mode="33188", fi="0x7f434a0e8cc0")
+gfs_create(path="/d1/d1/f4" mode="33188", fi="0x7fc75efe0cc0")
 gfs_getattr(path="/d1/d1/f4")
 gfs_getattr(path="/test_file")
 	Error:File look up failed
-gfs_create(path="/test_file" mode="33188", fi="0x7f434ab0bcc0")
+gfs_create(path="/test_file" mode="33188", fi="0x7fc75e5bdcc0")
 gfs_getattr(path="/test_file")
-gfs_write(path="(null)" buf="test  ", sz="6" off="0" fi="0x7f434a0e8df0")
+gfs_write(path="(null)" buf="test  ", sz="6" off="0" fi="0x7fc75efe0df0")
 	FILE CONTENTS : [(null)]
 	Mallocing a new buffer
 	errno = [0]
 	FILE CONTENTS : [test  ]
-gfs_open(path="/test_file" fi="0x7f434ab0bcc0")
-gfs_write(path="(null)" buf="test2  ", sz="7" off="6" fi="0x7f434a0e8df0")
+gfs_open(path="/test_file" fi="0x7fc75e5bdcc0")
+gfs_write(path="(null)" buf="test2  ", sz="7" off="6" fi="0x7fc75efe0df0")
 	FILE CONTENTS : [test  ]
 	Reallocing a larger file
 	errno = [0]
 	FILE CONTENTS : [test  test2  ]
-gfs_getattr(path="/test")
-	Error:File look up failed
-gfs_create(path="/test" mode="33188", fi="0x7f434ab0bcc0")
-gfs_getattr(path="/test")
-gfs_write(path="(null)" buf="test
-  ", sz="5" off="0" fi="0x7f434a0e8df0")
-	FILE CONTENTS : [(null)]
-	Mallocing a new buffer
-	errno = [0]
-	FILE CONTENTS : [test
-]
-gfs_open(path="/test" fi="0x7f434a0e8cc0")
-gfs_getattr(path="/test")
-gfs_open(path="/test" fi="0x7f434a0e8cc0")
-gfs_getattr(path="/test")
-gfs_open(path="/test" fi="0x7f434a0e8cc0")
-gfs_open(path="/test" fi="0x7f434ab0bcc0")
-gfs_getattr(path="/test")
-gfs_open(path="/test" fi="0x7f434ab0bcc0")
-gfs_open(path="/test" fi="0x7f434a0e8cc0")
-gfs_getattr(path="/test")
-gfs_open(path="/test" fi="0x7f434a0e8cc0")
+gfs_getattr(path="/")
+gfs_opendir(path="/")
+gfs_readdir(path="(null)", buf=0x50000990, filler=0x5f014d80, offset=0, fi=0x5efe0c50)
+gfs_getattr(path="/test_file")
+gfs_getattr(path="/f4")
+gfs_getattr(path="/f3")
+gfs_getattr(path="/f2")
+gfs_getattr(path="/f1")
+gfs_getattr(path="/d4")
+gfs_getattr(path="/d2")
+gfs_getattr(path="/d1")
+gfs_getattr(path="/")
+gfs_opendir(path="/")
+gfs_readdir(path="(null)", buf=0x58000af0, filler=0x5f014d80, offset=0, fi=0x5e5bdc50)
+gfs_getattr(path="/test_file")
+gfs_getattr(path="/test_file")
+gfs_open(path="/test_file" fi="0x7fc75efe0cc0")
+gfs_read(path="(null)" buf="0x7fc750000fe0", sz="4096" off="0" fi="0x7fc75e5bdcc0")

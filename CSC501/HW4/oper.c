@@ -270,18 +270,19 @@ int gfs_unlink (const char * path) {
     return -errno; 
 }
 
-int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_file_info * fi){
+int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_file_info * fi ) 
+{
     
     errno = 0; 
-    Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
+    Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi ); 
 
-    File file = (file) fi->fh; 
+    File file = (File) fi->fh; 
     
     if( file == NULL ) {
-        Log_msg("Error:File lookup failed\n")
+        Log_msg("Error:File lookup failed\n");
         errno = ENOENT; 
 
-    }else if( ISDIR(file) {
+    }else if( ISDIR(file) ){
         Log_msg("\tError:File is a directory\n");
         errno = EISDIR;
 
@@ -290,7 +291,13 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
         errno = ENFILE;
 
     } else {
-        int digitstoread = file
+        int real_sz = ((sz + off) > file->buf_sz) ? file->buf_sz - off : sz ; 
+
+        for( int i = 0; i < sz; i++ ) {
+            buf[i] = file->buf[off + i];
+        }
+    
+        return real_sz;
 
     }
     
