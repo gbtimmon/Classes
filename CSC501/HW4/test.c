@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 
     if( argc != 3 ) { 
         printf("RAMDISK expects 2 parameters\n"); 
+        exit (1); 
     }
 
     int size_limit = atoi(argv[2]);    
@@ -23,10 +24,10 @@ int main(int argc, char *argv[])
    
     setrlimit(RLIMIT_DATA, &rl); 
   
-   
+    argc    = 2; 
+    argv[2] = NULL;
 
     fuse_stat = fuse_main(argc, argv, &gfs_oper, fsState );
-    Log_msg("Testing the log %s\n", "AHHHH");
     return fuse_stat;
 }
 

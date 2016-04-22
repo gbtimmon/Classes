@@ -110,7 +110,7 @@ int gfs_getattr (const char * path, struct stat * stbuf)
         stbuf->st_size =  fattr->buf_sz;
         errno = 0; 
     } 
-
+    Log_msg("\t returning %d\n", -errno);
     return -errno; 
 }
 
