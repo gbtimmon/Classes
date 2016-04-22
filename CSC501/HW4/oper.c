@@ -265,6 +265,7 @@ int gfs_unlink (const char * path) {
         errno = EISDIR; 
 
     } else {
+        current_size = current_size - node->buf_sz; 
         File_unlink( node );
         File_free( node ); 
         errno = 0; 
@@ -314,22 +315,25 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
 
     File file = (File) fi->fh; 
     size_t end_of_write = off + sz; 
+    size_t new_space    = end_of_write - file->buf_sz;
 
     Log_msg("\tFILE CONTENTS : [%s]\n", file->buf );
 
     if( file == NULL ) { 
-        Log_msg("Error:File lookup failed\n");
+        Log_msg("\tError:File lookup failed\n");
         errno = ENOENT; 
         
+    } else if( current_size + new_space > size_limit_bytes ) {
+        Log_msg("\tError:No more space\n");
+        errno = ENOSPC;
+
     } else if( file->buf == NULL ) { 
         Log_msg("\tMallocing a new buffer\n"); 
 
-        if( current_size + end_of_write > size_limit_bytes) {
-            return ENOSPC;
-        }
 
-        file->buf    = calloc( sizeof(char), end_of_write ); 
-        file->buf_sz = end_of_write;  
+        file->buf    = calloc( sizeof(char), new_space ); 
+        file->buf_sz = new_space;  
+        current_size = current_size + new_space;
         
         if(file->buf == NULL ){
            return ENOMEM;
@@ -339,6 +343,7 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         Log_msg("\tReallocing a larger file\n"); 
         file->buf    = realloc(file->buf, sizeof(char) * end_of_write); 
         file->buf_sz = end_of_write;
+        current_size = current_size + new_space;
 
         if( file->buf == NULL ){
             return ENOMEM;
@@ -400,7 +405,10 @@ int gfs_truncate ( const char * path, off_t off ) {
         file->buf    = realloc(file->buf, sizeof(char) * off );     
 
         if( file->buf == NULL ) return ENOMEM;
-        
+
+        long int change = file->buf_sz - off;
+        current_size = current_size - change;        
+
         file->buf_sz = off; 
 
         if( off > file->buf_sz ) 
