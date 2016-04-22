@@ -16,40 +16,40 @@
  * 1.00 - Original release - 8/17/97
  *
  * 1.01 - Fixed endless loop on EOF, 
- *        Divide by zero when file_size_high=file_size_low - 10/29/97
- *               (Thanks to Chuck Murnane)
+ * Divide by zero when file_size_high=file_size_low - 10/29/97
+ * (Thanks to Chuck Murnane)
  *
- *               1.1 - Added new commands to distribute work across multiple directories
- *                     and/or file systems and multiple work subdirectories.
+ * 1.1 - Added new commands to distribute work across multiple directories
+ * and/or file systems and multiple work subdirectories.
  *
- *                           Changed set location command (+,-) to allow file systems & weights
- *                                 Added set subdirectories command and code to distribute work across
- *                                          multiple subdirectories
- *                                                Added file redirect to show and run commands
- *                                                      Improved help system - 4/8/98
+ * Changed set location command (+,-) to allow file systems & weights
+ * Added set subdirectories command and code to distribute work across
+ * multiple subdirectories
+ * Added file redirect to show and run commands
+ * Improved help system - 4/8/98
  *
- *                                                      1.11 - Fixed unfortunate problem where read_file opens in append mode thus
- *                                                             avoiding actual reads.  (Thanks to Kent Peacock)
+ * 1.11 - Fixed unfortunate problem where read_file opens in append mode thus
+ * avoiding actual reads.  (Thanks to Kent Peacock)
  *
- *                                                             1.12 - Changed bytes read and written to float.  Hopefully this will avoid
- *                                                                    overflow when very large file sizes are used.
+ * 1.12 - Changed bytes read and written to float.  Hopefully this will avoid
+ * overflow when very large file sizes are used.
  *
- *                                                                    1.13 - Added terse report option allowing results to be easily included in
- *                                                                           other things.  (Thanks to Walter Wong) 
- *                                                                                  Also tweaked help code to allow partial matches
+ * 1.13 - Added terse report option allowing results to be easily included in
+ * other things.  (Thanks to Walter Wong) 
+ * Also tweaked help code to allow partial matches
+ * 
+ * 1.14 - Automatically stop run if work files are depleted
  *
- *                                                                                  1.14 - Automatically stop run if work files are depleted
+ * 1.5 - Many people (most recently Michael Flaster) have emphasized that the
+ * pseudo-random number generator was more pseudo than random.  After
+ * a review of the literature and extensive benchmarking, I've replaced
+ * the previous PRNG with the Mersenne Twister.  While an excellent PRNG,
+ * it retains much of the performance of the previous implementation. 
+ * URL: http://www.math.keio.ac.jp/~matumoto/emt.html
+ * Also changed MB definition to 1024KB, tweaked show command
  *
- *                                                                                  1.5 - Many people (most recently Michael Flaster) have emphasized that the
- *                                                                                        pseudo-random number generator was more pseudo than random.  After
- *                                                                                              a review of the literature and extensive benchmarking, I've replaced
- *                                                                                                    the previous PRNG with the Mersenne Twister.  While an excellent PRNG,
- *                                                                                                          it retains much of the performance of the previous implementation. 
- *                                                                                                                URL: http://www.math.keio.ac.jp/~matumoto/emt.html
- *                                                                                                                      Also changed MB definition to 1024KB, tweaked show command
- *
- *                                                                                                                      1.51 - Added command to load config file from CLI
- *                                                                                                                      */
+ * 1.51 - Added command to load config file from CLI
+ * */
 
 #include <stdio.h>
 #include <string.h>
@@ -117,10 +117,8 @@ cmd command_list[]={ /* table of CLI commands */
    {"set read",cli_set_read,"Sets read block size"},
    {"set write",cli_set_write,"Sets write block size"},
    {"set buffering",cli_set_buffering,"Sets usage of buffered I/O"},
-   {"set bias read",cli_set_bias_read,
-      "Sets the chance of choosing read over append"},
-   {"set bias create",cli_set_bias_create,
-      "Sets the chance of choosing create over delete"},
+   {"set bias read",cli_set_bias_read,"Sets the chance of choosing read over append"},
+   {"set bias create",cli_set_bias_create,"Sets the chance of choosing create over delete"},
    {"set report",cli_set_report,"Choose verbose or terse report format"},
    {"run",cli_run,"Runs one iteration of benchmark"},
    {"load",cli_load,"Read configuration file"},

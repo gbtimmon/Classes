@@ -4,7 +4,6 @@
 #include "global.h"
 #include <fuse.h>
 
-
 struct fuse_operations gfs_oper; 
 
 /** Get file attributes.

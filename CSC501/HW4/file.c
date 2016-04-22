@@ -10,11 +10,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+//copy string. returns null when out of space. 
 char * copyString( const char * os, size_t * size){
 
     size_t sz = sizeof(char) * strlen(os);
 
     char * ns = malloc( sz ); 
+
+    if( ns == NULL ) {
+        return NULL; 
+    }
     strcpy(ns, os); 
 
     if( size != NULL ) 
@@ -36,6 +41,12 @@ File File_find( const char * path ) {
     errno = 0; 
     File current  = getState()->root->head;
     char * string = copyString(path, NULL); 
+
+    if( string == NULL ) {
+        errno = ENOSPC;
+        return NULL;
+    }
+
     char * start  = string + 1; //all of my non root file start with / 
     char * end    = string + 1; //I can ignore that first / and root "/" only
     int end_found = 0;          //wont mkae it here. 
@@ -117,10 +128,24 @@ char * File_dirname( const char * in, char ** filename ) {
 
     if( last < 1 ) {
         char * dir = malloc( sizeof(char) * 2 );
+
+        if( dir == NULL ) {
+            if(filename) *filename = NULL;
+            errno = ENOSPC;
+            return NULL;
+        }
+
         strcpy( dir,( last == -1 ) ? ".": "/" );
 
         if( filename ) {
             char * fil = malloc( sizeof(char) * strlen(in) );
+
+            if( fil == NULL ) {
+                *filename == NULL;
+                errno =ENOSPC;
+                return NULL;
+            }
+
             strcpy( fil, in + ((last == -1 ) ? 0 : 1) );
 
             *filename = fil;
@@ -135,11 +160,26 @@ char * File_dirname( const char * in, char ** filename ) {
         return dir;
 
     }
+
     char * dir = calloc(  sizeof(char),  last +  2 ) ;
+
+    if( dir == NULL ) {
+        if(filename) *filename = NULL;
+        errno = ENOSPC;
+        return NULL;
+    }
+
     strncpy( dir, in, last);
 
     if( filename ) {
         char * fil = malloc( sizeof(char) * strlen( in + last ) );
+
+        if( fil == NULL ) {
+           *filename = NULL;
+           errno = ENOSPC;
+           return NULL;
+        }
+
         strcpy( fil, in + last + ((last == -1 ) ? 0 : 1) );
         *filename = fil;
 
@@ -157,6 +197,11 @@ char * File_dirname( const char * in, char ** filename ) {
 File File_new_root( ) { 
 
     File root    = malloc( sizeof( struct fs_file ) ); 
+
+    if( root == NULL ) {
+        errno = ENOSPC; 
+        return NULL;
+    }
 
     root->type   = FILE_TYPE_ROOT; 
     root->mode   = S_IFDIR | 0755;
@@ -184,6 +229,11 @@ File File_new_dir( File parent, const char * name ) {
     //create new file. 
     size_t name_size; 
     File dir    = malloc( sizeof( struct fs_file ) );
+
+    if( dir == NULL ) {
+        errno = ENOSPC;
+        return NULL;
+    }
 
     dir->type   = FILE_TYPE_DIR;
     dir->name   = copyString( name, &name_size ); 
@@ -218,6 +268,11 @@ File File_new( File dir, const char * name  ) {
     size_t name_size; 
 
     File node    = malloc( sizeof( struct fs_file ) ); 
+
+    if( node == NULL ) {
+        errno = ENOSPC; 
+        return NULL;
+    }
 
     node->type   = FILE_TYPE_FILE; 
     node->name   = copyString( name, &name_size ); 
