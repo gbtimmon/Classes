@@ -96,6 +96,7 @@ struct fuse_operations gfs_oper = {
 
 int gfs_getattr (const char * path, struct stat * stbuf) 
 { 
+    errno = 0;
     Log_msg("gfs_getattr(path=\"%s\")\n", path);
     memset(stbuf, 0, sizeof(struct stat));
 
@@ -116,6 +117,7 @@ int gfs_getattr (const char * path, struct stat * stbuf)
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
+    errno = 0; 
     Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
 
     File dir = (File) fi->fh; 
@@ -167,6 +169,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
 }
 
 int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
+    errno = 0; 
     Log_msg("gfs_opendir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ; 
@@ -311,13 +314,11 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
 int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct fuse_file_info * fi ) {
 
     errno = 0; 
-    Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi); 
+    Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, &buf, sz, off, (void*) fi); 
 
     File file = (File) fi->fh; 
     size_t end_of_write = off + sz; 
     size_t new_space    = end_of_write - file->buf_sz;
-
-    Log_msg("\tFILE CONTENTS : [%s]\n", file->buf );
 
     if( file == NULL ) { 
         Log_msg("\tError:File lookup failed\n");
@@ -354,9 +355,11 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
     } else {   
         Log_msg("\tFile seems to be large enough"); 
     }
-
-    for( int i = 0; i < sz; i++){
-        file->buf[ off + i ] = buf[i]; 
+    
+    if( errno == 0 ){
+        for( int i = 0; i < sz; i++){
+            file->buf[ off + i ] = buf[i]; 
+        }
     }
 
     return (errno == 0 ) ? sz : errno; 
