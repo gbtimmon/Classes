@@ -141,8 +141,8 @@ char * File_dirname( const char * in, char ** filename ) {
             char * fil = malloc( sizeof(char) * strlen(in) );
 
             if( fil == NULL ) {
-                *filename == NULL;
-                errno =ENOSPC;
+                *filename = NULL;
+                errno = ENOSPC;
                 return NULL;
             }
 
@@ -212,8 +212,6 @@ File File_new_root( ) {
     root->head   = NULL;
     root->buf    = NULL;
     root->buf_sz = 0; 
-  
-    root->sz   = sizeof(struct fs_file ); 
 
     return root;
 }
@@ -243,9 +241,7 @@ File File_new_dir( File parent, const char * name ) {
     dir->last   = NULL;
     dir->head   = NULL;
     dir->buf    = NULL;
-
     dir->buf_sz = 0; 
-    dir->sz     = sizeof(struct fs_file ) + name_size;
 
     //attach the file.
     if( parent->head )
@@ -283,7 +279,6 @@ File File_new( File dir, const char * name  ) {
     node->head   = NULL; 
     node->buf    = NULL;
     node->buf_sz = 0; 
-    node->sz     = sizeof(struct fs_file ) + name_size;
 
     //ATTACH THE FILE 
     if( dir->head )  

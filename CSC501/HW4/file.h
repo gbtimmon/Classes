@@ -18,7 +18,6 @@ typedef struct fs_file {
     struct fs_file * head; 
     int    buf_sz; 
     char * buf; 
-    size_t sz; 
     mode_t mode; 
 } * File;
 
