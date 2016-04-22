@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/resource.h>
 
 int main(int argc, char *argv[])
 {
@@ -17,14 +16,11 @@ int main(int argc, char *argv[])
         exit (1); 
     }
 
-    int size_limit = atoi(argv[2]);    
-    int size_limit_bytes = size_limit * 1024 * 1024;
-    
-    struct rlimit rl = {size_limit_bytes, size_limit_bytes};
-   
-    setrlimit(RLIMIT_DATA, &rl); 
+    size_limit = atoi(argv[2]);    
+    size_limit_bytes = size_limit * 1024 * 1024;
+    current_size = 0; 
   
-    argc    = 2; 
+    argc = 2;
     argv[2] = NULL;
 
     fuse_stat = fuse_main(argc, argv, &gfs_oper, fsState );

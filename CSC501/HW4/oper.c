@@ -143,10 +143,14 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 
 int gfs_mkdir (const char * path, mode_t mode) {
     
+    errno = 0; 
     Log_msg("gfs_mkdir(path=\"%s\")\n", path);
 
     char* filename; 
     char* dirpath = File_dirname( path, &filename ); 
+    
+    if( dirpath == NULL ) return -errno;
+    
     File  dir = File_find( dirpath ); 
 
     if( dir == NULL ) {
@@ -154,7 +158,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
         //inhierit the File find error. 
     } else {
         File_new_dir(dir, filename);
-        errno = 0;
+        //inhierit the new file errno; 
     }
 
     free(dirpath); 
@@ -237,9 +241,8 @@ int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
     } else { 
         File newf = File_new( dir, filename ); 
         fi->fh = (unsigned long) newf; 
-        errno = 0; 
+        //inhierit the newfile error;
     }
-
 
     free(filename); 
     free(dirpath); 
@@ -320,13 +323,27 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         
     } else if( file->buf == NULL ) { 
         Log_msg("\tMallocing a new buffer\n"); 
+
+        if( current_size + end_of_write > size_limit_bytes) {
+            return ENOSPC;
+        }
+
         file->buf    = calloc( sizeof(char), end_of_write ); 
         file->buf_sz = end_of_write;  
+        
+        if(file->buf == NULL ){
+           return ENOMEM;
+        }
 
     } else if( file->buf_sz < end_of_write) {
         Log_msg("\tReallocing a larger file\n"); 
         file->buf    = realloc(file->buf, sizeof(char) * end_of_write); 
         file->buf_sz = end_of_write;
+
+        if( file->buf == NULL ){
+            return ENOMEM;
+        }
+
         memset( file->buf + file->buf_sz, 0, end_of_write - file->buf_sz ); 
 
     } else {   
@@ -337,7 +354,6 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         file->buf[ off + i ] = buf[i]; 
     }
 
-    Log_msg("\terrno = [%d]\n\tFILE CONTENTS : [%s]\n",errno, file->buf ); 
     return (errno == 0 ) ? sz : errno; 
 }
 
@@ -382,6 +398,9 @@ int gfs_truncate ( const char * path, off_t off ) {
 
     }  else {
         file->buf    = realloc(file->buf, sizeof(char) * off );     
+
+        if( file->buf == NULL ) return ENOMEM;
+        
         file->buf_sz = off; 
 
         if( off > file->buf_sz ) 

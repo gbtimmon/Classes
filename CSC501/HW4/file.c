@@ -43,7 +43,7 @@ File File_find( const char * path ) {
     char * string = copyString(path, NULL); 
 
     if( string == NULL ) {
-        errno = ENOSPC;
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -131,7 +131,7 @@ char * File_dirname( const char * in, char ** filename ) {
 
         if( dir == NULL ) {
             if(filename) *filename = NULL;
-            errno = ENOSPC;
+            errno = ENOMEM;
             return NULL;
         }
 
@@ -142,7 +142,7 @@ char * File_dirname( const char * in, char ** filename ) {
 
             if( fil == NULL ) {
                 *filename = NULL;
-                errno = ENOSPC;
+                errno = ENOMEM;
                 return NULL;
             }
 
@@ -165,7 +165,7 @@ char * File_dirname( const char * in, char ** filename ) {
 
     if( dir == NULL ) {
         if(filename) *filename = NULL;
-        errno = ENOSPC;
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -176,7 +176,7 @@ char * File_dirname( const char * in, char ** filename ) {
 
         if( fil == NULL ) {
            *filename = NULL;
-           errno = ENOSPC;
+           errno = ENOMEM;
            return NULL;
         }
 
@@ -199,7 +199,7 @@ File File_new_root( ) {
     File root    = malloc( sizeof( struct fs_file ) ); 
 
     if( root == NULL ) {
-        errno = ENOSPC; 
+        errno = ENOMEM; 
         return NULL;
     }
 
@@ -229,7 +229,7 @@ File File_new_dir( File parent, const char * name ) {
     File dir    = malloc( sizeof( struct fs_file ) );
 
     if( dir == NULL ) {
-        errno = ENOSPC;
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -250,6 +250,7 @@ File File_new_dir( File parent, const char * name ) {
     dir->next    = parent->head; 
     parent->head = dir; 
 
+    errno = 0;
     return dir;
 }
 
@@ -266,7 +267,7 @@ File File_new( File dir, const char * name  ) {
     File node    = malloc( sizeof( struct fs_file ) ); 
 
     if( node == NULL ) {
-        errno = ENOSPC; 
+        errno = ENOMEM; 
         return NULL;
     }
 
@@ -287,6 +288,7 @@ File File_new( File dir, const char * name  ) {
     node->next = dir->head; 
     dir->head  = node; 
 
+    errno = 0;
     return node; 
 }
 

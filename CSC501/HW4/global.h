@@ -30,5 +30,8 @@ int State_del( State );
 FILE* Log_open(const char *);
 void  Log_msg(const char *, ...);
 
+unsigned int size_limit;
+unsigned long long int size_limit_bytes; 
+unsigned long long int current_size;
 
 #endif
