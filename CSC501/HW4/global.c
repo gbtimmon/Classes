@@ -21,7 +21,7 @@
 State State_new( const char * logpath ) {
 
     State newState    = malloc( sizeof( struct fs_state ) ); 
-    newState->logfile = Log_open( logpath ); 
+    //newState->logfile = Log_open( logpath ); 
     newState->root    = File_new_root(); 
 
     return newState; 
@@ -32,7 +32,7 @@ State getState() {
 }
 
 int State_del( State s ){
-    fclose(s->logfile);
+    //fclose(s->logfile);
     free(s); 
     return EXIT_SUCCESS;
 }

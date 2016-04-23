@@ -97,13 +97,13 @@ struct fuse_operations gfs_oper = {
 int gfs_getattr (const char * path, struct stat * stbuf) 
 { 
     errno = 0;
-    Log_msg("gfs_getattr(path=\"%s\")\n", path);
+    //Log_msg("gfs_getattr(path=\"%s\")\n", path);
     memset(stbuf, 0, sizeof(struct stat));
 
     File fattr = File_find( path ); 
 
     if( fattr == NULL ) {
-        Log_msg("\tError:File look up failed\n"); 
+        //Log_msg("\tError:File look up failed\n"); 
         //inhierit the failed lookup error. 
     }else {
         stbuf->st_mode = fattr->mode; 
@@ -111,24 +111,24 @@ int gfs_getattr (const char * path, struct stat * stbuf)
         stbuf->st_size =  fattr->buf_sz;
         errno = 0; 
     } 
-    Log_msg("\t returning %d\n", -errno);
+    //Log_msg("\t returning %d\n", -errno);
     return -errno; 
 }
 
 int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
     errno = 0; 
-    Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
+    //Log_msg("gfs_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n", path, buf, filler, offset, fi); 
 
     File dir = (File) fi->fh; 
     if( dir == NULL ){ 
         //really shouldnt happen since already checke din dir open, but sanity check. 
-        Log_msg("\tError:Failed to find destination dir\n"); 
+        //Log_msg("\tError:Failed to find destination dir\n"); 
         errno = ENOENT; 
 
     } else if( !ISDIR(dir) ){ 
         //really shount happen since already checked in dir open, but sanity check. 
-        Log_msg("\tError:Not a dir\n"); 
+        //Log_msg("\tError:Not a dir\n"); 
         errno = ENOTDIR; 
     } else {
         filler(buf, ".", NULL, 0);
@@ -146,7 +146,7 @@ int gfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 int gfs_mkdir (const char * path, mode_t mode) {
     
     errno = 0; 
-    Log_msg("gfs_mkdir(path=\"%s\")\n", path);
+    //Log_msg("gfs_mkdir(path=\"%s\")\n", path);
 
     char* filename; 
     char* dirpath = File_dirname( path, &filename ); 
@@ -156,7 +156,7 @@ int gfs_mkdir (const char * path, mode_t mode) {
     File  dir = File_find( dirpath ); 
 
     if( dir == NULL ) {
-        Log_msg("\tError:Failed to find destination dir\n"); 
+        //Log_msg("\tError:Failed to find destination dir\n"); 
         //inhierit the File find error. 
     } else {
         File_new_dir(dir, filename);
@@ -170,16 +170,16 @@ int gfs_mkdir (const char * path, mode_t mode) {
 
 int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
     errno = 0; 
-    Log_msg("gfs_opendir(path=\"%s\")\n", path);
+    //Log_msg("gfs_opendir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ; 
 
     if ( dir == NULL ) { 
-       Log_msg("\tError: File lookup failed\n"); 
+       //Log_msg("\tError: File lookup failed\n"); 
        //inhierit the error of the failed find. 
        
     } else if( !ISDIR(dir) ) {
-       Log_msg("\tError:Not a directory\n");
+       //Log_msg("\tError:Not a directory\n");
        errno = ENOTDIR; 
 
     } else {
@@ -191,20 +191,20 @@ int gfs_opendir(const char * path, struct fuse_file_info * fi ) {
 }
 
 int gfs_rmdir (const char * path ) { 
-    Log_msg("gfs_rmdir(path=\"%s\")\n", path);
+    //Log_msg("gfs_rmdir(path=\"%s\")\n", path);
 
     File dir = File_find( path ) ;
 
     if ( dir == NULL ) {
-       Log_msg("\tError:File lookup failed\n");
+       //Log_msg("\tError:File lookup failed\n");
        //inhierit the error of the failed find. 
 
     } else if ( !ISDIR(dir) ) { 
-       Log_msg("\tError:Not a directory\n");
+       //Log_msg("\tError:Not a directory\n");
        errno = ENOTDIR; 
 
     } else if( dir->head != NULL ) {
-        Log_msg("\tError:Cant delete non empty dir.\n"); 
+        //Log_msg("\tError:Cant delete non empty dir.\n"); 
         errno = EPERM;
 
     } else {
@@ -226,7 +226,7 @@ int gfs_rmdir (const char * path ) {
 int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
 
     errno = 0; 
-    Log_msg("gfs_create(path=\"%s\" mode=\"%d\", fi=\"%p\")\n", path, mode, (void*) fi); 
+    //Log_msg("gfs_create(path=\"%s\" mode=\"%d\", fi=\"%p\")\n", path, mode, (void*) fi); 
  
     char * filename; 
     char * dirpath = File_dirname( path, &filename ) ; 
@@ -234,11 +234,11 @@ int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
     File dir = File_find( dirpath); 
 
     if ( dir == NULL ) {
-        Log_msg("\tError:File lookup failed\n");
+        //Log_msg("\tError:File lookup failed\n");
         //inhierit the error of the failed find. 
 
     } else if ( !ISDIR(dir) ) { 
-        Log_msg("\tError:Not a directory\n");
+        //Log_msg("\tError:Not a directory\n");
         errno = ENOTDIR; 
 
     } else { 
@@ -255,16 +255,16 @@ int gfs_create (const char * path, mode_t mode, struct fuse_file_info * fi ){
 int gfs_unlink (const char * path) {
     
     errno = 0;
-    Log_msg("gfs_unlink(path=\"%s\")\n"); 
+    //Log_msg("gfs_unlink(path=\"%s\")\n"); 
    
     File node = File_find( path ); 
 
     if( node == NULL ) { 
-        Log_msg("\tError:File lookup failed\n");
+        //Log_msg("\tError:File lookup failed\n");
         //inhierit the error of the failed find.
 
     } else if ( ISDIR(node) ) {
-        Log_msg("\tError:File is a directory\n"); 
+        //Log_msg("\tError:File is a directory\n"); 
         errno = EISDIR; 
 
     } else {
@@ -281,56 +281,56 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
 {
     
     errno = 0; 
-    Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi ); 
+    //Log_msg("gfs_read(path=\"%s\" buf=\"%p\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, buf, sz, off, (void*) fi ); 
 
     File file = (File) fi->fh; 
     
     if( file == NULL ) {
-        Log_msg("Error:File lookup failed\n");
+        //Log_msg("Error:File lookup failed\n");
         errno = ENOENT; 
 
     }else if( ISDIR(file) ){
-        Log_msg("\tError:File is a directory\n");
+        //Log_msg("\tError:File is a directory\n");
         errno = EISDIR;
 
     }else if( off  > file->buf_sz )  {
-        Log_msg("\tError:Illegal Access\n"); 
+        //Log_msg("\tError:Illegal Access\n"); 
         errno = ENFILE;
 
     } else {
-        Log_msg("I AM READING\n"); 
+        //Log_msg("I AM READING\n"); 
         int real_sz = ((sz + off) > file->buf_sz) ? file->buf_sz - off : sz ; 
    
         for( int i = 0; i < real_sz; i++ ) {
             buf[i] = file->buf[off + i];
         }
-        Log_msg("I am exiting\n");  
+        //Log_msg("I am exiting\n");  
         return real_sz;
 
     }
-    Log_msg("I am exiting\n");
+    //Log_msg("I am exiting\n");
     return -errno; 
 }
 
 int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct fuse_file_info * fi ) {
 
     errno = 0; 
-    Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, &buf, sz, off, (void*) fi); 
+    //Log_msg("gfs_write(path=\"%s\" buf=\"%s\", sz=\"%d\" off=\"%d\" fi=\"%p\")\n", path, &buf, sz, off, (void*) fi); 
 
     File file = (File) fi->fh; 
     size_t end_of_write = off + sz; 
     size_t new_space    = end_of_write - file->buf_sz;
 
     if( file == NULL ) { 
-        Log_msg("\tError:File lookup failed\n");
+        //Log_msg("\tError:File lookup failed\n");
         errno = ENOENT; 
         
     } else if( current_size + new_space > size_limit_bytes ) {
-        Log_msg("\tError:No more space\n");
+        //Log_msg("\tError:No more space\n");
         errno = ENOSPC;
 
     } else if( file->buf == NULL ) { 
-        Log_msg("\tMallocing a new buffer\n"); 
+        //Log_msg("\tMallocing a new buffer\n"); 
 
 
         file->buf    = calloc( sizeof(char), new_space ); 
@@ -342,7 +342,7 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         }
 
     } else if( file->buf_sz < end_of_write) {
-        Log_msg("\tReallocing a larger file\n"); 
+        //Log_msg("\tReallocing a larger file\n"); 
         file->buf    = realloc(file->buf, sizeof(char) * end_of_write); 
         file->buf_sz = end_of_write;
         current_size = current_size + new_space;
@@ -354,7 +354,7 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
         memset( file->buf + file->buf_sz, 0, end_of_write - file->buf_sz ); 
 
     } else {   
-        Log_msg("\tFile seems to be large enough"); 
+        //Log_msg("\tFile seems to be large enough"); 
     }
     
     if( errno == 0 ){
@@ -369,16 +369,16 @@ int gfs_write (const char * path, const char * buf, size_t sz, off_t off, struct
 int gfs_open( const char * path, struct fuse_file_info * fi ) {
 
     errno = 0; 
-    Log_msg( "gfs_open(path=\"%s\" fi=\"%p\")\n", path, (void*) fi);
+    //Log_msg( "gfs_open(path=\"%s\" fi=\"%p\")\n", path, (void*) fi);
 
     File file = File_find( path ); 
 
     if ( file == NULL ) { 
-       Log_msg("\tError: File lookup failed\n"); 
+       //Log_msg("\tError: File lookup failed\n"); 
        //inhierit the error of the failed find. 
        
     } else if( ISDIR(file) ) {
-       Log_msg("\tError:File is a directory  \n");
+       //Log_msg("\tError:File is a directory  \n");
        errno = EISDIR; 
 
     }  else { 
@@ -394,15 +394,15 @@ int gfs_open( const char * path, struct fuse_file_info * fi ) {
 int gfs_truncate ( const char * path, off_t off ) { 
  
     errno = 0; 
-    Log_msg( "gfs_truncate(path=\"%s\" off=\"%d\")\n", path, off); 
+    //Log_msg( "gfs_truncate(path=\"%s\" off=\"%d\")\n", path, off); 
 
     File file = File_find( path ); 
 
     if ( file == NULL ) {
-        Log_msg("\tError: File lookup failed\n");
+        //Log_msg("\tError: File lookup failed\n");
         //inhierit the error of the failed find.
     } else if( ISDIR(file) ) {
-        Log_msg("\tError:File is a directory  \n");
+        //Log_msg("\tError:File is a directory  \n");
         errno = EISDIR;
 
     }  else {
