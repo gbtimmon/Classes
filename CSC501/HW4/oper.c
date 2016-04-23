@@ -298,16 +298,17 @@ int gfs_read (const char * path, char * buf, size_t sz, off_t off, struct fuse_f
         errno = ENFILE;
 
     } else {
+        Log_msg("I AM READING\n"); 
         int real_sz = ((sz + off) > file->buf_sz) ? file->buf_sz - off : sz ; 
-
-        for( int i = 0; i < sz; i++ ) {
+   
+        for( int i = 0; i < real_sz; i++ ) {
             buf[i] = file->buf[off + i];
         }
-    
+        Log_msg("I am exiting\n");  
         return real_sz;
 
     }
-    
+    Log_msg("I am exiting\n");
     return -errno; 
 }
 
