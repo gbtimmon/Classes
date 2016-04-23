@@ -219,7 +219,7 @@ File File_new_root( ) {
 File File_new_dir( File parent, const char * name ) { 
 
     if ( ! ISDIR(parent) ) {
-        Log_msg("Error: Tried to create file in non-directory object\n");
+        //Log_msg("Error: Tried to create file in non-directory object\n");
         errno = ENOTDIR;   
         return NULL;
     }
@@ -257,7 +257,7 @@ File File_new_dir( File parent, const char * name ) {
 File File_new( File dir, const char * name  ) { 
 
     if ( ! ISDIR(dir) ) {
-        Log_msg("Error: Tried to create file in non-directory object\n");
+        //Log_msg("Error: Tried to create file in non-directory object\n");
         errno = ENOTDIR;   
         return NULL;
     }
