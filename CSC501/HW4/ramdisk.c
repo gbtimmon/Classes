@@ -26,3 +26,4 @@ int main(int argc, char *argv[])
     fuse_stat = fuse_main(argc, argv, &gfs_oper, fsState );
     return fuse_stat;
 }
+
