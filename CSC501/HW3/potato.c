@@ -34,12 +34,16 @@ void Potato_free(Potato p){
 }
 
 Potato Potato_print(Potato p){
-    Potato_fprint(p, STDOUT_FILENO);
+    printf("Trace of potato:\n");
+    printf("%d", p->signature[0] );
+    for(int i = 1; i < p->signature_count; i++ ) 
+        printf(",%d", p->signature[i]);
+    printf("\n");
     return p; 
 }
 
 Potato Potato_fprint(Potato p, Stream s ){
-    dprintf(s, "Trace of potato\n");
+    dprintf(s, "Trace of potato:\n");
     dprintf(s, "%d", p->signature[0] );
     for(int i = 1; i < p->signature_count; i++ ) 
         dprintf(s, ",%d", p->signature[i]);

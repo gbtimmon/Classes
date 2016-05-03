@@ -2,7 +2,7 @@
 #define SOCKET_C
 
 #define _GNU_SOURCE
-#define BUFFER_SIZE 5000
+#define BUFFER_SIZE 100000
 
 #include "random.h"
 #include "connection.h"
@@ -138,12 +138,12 @@ void Socket_sends( int s, char* i ){
 }
 
 char* Socket_recv( int c ) {
-    char* s = malloc( sizeof(char) * 1024 ); 
+    char* s = malloc( sizeof(char) * BUFFER_SIZE ); 
     s[0] = '\0';
-    char t[1024]; 
+    char t[BUFFER_SIZE]; 
 
     while( 1 ) {
-        int len = recv(c, t, 1024, 0); 
+        int len = recv(c, t, BUFFER_SIZE, 0); 
         if( len == 0 ) break;
         if( len <  0 ) {
             perror("recv");
