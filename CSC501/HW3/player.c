@@ -92,9 +92,13 @@ int main (int argc, char *argv[])
         char* t = s;
         int   v = atoi(strsep(&t, "\n")); 
 
+        printf("I am potato number %d, And I got %d\n", id, v); 
+        fflush(NULL);
         switch (v ) { 
             case MSG_TYPE_POTATO :
             {
+                printf("[%d] Its a potato!\n", id);
+                fflush(NULL);
                 if ( conn_l == NULL || conn_r == NULL ) {
                     fprintf(stderr, "I recieved a potatoe too soon I an not initalized!\n");
                     exit(1); 
@@ -113,11 +117,15 @@ int main (int argc, char *argv[])
                      printf("Sending potato to %d\n", targ->num);
                 }
                 passPotato(p, targ);
+                printf("Free in\n");
                 Potato_free( p ); 
+                printf("Free out\n");
                 break;
             }
             case MSG_TYPE_CONNECTION :
             {
+                printf("[%d] Its a connection!\n", id);
+                fflush(NULL);
                 Connection c = Connection_recv( &t );
                 if( c->type == CONN_TYPE_LEFT )
                     conn_l = c; 
@@ -127,20 +135,29 @@ int main (int argc, char *argv[])
             }
             case MSG_TYPE_CHILD_NAME :
             {
+                printf("[%d] Its a child!\n", id);
+                fflush(NULL);
                 id = atoi(strsep( &t, "\n") );
                 printf("Connected as player %d\n", id);
                 break;
             }
             case MSG_TYPE_CLOSE : 
             {
+                printf("[%d] Its a close!\n", id);
+                fflush(NULL);
                 exit(0);
                 break;
+            } default : 
+            {
+                printf("[%d] DEFAULT\n", id);
+                fflush(NULL);
             }
+
         }
         free(s); 
 
     }
-
+    printf("Freeing!!!\n");
     Connection_free(conn_in); 
     Connection_free(conn_l); 
     Connection_free(conn_r); 
