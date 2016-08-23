@@ -1,1 +1,97 @@
 Lecture notes 2
+
+Outline : Interpreter vs Compiler review 
+          High level overview of a compiler
+
+----------------------
+
+<> Interpreter runs the program and produces the result of the program. 
+<> Compiler reads the program and translates the program. 
+
+A compiler:
+    Takes an entire program as input 
+    Generates immediate object code 
+    users more memory then the counter part
+    errors are displayed for the whole program before exec
+    c++ uses it
+    java uses it
+
+A Interpreter:
+    Takes a single instruction at a time
+    Works every time the program runs
+    Python typicall uses it
+    Java uses it
+
+
+----------------------
+
+Java is compiled to bytecode, then byte code to native code
+
+Java byte code can either be interpreted or compiled by a JIT compiler. 
+
+How JIT works : 
+
+     >  public static void main( String ... args ) { 
+     >     int x = 1; 
+     >     foo(x); 
+     >  }
+     > 
+     >  void foo(x) {
+     >      ...
+     >  }
+
+    1 Java runtime is started
+    2 Lopad the byte code of the :main: method
+    3 Compile the main method 
+    4 Execture the main method
+    5 When reaching the call of foo
+    6 Load and compile the foo method
+    7 resume the execution
+
+----------------------
+    
+Three pass compiler :
+    Front end : converts program into intermediate representation. O(n) or O(n log n)
+    Middle end : optimizes the program and refactors the intermediate represention. 
+    Back  end : converts intermeddiate representation into machine code. Runtime NP Complete.
+   
+----------------------
+Front End :
+
+Scanner (syntax)
+    1 Maps character streams into words & their parts fo speech
+    2 x = x + 2; becomes <id,x> = <id,x> + <number,2>
+    3 Analogy: Dogs are animals => noun verb noun. 
+
+Parser
+    1 Recognizes context-free syntax & reports erros
+    2 Analogy : Dogs are animals
+
+                  Sentence
+                 /        \
+              noun        verb phrase
+              /           /        \ 
+           Dogs        verb        noun ...
+
+
+    3 A parse tree an be represented by parse tree or a syntax tree 
+    4 A tree has a lot of unneeded information
+    5 Compilers use a abstract syntax tree which is much more concise. 
+    6 AST is a form of the intermediate representation
+
+----------------------
+Middle End : (Code imporvement or optimization) 
+    1 Analyzes IR and rewrites or transforms the IR
+    2 Primary goal is to reduce the runtime
+    3 May also improve space, power consumption or a number of metrics
+    4 Must not change the result of the code 
+    5 Definition of meaning varies. 
+
+cal Tranfomrations : 
+    Discover and Propogate sone constant value 
+    Move a computation to a less frequently executed place:x
+ 
+
+
+ 
+  
