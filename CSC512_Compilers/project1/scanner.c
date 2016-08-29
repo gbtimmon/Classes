@@ -72,7 +72,7 @@ int Buffer_nchars( Buffer b ) {
     return b.size - b.index; 
 };
 
-void Buffer_read( Buffer b, const char c ) {
+void Buffer_write( Buffer b, const char c ) {
     b.stack[++b.index] = c; 
 };
 
@@ -90,9 +90,6 @@ void Buffer_rewind( Buffer b ) {
 };
 
 Buffer token_buffer = { 0, 0, "" };
-//I MAY NOT USE THE BUFFER. 
-// WELL SEE.....
-
 
 int isAlpha( const char c ) { 
    return (
@@ -116,7 +113,11 @@ int main( int argc, char ** argp, char ** envp ) {
 
         switch( state ) {
         case STATE_NEWTOK :
-  
+            if( isNumeric( cur ) ) { 
+
+            else if( isAlpha( cur ) ) { 
+                state = STATE_IDENT;
+            }           
         break;
         case STATE_IDENT :
 
@@ -124,15 +125,16 @@ int main( int argc, char ** argp, char ** envp ) {
         case STATE_NUMBER : 
 
         break; 
+        case STATE_SYMBOL : 
 
-   
+        break;
+        case STATE_STRING : 
+ 
+        break;
+        case STATE_MSTMT:
+
+        break;
         }
-
-
-
-       
-        
-
     }
 };
 
