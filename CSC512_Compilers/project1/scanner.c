@@ -2,6 +2,8 @@
 #define _SCANNER_C_
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 const char* reserved_words[12] = {
     "int",
@@ -27,7 +29,6 @@ int charIn( const char c, char * string ) {
     }
     return 0; 
 };
-
 
 /**
     STATES
@@ -78,14 +79,14 @@ typedef struct _buffer {
     int index; 
     int size; 
     char stack[1024];
-} Buffer; 
+} * Buffer; 
 
 int Buffer_nchars( Buffer b ) { 
-    return b.size - b.index; 
+    return b->size - b->index; 
 };
 
 void Buffer_write( Buffer b, const char c ) {
-    b.stack[++b.index] = c; 
+    b->stack[b->size++] = ( c == '\n') ? ' ' : c; 
 };
 
 int Buffer_hasChar( Buffer b ) {
@@ -93,30 +94,29 @@ int Buffer_hasChar( Buffer b ) {
 };
 
 void Buffer_reset( Buffer b ) { 
-    b.index = 0; 
-    b.size = 0; 
+    b->index = 0; 
+    b->size = 0; 
+    memset( b->stack, '\0', sizeof b->stack);
 };
 
 void Buffer_rewind( Buffer b ) { 
-    b.index = 0; 
+    b->index = 0; 
 };
 
 void Buffer_emit( Buffer b ) { 
-   b.stack[ b.index + 1 ] = '\0';
-   printf( "%s\n", b.stack );
+   b->stack[ b->size + 1 ] = '\0';
+   printf( "EMIT : [%s]\n", b->stack );
 };
 
-Buffer token_buffer = { 0, 0, "" };
-
-int isAlpha( const char c ) { 
-   return (
-       ( c >= 'A' && c <= 'z' ) || c == '_'
-   ); 
+Buffer Buffer_new() {
+    Buffer n = (Buffer) malloc(sizeof(_buffer));
+    n->size = 0;   
+    n->index = 0; 
+    memset( n->stack, '\0', sizeof n->stack);
+    return n;
 };
-
-int isNumeric( const char c ) { 
-   return ( c>= '0' && c <= '9' );
-};
+    
+Buffer token_buffer = Buffer_new();
 
 
 #define CONSUME() { \
@@ -127,31 +127,36 @@ int isNumeric( const char c ) {
       }
          
 
-void Print_state() {
+const char * stateString() {
     switch( state ) {
     case STATE_NEWTOK :
-         printf(" State : STATE_NEWTOK \n");
+         return "STATE_NEWTOK";
     break;
     case STATE_IDENT :
-         printf(" State : STATE_IDENT  \n");
+          return "STATE_IDENT";
     break;
     case STATE_NUMBER : 
-         printf(" State : STATE_NUMBER  \n");
+          return "STATE_NUMBER";
     break; 
     case STATE_SYMBOL : 
-         printf(" State : STATE_SYMBOL  \n");
+          return "STATE_SYMBOL";
     break;
     case STATE_STRING : 
-         printf(" State : STATE_STRING  \n");
+          return "STATE_STRING";
     break;
     case STATE_MSTMT:
-         printf(" State : STATE_MSTMT \n");
+          return "STATE_MSTMT";
     break;
     }
 }
-    
-int MAX_ITER = 35; 
+   
+void keywordCheck( ) { 
+    printf("Key word check not implemented\n"); 
+}
+
+int MAX_ITER = 1000; 
 int CUR_ITER = 0; 
+int quotes_seen = 0;
 int main( int argc, char ** argp, char ** envp ) { 
 
     char cur; 
@@ -165,34 +170,63 @@ int main( int argc, char ** argp, char ** envp ) {
     }
   
     while( continue_loop == 0  && CUR_ITER++ < MAX_ITER ) { 
-        Print_state();
-        printf(" %c\n", cur);
 
         switch( state ) {
         case STATE_NEWTOK :
-            if( isNumeric( cur ) ) { 
+            if( isdigit( cur ) ) { 
                 state = STATE_NUMBER;
-            } else if( isAlpha( cur ) ) { 
+            } else if( isalpha( cur ) || cur == '_' ) { 
                 state = STATE_IDENT;
             } else if( cur == '#' ){
                 state = STATE_MSTMT;
-            } else if( cur == '"' || cur == '\'' ){
+            } else if( cur == '"' /*|| cur == '\''*/ ){
                 state = STATE_STRING;
             } else if( charIn( cur, "+-/*()") ) {
                 state = STATE_SYMBOL;
+            } else {
+                CONSUME();
             }
+            printf("I see a %s\n", stateString()) ;
+               
         break;
         case STATE_IDENT :
-
-        break;
+            if( isalpha(cur) || isdigit(cur) || cur == '_' ){
+                Buffer_write( token_buffer, cur );
+                CONSUME();
+            } else {
+                keywordCheck();
+                Buffer_emit( token_buffer );
+                Buffer_reset( token_buffer); 
+                state = STATE_NEWTOK;
+            }
         case STATE_NUMBER : 
-
+            if( isdigit( cur ) ) {
+                Buffer_write( token_buffer, cur);
+                CONSUME();
+            } else {
+                Buffer_emit( token_buffer );         
+                Buffer_reset( token_buffer ); 
+                state = STATE_NEWTOK;
+            }
         break; 
         case STATE_SYMBOL : 
+            state = STATE_NEWTOK;
+            CONSUME();
 
         break;
         case STATE_STRING : 
- 
+            if( cur == '"' ) {
+                quotes_seen++;
+                if( quotes_seen == 2){
+                    quotes_seen = 0; 
+                    Buffer_emit( token_buffer );
+                    Buffer_reset( token_buffer ); 
+                    state=STATE_NEWTOK;
+                    continue;
+                }
+            }
+            Buffer_write( token_buffer, cur );
+            CONSUME();
         break;
         case STATE_MSTMT:
             Buffer_write( token_buffer, cur );
