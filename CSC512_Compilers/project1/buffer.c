@@ -46,7 +46,7 @@ void Buffer_rewind( Buffer b ) {
 
 void Buffer_emit( const char* state, const char* prefix, Buffer b, int newLine ) { 
    b->stack[ b->size + 1 ] = '\0';
-   printf( "[%s] %s%s%s", state, prefix,  b->stack, (newLine) ? "\n" : "\n" );
+   printf( "%s%s%s", prefix, b->stack, (newLine) ? "\n" : " " );
 };
 
 Buffer Buffer_new() {

@@ -148,41 +148,91 @@ char consumeString( Buffer b, char first ) {
     }
 };
 
-char consumeOp( Buffer b, char first ) {
 
-    char cur = first;
-    Buffer_reset( b ); 
+char consumeComment( Buffer b ) {
+    //This consume is non standard as it does not come from the main loop
+    //but instead from the operator consume which identifies the opening of the comment. 
+    //In this case DO NOT reset the buffer. 
+
+    while( true ) {
+        char cur = getc( stdin );     
+        if ( cur == '\n' || cur == EOF ) {
+            Buffer_emit( "CMNT1", "", b, true );
+            return cur;
+        }
+        Buffer_write( b, cur ); 
+    }
+};
+
+char consumeMulitlineComment( Buffer b ) {
+    //This consume is non standard as it does not come from the main loop
+    //but instead from the operator consume which identifies the opening of the comment. 
+    //In this case DO NOT reset the buffer. 
+
+    char this, that; 
+    this = getc( stdin ); 
+    that = getc( stdin ); 
 
     while( true ) {
 
-        if( b->size == 0 ) {
-            if( charIn( cur, "(){}[],;+/-*") ){
-                Buffer_write( b, cur ); 
-                Buffer_emit ( "OPSZ1", "", b, false ); 
-                return getc( stdin );
-            } else if ( charIn( cur, "=><!|&" ) ){
-                Buffer_write( b, cur );
-                cur = getc( stdin ); 
-            }
-        } else {
-            char prev = b->stack[0];
-            if(  ( charIn(prev, "=<>!")  && cur == '=' ) 
-                 || ( prev == '|' && cur == '|' )
-                 || ( prev == '&' && cur == '&' )
-            ){
-                 Buffer_write( b, cur );
-                 Buffer_emit ( "OPSZ2", "", b, false );
-                 return getc( stdin ); 
-
-            } else if ( charIn( prev, "=><" ) ) {
-                 Buffer_emit( "OPSZ1", "", b, false );
-                 return cur; 
-            }  else {
-                 fprintf( stderr, "ILLEGAL OPERATION!! %s\n", b->stack );
-                 return cur; 
-            }
+        if( this == '*' && that == '/' ) {
+            Buffer_write( b, this ); 
+            Buffer_write( b, that ); 
+            Buffer_emit( "CMNT2", "", b, true); 
+            return getc( stdin ); 
         }
+        Buffer_write( b, this ); 
+        this = that; 
+        that = getc( stdin ); 
     }
+}
+
+char consumeOp( Buffer b, char first ) {
+
+ // Every if here should have a return, 
+ // otherwise you might break the logic. 
+
+    char second = getc( stdin ); 
+    Buffer_reset( b ); 
+    Buffer_write( b, first ); 
+
+ // if a garunteed on length op - return. 
+    if( charIn( first, "(){}[],;+-*") ){
+        Buffer_emit ( "OPSZ1", "", b, false ); 
+        return second;
+    } 
+
+ // if a valid 2 length non comment
+    if( ( charIn(first, "=<>!")  && second == '=' ) 
+        || ( first == '|' && second == '|' )
+        || ( first == '&' && second == '&' )
+    ){
+        Buffer_write( b, second ); 
+        Buffer_emit ( "OPSZ2", "", b, false );
+        return getc( stdin ); 
+    }
+
+ // if a one line comment 
+    if ( first == '/' && second == '/' ) {
+        Buffer_write( b, second );  
+        return consumeComment(b); 
+    }
+
+ // if a multiline comment
+    if ( first == '/' && second == '*' ) {
+        Buffer_write( b, second ); 
+        return consumeMulitlineComment(b); 
+    }
+
+ // if not a 2 char, at this point its a one char. 
+    if ( charIn( first, "=></" ) ) {
+         Buffer_emit( "OPSZ1", "", b, false );
+         return second; 
+
+    }   
+
+    fprintf( stderr, "ILLEGAL OPERATION!! %s\n", b->stack );
+    return second; 
 };
 
 int main( int argc, char ** argp, char ** envp ) { 
@@ -196,7 +246,7 @@ int main( int argc, char ** argp, char ** envp ) {
         exit(1);
     }
     int fileInFd  = open( argp[1], O_RDONLY );
-    int fileOutFd = open( outFile(argp[1]), O_CREAT | O_APPEND | O_WRONLY, S_IRWXU); // Memory leak with outFile, but its in main and I am to lazy to fix it. 
+    int fileOutFd = open( outFile(argp[1]), O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU); // Memory leak with outFile, but its in main and I am to lazy to fix it. 
  
     dup2( fileInFd, STDIN_FILENO );
     dup2( fileOutFd, STDOUT_FILENO );
