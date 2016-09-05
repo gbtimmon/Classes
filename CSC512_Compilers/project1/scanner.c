@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <limits.h>
 
+#include "./buffer.c"
+
 typedef FILE* File; 
 #define RESERVED_WORD_COUNT 13
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
@@ -35,92 +37,6 @@ int charIn( const char c, char * string ) {
     return 0; 
 };
 
-/**
-    STATES
-    ----------------------
-    These are the states that the scanner can occupy
-    this is the hiearchy tree
-
-    <identifier>
-        |
-        +-<reserved word>
-
-    <number>
-
-    <symbol>
-
-    <string>
-
-    <meta statement>
-*/
-
-#define STATE_NEWTOK  -1
-#define STATE_IDENT   0
-#define STATE_RWORD   1
-#define STATE_NUMBER  2
-#define STATE_SYMBOL  3
-#define STATE_STRING  4
-#define STATE_MSTMT   5
-
-// We start with no token. 
-int state = STATE_NEWTOK;
-
-/**   
-    BUFFER 
-    ----------------------
-    This buffer will record a "memory of the tokens seen
-    When a regex fails, we will roll back to the last known 
-    breakpoint and try again with the next option in the chain. 
-    If a token ends on a valid terminating state, it will clear
-    and emit the token to output. 
-
-    You can 
-       write to the buffer, 
-       read the next char from the buffer
-       rewind the buffer - start at the beggining without clearing the memory
-       reset the buffer - start at the beggining with clearing the memory
-**/
-typedef struct _buffer {
-    int index; 
-    int size; 
-    char stack[1024];
-} * Buffer; 
-
-int Buffer_nchars( Buffer b ) { 
-    return b->size - b->index; 
-};
-
-void Buffer_write( Buffer b, const char c ) {
-    b->stack[b->size++] = ( c == '\n') ? ' ' : c; 
-};
-
-int Buffer_hasChar( Buffer b ) {
-    return ( Buffer_nchars(b) >= 1 );
-};
-
-void Buffer_reset( Buffer b ) { 
-    b->index = 0; 
-    b->size = 0; 
-    memset( b->stack, '\0', sizeof b->stack);
-};
-
-void Buffer_rewind( Buffer b ) { 
-    b->index = 0; 
-};
-
-void Buffer_emit( const char* state, const char* prefix, Buffer b, int newLine ) { 
-   b->stack[ b->size + 1 ] = '\0';
-   printf( "[%s] %s%s%s", state, prefix,  b->stack, (newLine) ? "\n" : "\n" );
-};
-
-Buffer Buffer_new() {
-    Buffer n = (Buffer) malloc(sizeof(_buffer));
-    n->size = 0;   
-    n->index = 0; 
-    memset( n->stack, '\0', sizeof n->stack);
-    return n;
-};
-
 int isReserved( Buffer b ) {
     for ( int i = 0; i < RESERVED_WORD_COUNT; i++ ) {
         if( strcmp( reserved_word[ i ] , b->stack ) == 0 )
@@ -128,29 +44,6 @@ int isReserved( Buffer b ) {
     }
     return 0;
 };
-
-const char * stateString() {
-    switch( state ) {
-    case STATE_NEWTOK :
-         return "STATE_NEWTOK";
-    break;
-    case STATE_IDENT :
-          return "STATE_IDENT";
-    break;
-    case STATE_NUMBER : 
-          return "STATE_NUMBER";
-    break; 
-    case STATE_SYMBOL : 
-          return "STATE_SYMBOL";
-    break;
-    case STATE_STRING : 
-          return "STATE_STRING";
-    break;
-    case STATE_MSTMT:
-          return "STATE_MSTMT";
-    break;
-    }
-}
 
 char * outFile( const char * inFile ) {
 
@@ -172,12 +65,6 @@ char * outFile( const char * inFile ) {
 
     return newString;
 }
-
-int quotes_seen = 0; /* Im cheating here to use a global for string recognition. 
-                        I should probably put token processing in localized subfunctions. 
-                        
-                        But Im to lazy since this is just a homework that wont be expanded on greatly. 
-                      */
 
 char consumeIdent( Buffer b, File stream, char first ) {
 
@@ -331,7 +218,7 @@ int main( int argc, char ** argp, char ** envp ) {
         else if( charIn(cur, "(){}[],;+-*/<>=|&!") ) 
            cur = consumeOp( token_buffer, fileIn, cur );
 
-        else 
+        else //Hey this is probably whitespace, just skip it. 
            cur = getc( fileIn );
 };
 
