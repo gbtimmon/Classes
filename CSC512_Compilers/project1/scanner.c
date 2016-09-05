@@ -5,7 +5,9 @@
 #include <string.h>
 #include <ctype.h>
 
-const char* reserved_words[12] = {
+#define RESERVED_WORD_COUNT 13
+const char* reserved_word[ RESERVED_WORD_COUNT ] = {
+    "main",
     "int",
     "void",
     "if",
@@ -103,9 +105,9 @@ void Buffer_rewind( Buffer b ) {
     b->index = 0; 
 };
 
-void Buffer_emit( Buffer b ) { 
+void Buffer_emit( const char* state, const char* prefix, Buffer b ) { 
    b->stack[ b->size + 1 ] = '\0';
-   printf( "EMIT : [%s]\n", b->stack );
+   printf( "%s%s\n", prefix,  b->stack );
 };
 
 Buffer Buffer_new() {
@@ -126,6 +128,14 @@ Buffer token_buffer = Buffer_new();
       continue; \
       }
          
+
+int isReserved( Buffer b ) {
+    for ( int i = 0; i < RESERVED_WORD_COUNT; i++ ) {
+        if( strcmp( reserved_word[ i ] , b->stack ) == 0 )
+            return 1; 
+    }
+    return 0;
+};
 
 const char * stateString() {
     switch( state ) {
@@ -149,12 +159,7 @@ const char * stateString() {
     break;
     }
 }
-   
-void keywordCheck( ) { 
-    printf("Key word check not implemented\n"); 
-}
-
-int MAX_ITER = 1000; 
+int MAX_ITER = 530; 
 int CUR_ITER = 0; 
 int quotes_seen = 0;
 int main( int argc, char ** argp, char ** envp ) { 
@@ -181,12 +186,11 @@ int main( int argc, char ** argp, char ** envp ) {
                 state = STATE_MSTMT;
             } else if( cur == '"' /*|| cur == '\''*/ ){
                 state = STATE_STRING;
-            } else if( charIn( cur, "+-/*()") ) {
+            } else if( charIn(cur, "(){}[],;+-*/<>=|&!") ) {
                 state = STATE_SYMBOL;
             } else {
                 CONSUME();
             }
-            printf("I see a %s\n", stateString()) ;
                
         break;
         case STATE_IDENT :
@@ -194,45 +198,81 @@ int main( int argc, char ** argp, char ** envp ) {
                 Buffer_write( token_buffer, cur );
                 CONSUME();
             } else {
-                keywordCheck();
-                Buffer_emit( token_buffer );
+                if( isReserved ( token_buffer ) ) {
+                    Buffer_emit( "KEYWD", "", token_buffer );
+                } else {
+                    Buffer_emit( "IDENT", "csc512", token_buffer );
+                }
                 Buffer_reset( token_buffer); 
                 state = STATE_NEWTOK;
             }
+        break;
         case STATE_NUMBER : 
             if( isdigit( cur ) ) {
                 Buffer_write( token_buffer, cur);
                 CONSUME();
             } else {
-                Buffer_emit( token_buffer );         
+                Buffer_emit( "NUMBR", "", token_buffer );         
                 Buffer_reset( token_buffer ); 
                 state = STATE_NEWTOK;
             }
         break; 
         case STATE_SYMBOL : 
-            state = STATE_NEWTOK;
-            CONSUME();
+            if( token_buffer->size == 0 ) {
+                if( charIn( cur, "(){}[],;+-*/") ){
+                    Buffer_write( token_buffer, cur ); 
+                    Buffer_emit ( "OPSZ1", "", token_buffer ); 
+                    Buffer_reset( token_buffer ); 
+                    state = STATE_NEWTOK; 
+                    CONSUME();
+                } else if ( charIn( cur, "=><!|&" ) ){
+                    Buffer_write( token_buffer, cur );
+                    CONSUME();
+                }
+            } else {
+                char prev = token_buffer->stack[0];
+                if(  ( charIn(prev, "=<>!")  && cur == '=' ) 
+                     || ( prev == '|' && cur == '|' )
+                     || ( prev == '&' && cur == '&' )
+                ){
+                     Buffer_write( token_buffer, cur );
+                     Buffer_emit ( "OPSZ2", "", token_buffer );
+                     Buffer_reset( token_buffer ); 
+                     state = STATE_NEWTOK;
+                     CONSUME();
 
+                } else if ( charIn( prev, "=><" ) ) {
+                     Buffer_emit( "OPSZ1", "", token_buffer );
+                     Buffer_reset( token_buffer );
+                     state = STATE_NEWTOK;
+                }  else {
+                     fprintf( stderr, "ILLEGAL OPERATION!! %s\n", token_buffer->stack );
+                     Buffer_reset( token_buffer); 
+                     state = STATE_NEWTOK;
+                }
+            }
         break;
         case STATE_STRING : 
             if( cur == '"' ) {
                 quotes_seen++;
-                if( quotes_seen == 2){
-                    quotes_seen = 0; 
-                    Buffer_emit( token_buffer );
-                    Buffer_reset( token_buffer ); 
-                    state=STATE_NEWTOK;
-                    continue;
-                }
             }
-            Buffer_write( token_buffer, cur );
+
+            Buffer_write( token_buffer , cur );
+
+            if( quotes_seen == 2){
+                quotes_seen = 0; 
+                Buffer_emit( "STRNG", "", token_buffer );
+                Buffer_reset( token_buffer ); 
+                state=STATE_NEWTOK;
+            }
+
             CONSUME();
         break;
         case STATE_MSTMT:
             Buffer_write( token_buffer, cur );
             if( cur == '\n'){
                 state = STATE_NEWTOK;
-                Buffer_emit( token_buffer );         
+                Buffer_emit( "MSTMT", "", token_buffer );         
                 Buffer_reset( token_buffer ); 
             }
             CONSUME();
