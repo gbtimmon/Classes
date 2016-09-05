@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
+#include <limits.h>
 
+typedef FILE* File; 
 #define RESERVED_WORD_COUNT 13
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
     "main",
@@ -49,7 +52,7 @@ int charIn( const char c, char * string ) {
     <string>
 
     <meta statement>
-**/
+*/
 
 #define STATE_NEWTOK  -1
 #define STATE_IDENT   0
@@ -105,9 +108,9 @@ void Buffer_rewind( Buffer b ) {
     b->index = 0; 
 };
 
-void Buffer_emit( const char* state, const char* prefix, Buffer b ) { 
+void Buffer_emit( const char* state, const char* prefix, Buffer b, int newLine ) { 
    b->stack[ b->size + 1 ] = '\0';
-   printf( "%s%s\n", prefix,  b->stack );
+   printf( "[%s] %s%s%s", state, prefix,  b->stack, (newLine) ? "\n" : "\n" );
 };
 
 Buffer Buffer_new() {
@@ -117,17 +120,6 @@ Buffer Buffer_new() {
     memset( n->stack, '\0', sizeof n->stack);
     return n;
 };
-    
-Buffer token_buffer = Buffer_new();
-
-
-#define CONSUME() { \
-      cur = getc(stdin);\
-      if( cur == EOF ) \
-          continue_loop = 1; \
-      continue; \
-      }
-         
 
 int isReserved( Buffer b ) {
     for ( int i = 0; i < RESERVED_WORD_COUNT; i++ ) {
@@ -159,126 +151,188 @@ const char * stateString() {
     break;
     }
 }
-int MAX_ITER = 530; 
-int CUR_ITER = 0; 
-int quotes_seen = 0;
+
+char * outFile( const char * inFile ) {
+
+     char * newString = ( char * ) malloc( sizeof( char ) * ( strlen(inFile) + 4 ) );
+    
+     int strIndex = strlen(inFile) + 4; //I add four chars and its index from 0.
+
+     for ( int i = strlen(inFile); i >= 0; i--){
+       
+         newString[ strIndex-- ] = inFile[i];
+
+         if( inFile[i] == '.' ) {
+             newString[ strIndex-- ] = 'n';
+             newString[ strIndex-- ] = 'e';
+             newString[ strIndex-- ] = 'g';
+             newString[ strIndex-- ] = '_';
+         }
+     }
+
+    return newString;
+}
+
+int quotes_seen = 0; /* Im cheating here to use a global for string recognition. 
+                        I should probably put token processing in localized subfunctions. 
+                        
+                        But Im to lazy since this is just a homework that wont be expanded on greatly. 
+                      */
+
+char consumeIdent( Buffer b, File stream, char first ) {
+
+    char cur = first; 
+    Buffer_reset( b );
+
+    while( true ) {
+        if( isalpha(cur) || isdigit(cur) || cur == '_' ){
+            Buffer_write( b, cur );
+        } else {
+            if( isReserved ( b ) ) {
+                Buffer_emit( "KEYWD", "", b, false );
+            } else {
+                Buffer_emit( "IDENT", "cs512", b, false );
+            }
+            return cur;
+        }
+        cur = getc( stream );
+    }
+}
+     
+char consumeNumber( Buffer b, File stream, char first ){
+
+    char cur = first; 
+    Buffer_reset( b ); 
+
+    while( true ) {
+        if( isdigit( cur ) ) {
+            Buffer_write( b, cur);
+        } else {
+            Buffer_emit( "NUMBR", "", b, false);         
+            return cur; 
+        }
+        cur = getc( stream );
+    }
+};
+
+char consumeMeta( Buffer b, File stream, char first ) {
+
+    char cur = first; 
+    Buffer_reset( b ); 
+
+    while( true ) {
+        if( cur == '\n'){
+            Buffer_emit( "MSTMT", "", b, true );         
+            return getc( stream ); 
+        } else {
+            Buffer_write( b, cur ); 
+            cur = getc( stream ); 
+        }
+    }
+};
+
+char consumeString( Buffer b, File stream, char first ) {
+
+    Buffer_reset( b ); 
+    Buffer_write( b, first); 
+
+    char cur = getc(stream);; 
+
+    while( true ) {
+        if( cur == '\n' || cur == EOF ) {
+            fprintf( stderr, "UNTERMINATED STRING FOUND!! %s\n", b->stack );
+            return cur;
+        } 
+        if( cur == '"' ) {
+            Buffer_write( b, cur ); 
+            Buffer_emit( "STRNG", "", b, false );
+            return getc( stream ); 
+        }
+
+        Buffer_write( b , cur );
+        cur = getc( stream );
+        
+    }
+};
+
+char consumeOp( Buffer b, File stream, char first ) {
+
+    char cur = first;
+    Buffer_reset( b ); 
+
+    while( true ) {
+
+        if( b->size == 0 ) {
+            if( charIn( cur, "(){}[],;+/-*") ){
+                Buffer_write( b, cur ); 
+                Buffer_emit ( "OPSZ1", "", b, false ); 
+                return getc( stream );
+            } else if ( charIn( cur, "=><!|&" ) ){
+                Buffer_write( b, cur );
+                cur = getc( stream ); 
+            }
+        } else {
+            char prev = b->stack[0];
+            if(  ( charIn(prev, "=<>!")  && cur == '=' ) 
+                 || ( prev == '|' && cur == '|' )
+                 || ( prev == '&' && cur == '&' )
+            ){
+                 Buffer_write( b, cur );
+                 Buffer_emit ( "OPSZ2", "", b, false );
+                 return getc( stream ); 
+
+            } else if ( charIn( prev, "=><" ) ) {
+                 Buffer_emit( "OPSZ1", "", b, false );
+                 return cur; 
+            }  else {
+                 fprintf( stderr, "ILLEGAL OPERATION!! %s\n", b->stack );
+                 return cur; 
+            }
+        }
+    }
+};
+
 int main( int argc, char ** argp, char ** envp ) { 
 
-    char cur; 
-    int continue_loop = 0; 
+    /**
+     * File handling 
+     **/
 
-    cur = getc( stdin );
+    if( argc < 2 ) {
+        fprintf(stderr, "Filename input required, no given!\n");
+        exit(1);
+    }
+    File fileIn  = fopen( argp[1], "r" );
+    File fileOut = fopen( outFile(argp[1]), "w" ); // Memory leak, but its in main and I am to lazy to fix it. 
+
+    Buffer token_buffer = Buffer_new();
+
+    int continue_loop = 0; 
+    char cur = getc( fileIn );
 
     if (  cur == EOF ) {
         fprintf(stderr, "No input read\n"); 
         exit(1); 
     }
-  
-    while( continue_loop == 0  && CUR_ITER++ < MAX_ITER ) { 
 
-        switch( state ) {
-        case STATE_NEWTOK :
-            if( isdigit( cur ) ) { 
-                state = STATE_NUMBER;
-            } else if( isalpha( cur ) || cur == '_' ) { 
-                state = STATE_IDENT;
-            } else if( cur == '#' ){
-                state = STATE_MSTMT;
-            } else if( cur == '"' /*|| cur == '\''*/ ){
-                state = STATE_STRING;
-            } else if( charIn(cur, "(){}[],;+-*/<>=|&!") ) {
-                state = STATE_SYMBOL;
-            } else {
-                CONSUME();
-            }
-               
-        break;
-        case STATE_IDENT :
-            if( isalpha(cur) || isdigit(cur) || cur == '_' ){
-                Buffer_write( token_buffer, cur );
-                CONSUME();
-            } else {
-                if( isReserved ( token_buffer ) ) {
-                    Buffer_emit( "KEYWD", "", token_buffer );
-                } else {
-                    Buffer_emit( "IDENT", "csc512", token_buffer );
-                }
-                Buffer_reset( token_buffer); 
-                state = STATE_NEWTOK;
-            }
-        break;
-        case STATE_NUMBER : 
-            if( isdigit( cur ) ) {
-                Buffer_write( token_buffer, cur);
-                CONSUME();
-            } else {
-                Buffer_emit( "NUMBR", "", token_buffer );         
-                Buffer_reset( token_buffer ); 
-                state = STATE_NEWTOK;
-            }
-        break; 
-        case STATE_SYMBOL : 
-            if( token_buffer->size == 0 ) {
-                if( charIn( cur, "(){}[],;+-*/") ){
-                    Buffer_write( token_buffer, cur ); 
-                    Buffer_emit ( "OPSZ1", "", token_buffer ); 
-                    Buffer_reset( token_buffer ); 
-                    state = STATE_NEWTOK; 
-                    CONSUME();
-                } else if ( charIn( cur, "=><!|&" ) ){
-                    Buffer_write( token_buffer, cur );
-                    CONSUME();
-                }
-            } else {
-                char prev = token_buffer->stack[0];
-                if(  ( charIn(prev, "=<>!")  && cur == '=' ) 
-                     || ( prev == '|' && cur == '|' )
-                     || ( prev == '&' && cur == '&' )
-                ){
-                     Buffer_write( token_buffer, cur );
-                     Buffer_emit ( "OPSZ2", "", token_buffer );
-                     Buffer_reset( token_buffer ); 
-                     state = STATE_NEWTOK;
-                     CONSUME();
+    while( true )  
+        if( cur == EOF ) 
+           exit( 0 );
 
-                } else if ( charIn( prev, "=><" ) ) {
-                     Buffer_emit( "OPSZ1", "", token_buffer );
-                     Buffer_reset( token_buffer );
-                     state = STATE_NEWTOK;
-                }  else {
-                     fprintf( stderr, "ILLEGAL OPERATION!! %s\n", token_buffer->stack );
-                     Buffer_reset( token_buffer); 
-                     state = STATE_NEWTOK;
-                }
-            }
-        break;
-        case STATE_STRING : 
-            if( cur == '"' ) {
-                quotes_seen++;
-            }
+        else if( isalpha( cur ) || cur == '_' ) 
+           cur = consumeIdent( token_buffer, fileIn, cur );
 
-            Buffer_write( token_buffer , cur );
+        else if ( isdigit( cur ) ) 
+           cur = consumeNumber( token_buffer, fileIn, cur ); 
 
-            if( quotes_seen == 2){
-                quotes_seen = 0; 
-                Buffer_emit( "STRNG", "", token_buffer );
-                Buffer_reset( token_buffer ); 
-                state=STATE_NEWTOK;
-            }
+        else if ( cur == '#' )
+           cur = consumeMeta( token_buffer, fileIn, cur );
 
-            CONSUME();
-        break;
-        case STATE_MSTMT:
-            Buffer_write( token_buffer, cur );
-            if( cur == '\n'){
-                state = STATE_NEWTOK;
-                Buffer_emit( "MSTMT", "", token_buffer );         
-                Buffer_reset( token_buffer ); 
-            }
-            CONSUME();
-        break;
-        }
-    }
+        else if( charIn(cur, "(){}[],;+-*/<>=|&!") ) 
+           cur = consumeOp( token_buffer, fileIn, cur );
+
+        else 
+           cur = getc( fileIn );
 };
 
 
