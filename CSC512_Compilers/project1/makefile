@@ -1,15 +1,15 @@
-CC       = g++
+CC       = gcc
 SRC_PATH = .
 
 INC      = -I /c/MinGW/include -I ./include
 LIB      = -L /c/MinGW/lib
 STATIC   = -c
 CFLAGS   = -w -Wall -std=c11 -pedantic
-LINKER   = -l mingw32 
+LINKER   = 
 
-BINARY = start.exe
+BINARY = scanner
 
 all : $(SOURCES) $(BINARY)
 
 $(BINARY) : scanner.c
-	$(CC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o start.exe
+	$(CC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)

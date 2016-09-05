@@ -50,7 +50,7 @@ void Buffer_emit( const char* state, const char* prefix, Buffer b, int newLine )
 };
 
 Buffer Buffer_new() {
-    Buffer n = (Buffer) malloc(sizeof(_buffer));
+    Buffer n = (Buffer) malloc(sizeof( struct _buffer));
 };
 
 
