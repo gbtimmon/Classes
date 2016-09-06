@@ -15,10 +15,13 @@
 
 #include "./buffer.c"
 
+int LINE_COUNT  = 1; 
+int ERROR_COUNT = 0;
+
 typedef FILE* File; 
 #define RESERVED_WORD_COUNT 13
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
-    "main",
+    "main", //I cheated a little. 
     "int",
     "void",
     "if",
@@ -115,6 +118,7 @@ char consumeMeta( Buffer b, char first ) {
 
     while( true ) {
         if( cur == '\n'){
+            LINE_COUNT++;
             Buffer_emit( "MSTMT", "", b, true );         
             return getc( stdin ); 
         } else {
@@ -133,7 +137,8 @@ char consumeString( Buffer b, char first ) {
 
     while( true ) {
         if( cur == '\n' || cur == EOF ) {
-            fprintf( stderr, "UNTERMINATED STRING FOUND!! %s\n", b->stack );
+            ERROR_COUNT++;
+            fprintf( stderr, "Error at line %d: Unterminated String\n\t>>%s\n\n", LINE_COUNT, b->stack );
             return cur;
         } 
         if( cur == '"' ) {
@@ -173,6 +178,9 @@ char consumeMulitlineComment( Buffer b ) {
     this = getc( stdin ); 
     that = getc( stdin ); 
 
+    if( this == '\n' ) LINE_COUNT++; 
+    if( that == '\n' ) LINE_COUNT++; 
+
     while( true ) {
 
         if( this == '*' && that == '/' ) {
@@ -184,6 +192,7 @@ char consumeMulitlineComment( Buffer b ) {
         Buffer_write( b, this ); 
         this = that; 
         that = getc( stdin ); 
+        if( that == '\n' ) LINE_COUNT++; 
     }
 }
 
@@ -230,8 +239,9 @@ char consumeOp( Buffer b, char first ) {
          return second; 
 
     }   
-
-    fprintf( stderr, "ILLEGAL OPERATION!! %s\n", b->stack );
+  
+    ERROR_COUNT++;
+    fprintf( stderr, "Error at line %d: Illegal Character\n\t>> %s\n\n", LINE_COUNT, b->stack );
     return second; 
 };
 
@@ -246,24 +256,21 @@ int main( int argc, char ** argp, char ** envp ) {
         exit(1);
     }
     int fileInFd  = open( argp[1], O_RDONLY );
-    int fileOutFd = open( outFile(argp[1]), O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU); // Memory leak with outFile, but its in main and I am to lazy to fix it. 
+    int fileOutFd = open( outFile(argp[1]), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR); // Memory leak with outFile, but its in main and I am to lazy to fix it. 
  
     dup2( fileInFd, STDIN_FILENO );
     dup2( fileOutFd, STDOUT_FILENO );
 
     Buffer token_buffer = Buffer_new();
 
-    int continue_loop = 0; 
-    char cur = getc( stdin );
+    char cur = getc(stdin); 
+    while( true )  {
 
-    if (  cur == EOF ) {
-        fprintf(stderr, "No input read\n"); 
-        exit(1); 
-    }
+        if( cur == '\n') 
+           LINE_COUNT++;
 
-    while( true )  
         if( cur == EOF ) 
-           exit( 0 );
+           break;
 
         else if( isalpha( cur ) || cur == '_' ) 
            cur = consumeIdent( token_buffer, cur );
@@ -274,11 +281,21 @@ int main( int argc, char ** argp, char ** envp ) {
         else if ( cur == '#' )
            cur = consumeMeta( token_buffer, cur );
 
+        else if ( cur == '"' )
+            cur = consumeString( token_buffer, cur);
+
         else if( charIn(cur, "(){}[],;+-*/<>=|&!") ) 
            cur = consumeOp( token_buffer, cur );
 
-        else //Hey this is probably whitespace, just skip it. 
-           cur = getc( stdin );
+        else
+           cur = getc(stdin);
+    }
+
+    printf("\n"); 
+
+    if( ERROR_COUNT > 0 ) 
+        fprintf( stderr, "Scanner exited with errors.\n");
+    exit( ERROR_COUNT ); 
 };
 
 
