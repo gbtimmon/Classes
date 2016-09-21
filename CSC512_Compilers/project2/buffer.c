@@ -53,5 +53,9 @@ Buffer Buffer_new() {
     Buffer n = (Buffer) malloc(sizeof( struct _buffer));
 };
 
+void Buffer_free( Buffer b ){
+   free( b ) ; 
+}
+
 
 #endif

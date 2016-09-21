@@ -12,4 +12,4 @@ BINARY = scanner
 all : $(SOURCES) $(BINARY)
 
 $(BINARY) : scanner.c
-	$(CC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
+	$(CC) $(STATIC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o scanner.o
