@@ -1,6 +1,7 @@
 #ifndef _BUFFER_C
 #define _BUFFER_C
 
+#include "buffer.h"
 /**   
     BUFFER 
     ----------------------
@@ -16,12 +17,6 @@
        rewind the buffer - start at the beggining without clearing the memory
        reset the buffer - start at the beggining with clearing the memory
 **/
-typedef struct _buffer {
-    int index; 
-    int size; 
-    char stack[1024];
-} * Buffer; 
-
 int Buffer_nchars( Buffer b ) { 
     return b->size - b->index; 
 };

@@ -13,107 +13,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "./buffer.c"
-#include "./token.c"
+#include "./buffer.h"
+#include "./scanner.h"
 
-int LINE_COUNT  = 1; 
-int ERROR_COUNT = 0;
-
-int charIn( const char c, char * string );
-int isReserved( Buffer b );
-char * outFile( const char * inFile );
-char consumeIdent( Buffer b, char first );
-char consumeNumber( Buffer b, char first );
-char consumeMeta( Buffer b, char first );
-char consumeString( Buffer b, char first );
-char consumeComment( Buffer b );
-char consumeMulitlineComment( Buffer b );
-char consumeOp( Buffer b, char first );
-
-// I want my "Parser" to "have" a scanner, so lets make scanner OOP.
-//
-// We need to:
-//    1.) take our redirects and make them non global. 
-//    2.) store state so I can demand a token as they are needed by the object owner. 
-//    3.) Implement hasNext() 
-//    4.) Implement getNext()
-//    5.) Implement constructor destructor. 
-//    6.) Implement objects for terminals (structs with label)
-
-
-typedef struct _scanner { 
-    int lineNo;
-    int errCnt; 
-    int outFlag;
-    Token token; 
-    int cur; 
-    Buffer buffer; 
-    FILE * in;
-    FILE * out;
-} * Scanner;
-
-Scanner Scanner_new( const char * inFile, const char * outFile ) {
-    Scanner n = malloc( sizeof (struct _scanner) );
-
-    n->lineNo  = 0; 
-    n->errCnt  = 0;
-    n->outFlag = 0;
-    n->in      = ( inFile == NULL) ? stdin : fopen( inFile, "r");
-    n->out     = ( outFile == NULL)? stdout: fopen(outFile, "w");
-    n->buffer  = Buffer_new(); 
-    n->token   = Token_new();
-    n->cur     = getc( n->in );
-}
-
-void Scanner_free( Scanner s ) {
-    Buffer_free( s->buffer );
-    free(s); 
-}
-
-void Scanner_setOutput( Scanner s, int output ) {
-    s->outFlag = output;
-};
-
-// This will load the Scanner->token data with the next good token. 
-// It will overwrite the last token. The return will return the same 
-// memory location everytime, so the return is just for synatic sugar. 
-Token Scanner_next( Scanner s ) {
-   
-    if( s->cur == '\n') 
-        s->lineNo++;
-
-    // One of these braches will build a new token. 
-    // if I get to the final else, I will skip a char and try again. 
-    // otherwise ive built a new good token.
-    if( s->cur == EOF )
-        printf("EOF_Token\n");
-    
-    else if( isalpha( s->cur ) || s->cur == '_' ) 
-         s->cur = consumeIdent( s->buffer, s->cur );
-
-    else if ( isdigit( s->cur ) ) 
-         s->cur = consumeNumber( s->buffer, s->cur ); 
-
-    else if ( s->cur == '#' )
-         s->cur = consumeMeta( s->buffer, s->cur );
-
-    else if ( s->cur == '"' )
-         s->cur = consumeString( s->buffer, s->cur);
-
-    else if( charIn(s->cur, "(){}[],;+-*/<>=|&!") ) 
-         s->cur = consumeOp( s->buffer, s->cur );
-
-    else { 
-         s->cur = getc( s->in );
-         Scanner_next( s ); 
-    } 
-    
-    return s->token;
-}
-
-
-typedef FILE* File; 
-#define RESERVED_WORD_COUNT 13
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
     "main", //I cheated a little. 
     "int",
@@ -129,6 +31,89 @@ const char* reserved_word[ RESERVED_WORD_COUNT ] = {
     "binary",
     "decimal"
 };
+//Local functions.
+int charIn( const char, char *);
+int isReserved( Buffer b );
+char * outFile( const char * inFile );
+
+void consumeIdent( Scanner );
+void consumeMeta( Scanner );
+void consumeString( Scanner );
+void consumeMulitlineComment( Scanner );
+void consumeOp( Scanner );
+void consumeNumber( Scanner );
+void consumeComment( Scanner );
+
+// I want my "Parser" to "have" a scanner, so lets make scanner OOP.
+//
+// Changes from last time -- We need to:
+//    1.) take our redirects and make them non global. 
+//    2.) store state so I can demand a token as they are needed by the object owner. 
+//    4.) Implement getNext()
+//    5.) Implement constructor destructor. 
+//    6.) Implement objects for terminals (structs with label (Token)) 
+
+Scanner Scanner_new( const char * inFile, const char * outFile ) {
+    Scanner n = malloc( sizeof (struct _scanner) );
+
+    n->lineNo  = 0; 
+    n->errCnt  = 0;
+    n->outFlag = 0;
+    n->in      = ( inFile == NULL) ? stdin : fopen( inFile, "r");
+    n->out     = ( outFile == NULL)? stdout: fopen(outFile, "w");
+    n->buffer  = Buffer_new(); 
+    n->token   = T_EMPTY;
+    n->cur     = getc( n->in );
+}
+
+void Scanner_free( Scanner s ) {
+    Buffer_free( s->buffer );
+    free(s); 
+}
+
+void Scanner_setOutput( Scanner s, int output ) {
+    s->outFlag = output;
+};
+
+void Scanner_nextChar( Scanner s ) {
+    s->cur = getc( s ->in) ;
+}
+// This will load the Scanner->token data with the next good token. 
+// It will overwrite the last token. The return will return the same 
+// memory location everytime, so the return is just for synatic sugar. 
+Token Scanner_nextToken( Scanner s ) {
+   
+    if( s->cur == '\n') 
+        s->lineNo++;
+
+    // One of these braches will build a new token. 
+    // if I get to the final else, I will skip a char and try again. 
+    // otherwise ive built a new good token.
+    if( s->cur == EOF ) 
+        return Token_new( T_EOF, "");
+    
+    else if( isalpha( s->cur ) || s->cur == '_' ) 
+        consumeIdent( s );
+
+    else if ( isdigit( s->cur ) ) 
+        consumeNumber( s ); 
+
+    else if ( s->cur == '#' )
+        consumeMeta( s );
+
+    else if ( s->cur == '"' )
+        consumeString( s );
+
+    else if( charIn(s->cur, "(){}[],;+-*/<>=|&!") ) 
+        consumeOp( s );
+
+    else { 
+        Scanner_nextChar( s );
+        return Scanner_nextToken( s ); 
+    } 
+    
+    return Token_new( s->token, s->buffer->stack ); 
+}
 
 int charIn( const char c, char * string ) {
     char * i = string; 
@@ -169,140 +154,114 @@ char * outFile( const char * inFile ) {
     return newString;
 }
 
-char consumeIdent( Buffer b, char first ) {
+void consumeIdent( Scanner s ) {
 
-    char cur = first; 
-    Buffer_reset( b );
+    Buffer_reset( s->buffer );
 
     while( true ) {
-        if( isalpha(cur) || isdigit(cur) || cur == '_' ){
-            Buffer_write( b, cur );
+        if( isalpha(s->cur) || isdigit(s->cur) || s->cur == '_' ){
+            Buffer_write( s->buffer, s->cur );
         } else {
-            if( isReserved ( b ) ) {
-                Buffer_emit( "KEYWD", "", b, false );
+            if( isReserved ( s->buffer ) ) {
+                s->token = T_KEYWORD;
             } else {
-                Buffer_emit( "IDENT", "cs512", b, false );
+                s->token = T_IDENT;
             }
-            return cur;
+            return;
         }
-        cur = getc( stdin );
+        Scanner_nextChar( s ); 
     }
 }
      
-char consumeNumber( Buffer b, char first ){
 
-    char cur = first; 
-    Buffer_reset( b ); 
+void consumeMeta( Scanner s ) {
 
-    while( true ) {
-        if( isdigit( cur ) ) {
-            Buffer_write( b, cur);
-        } else {
-            Buffer_emit( "NUMBR", "", b, false);         
-            return cur; 
-        }
-        cur = getc( stdin );
-    }
-};
-
-char consumeMeta( Buffer b, char first ) {
-
-    char cur = first; 
-    Buffer_reset( b ); 
+    Buffer_reset( s->buffer ); 
 
     while( true ) {
-        if( cur == '\n'){
-            LINE_COUNT++;
-            Buffer_emit( "MSTMT", "", b, true );         
-            return getc( stdin ); 
+        if( s->cur == '\n'){
+            s->lineNo++;
+            s->token = T_META;
+            Scanner_nextChar( s ); 
+            return; 
         } else {
-            Buffer_write( b, cur ); 
-            cur = getc( stdin ); 
+            Buffer_write( s->buffer, s->cur ); 
+            Scanner_nextChar( s ); 
         }
     }
 };
 
-char consumeString( Buffer b, char first ) {
+void consumeString( Scanner s ) {
 
-    Buffer_reset( b ); 
-    Buffer_write( b, first); 
-
-    char cur = getc( stdin );
+    Buffer_reset( s->buffer ); 
+    Buffer_write( s->buffer, s->cur); 
+    Scanner_nextChar( s ); 
 
     while( true ) {
-        if( cur == '\n' || cur == EOF ) {
-            ERROR_COUNT++;
-            fprintf( stderr, "Error at line %d: Unterminated String\n\t>>%s\n\n", LINE_COUNT, b->stack );
-            return cur;
+        if( s->cur == '\n' || s->cur == EOF ) {
+            s->errCnt++;
+            fprintf( stderr, "Error at line %d: Unterminated String\n\t>>%s\n\n", 
+                          s->lineNo, s->buffer->stack );
+            return;
         } 
-        if( cur == '"' ) {
-            Buffer_write( b, cur ); 
-            Buffer_emit( "STRNG", "", b, false );
-            return getc( stdin ); 
+        if( s->cur == '"' ) {
+            Buffer_write( s->buffer, s->cur ); 
+            s->token = T_STRING;
+            Scanner_nextChar( s ); 
+            return; 
         }
 
-        Buffer_write( b , cur );
-        cur = getc( stdin );
-        
+        Buffer_write( s->buffer , s->cur );
+        Scanner_nextChar( s ); 
     }
 };
 
 
-char consumeComment( Buffer b ) {
+
+void consumeMulitlineComment( Scanner s ) {
     //This consume is non standard as it does not come from the main loop
     //but instead from the operator consume which identifies the opening of the comment. 
     //In this case DO NOT reset the buffer. 
 
-    while( true ) {
-        char cur = getc( stdin );     
-        if ( cur == '\n' || cur == EOF ) {
-            Buffer_emit( "CMNT1", "", b, true );
-            return cur;
-        }
-        Buffer_write( b, cur ); 
-    }
-};
+    char this = s->cur;
+    Scanner_nextChar( s ); 
+    char that = s->cur;
 
-char consumeMulitlineComment( Buffer b ) {
-    //This consume is non standard as it does not come from the main loop
-    //but instead from the operator consume which identifies the opening of the comment. 
-    //In this case DO NOT reset the buffer. 
-
-    char this, that; 
-    this = getc( stdin ); 
-    that = getc( stdin ); 
-
-    if( this == '\n' ) LINE_COUNT++; 
-    if( that == '\n' ) LINE_COUNT++; 
+    if( this == '\n' ) s->lineNo++; 
+    if( that == '\n' ) s->lineNo++; 
 
     while( true ) {
 
         if( this == '*' && that == '/' ) {
-            Buffer_write( b, this ); 
-            Buffer_write( b, that ); 
-            Buffer_emit( "CMNT2", "", b, true); 
-            return getc( stdin ); 
+            Buffer_write( s->buffer, this ); 
+            Buffer_write( s->buffer, that ); 
+            s->token = T_MCOMMENT;
+            Scanner_nextChar( s ); 
+            return; 
         }
-        Buffer_write( b, this ); 
+        Buffer_write( s->buffer, this ); 
         this = that; 
-        that = getc( stdin ); 
-        if( that == '\n' ) LINE_COUNT++; 
+        Scanner_nextChar( s ); 
+        that = s->cur;
+        if( that == '\n' ) s->lineNo++; 
     }
 }
 
-char consumeOp( Buffer b, char first ) {
+void consumeOp( Scanner s ) {
 
  // Every if here should have a return, 
  // otherwise you might break the logic. 
+    char first  = s->cur;
+    Scanner_nextChar( s ); 
+    char second = s->cur; 
 
-    char second = getc( stdin ); 
-    Buffer_reset( b ); 
-    Buffer_write( b, first ); 
+    Buffer_reset( s->buffer ); 
+    Buffer_write( s->buffer, first ); 
 
  // if a garunteed on length op - return. 
     if( charIn( first, "(){}[],;+-*") ){
-        Buffer_emit ( "OPSZ1", "", b, false ); 
-        return second;
+        s->token = T_OP;
+        return;
     } 
 
  // if a valid 2 length non comment
@@ -310,32 +269,67 @@ char consumeOp( Buffer b, char first ) {
         || ( first == '|' && second == '|' )
         || ( first == '&' && second == '&' )
     ){
-        Buffer_write( b, second ); 
-        Buffer_emit ( "OPSZ2", "", b, false );
-        return getc( stdin ); 
+        Buffer_write( s->buffer, second ); 
+        s->token = T_OP;
+        Scanner_nextChar( s ); 
+        return; 
     }
 
  // if a one line comment 
     if ( first == '/' && second == '/' ) {
-        Buffer_write( b, second );  
-        return consumeComment(b); 
+        Buffer_write( s->buffer, second );  
+        Scanner_nextChar( s ); 
+        return consumeComment( s ); 
     }
 
  // if a multiline comment
     if ( first == '/' && second == '*' ) {
-        Buffer_write( b, second ); 
-        return consumeMulitlineComment(b); 
+        Buffer_write( s->buffer, second ); 
+        Scanner_nextChar( s ); 
+        return consumeMulitlineComment( s ); 
     }
 
  // if not a 2 char, at this point its a one char. 
     if ( charIn( first, "=></" ) ) {
-         Buffer_emit( "OPSZ1", "", b, false );
-         return second; 
+        s->token = T_OP;
+        return ; 
 
     }   
   
-    ERROR_COUNT++;
-    fprintf( stderr, "Error at line %d: Illegal Character\n\t>> %s\n\n", LINE_COUNT, b->stack );
-    return second; 
+    s->errCnt++; 
+    fprintf( stderr, "Error at line %d: Illegal Character\n\t>> %s\n\n",
+                                   s->lineNo, s->buffer->stack );
+    return; 
+};
+
+void consumeNumber( Scanner s ){
+
+    Buffer_reset( s->buffer ); 
+
+    while( true ) {
+        if( isdigit( s->cur ) ) {
+            Buffer_write( s->buffer, s->cur);
+        } else {
+            s->token = T_NUMBER;
+            return; 
+        }
+        Scanner_nextChar( s ); 
+    }
+};
+
+void consumeComment( Scanner s ) {
+    //This consume is non standard as it does not come from the main loop
+    //but instead from the operator consume which identifies the opening of the comment. 
+    //In this case DO NOT reset the buffer. 
+
+    Buffer_write( s->buffer, s->cur ); 
+    while( true ) {
+        Scanner_nextChar( s );      
+        if ( s->cur == '\n' || s->cur == EOF ) {
+            s->token = T_COMMENT;
+            return;
+        }
+        Buffer_write( s->buffer, s->cur ); 
+    }
 };
 #endif
