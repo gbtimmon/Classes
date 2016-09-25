@@ -4,12 +4,13 @@
 #include "token.h"
 #include <stdio.h>
 
-Token Token_new( token_t type, char * buffer ) { 
+Token Token_new( token_t type, char * buffer, int terminal ) { 
 
     Token n  = malloc( sizeof( struct _token ) );
     n->type  = type; 
     n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
     n->prev  = NULL;
+    n->term  = terminal;
 
     strcpy( n->value, buffer ); 
     return n;
