@@ -9,7 +9,6 @@ Token Token_new( token_t type, char * buffer, int terminal ) {
     Token n  = malloc( sizeof( struct _token ) );
     n->type  = type; 
     n->prev  = NULL;
-    n->term  = terminal;
     n->value = NULL;
     
     if( buffer ) n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
@@ -60,7 +59,14 @@ void Token_write( Token t, FILE * f ) {
     };
     fprintf( f, "TOKEN : %-10s[%s]\n", s, t->value );
 };
-    
+
+int isTerminal( token_t t ) {
+    return (t >= TERM_COUNT);
+};
+
+int isSkip( token_t t ) { 
+    return ( t == T_COMMENT || t == T_META || t == T_MCOMMENT );
+};
 
 TokenStack TokenStack_new ( void ) {
     TokenStack s = malloc( sizeof (struct _token_stack ) );

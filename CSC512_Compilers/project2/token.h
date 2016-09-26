@@ -49,12 +49,19 @@ typedef struct _token {
     token_t type;
     char*   value;
     struct _token * prev;
-    int     term;
 } * Token;
 
 typedef struct _token_stack {
     struct _token * head
 } * TokenStack;
+
+int        isTerminal     ( token_t );
+// Report if a token_t is a terminal type. Its hacky, but it works and is quick to code. 
+//     @1 : token type to check if terminal
+
+int        isSkip         ( token_t );
+// Report if the parser should skip this token.
+//     @1 : token that is being checked.
 
 Token      Token_new      ( token_t, char *, int );
 // Create a new token struct. 
