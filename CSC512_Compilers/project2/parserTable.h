@@ -4,9 +4,9 @@
 #include "token.h"
 
 #define RULE_ERROR -1 
-#define TERMINAL_COUNT
+#define RULE_LENGTH 5
 
-token_t ruleTable[][5] = {
+token_t ruleTable[][RULE_LENGTH] = {
 /* 1*/  { T_TYPE,   S_IDLIST,  T_SEMI,    S_DATA, T_e },
 /* 2*/  { T_e,      T_e,       T_e,       T_e,    T_e },
 /* 3*/  { S_ID,     S_IDLIST_, T_e,       T_e,    T_e },

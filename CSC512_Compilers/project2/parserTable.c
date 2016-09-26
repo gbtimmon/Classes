@@ -61,7 +61,7 @@ void set( token_t stack, token_t term, int rule )
 
 int lookup( token_t stack, token_t term )
 {
-    return lookupTable[ stack - TERM_COUNT ][ term ];
+    return lookupTable[ stack - TERM_COUNT ][ term ] - 1;
 };
 
 #endif

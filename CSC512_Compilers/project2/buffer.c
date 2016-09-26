@@ -2,6 +2,7 @@
 #define _BUFFER_C
 
 #include "buffer.h"
+#include <string.h>
 /**   
     BUFFER 
     ----------------------
@@ -52,5 +53,8 @@ void Buffer_free( Buffer b ){
    free( b ) ; 
 }
 
+int Buffer_eq( Buffer b, const char * c ){
+   return strcmp( b->stack, c ) == 0;
+}
 
 #endif

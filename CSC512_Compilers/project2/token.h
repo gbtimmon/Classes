@@ -63,11 +63,10 @@ int        isSkip         ( token_t );
 // Report if the parser should skip this token.
 //     @1 : token that is being checked.
 
-Token      Token_new      ( token_t, char *, int );
+Token      Token_new      ( token_t, char * );
 // Create a new token struct. 
 //     @1 : token type
 //     @2 : token string data, only filled on terminal 
-//     @3 : terminal indicator, true ( != 0 ) or false ( == 0 )
 
 Token      Token_free     ( Token t );
 // Free a token, properly releasing all internal memory
@@ -93,5 +92,7 @@ void       TokenStack_push( TokenStack s, Token t );
 Token      TokenStack_pop ( TokenStack s );
 // Pops a token off a stack
 //     @1 : The stack to pop from. 
+
+void TokenStack_write( TokenStack, FILE * );
 
 #endif

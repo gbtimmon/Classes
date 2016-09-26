@@ -22,13 +22,14 @@ typedef struct _buffer {
     char stack[1024];
 } * Buffer; 
 
-int Buffer_nchars( Buffer b ) ; 
-void Buffer_write( Buffer b, const char c ) ;
-int Buffer_hasChar( Buffer b ) ;
-void Buffer_reset( Buffer b ) ; 
-void Buffer_rewind( Buffer b ) ; 
-void Buffer_emit( const char* state, const char* prefix, Buffer b, int newLine ) ; 
-Buffer Buffer_new() ;
-void Buffer_free( Buffer b );
+int    Buffer_nchars  ( Buffer ) ; 
+void   Buffer_write   ( Buffer , const char ) ;
+int    Buffer_hasChar ( Buffer ) ;
+void   Buffer_reset   ( Buffer ) ; 
+void   Buffer_rewind  ( Buffer ) ; 
+void   Buffer_emit    ( const char*, const char*, Buffer, int ) ; 
+Buffer Buffer_new     ( ) ;
+int    Buffer_eq      ( Buffer, const char * );
+void   Buffer_free    ( Buffer );
 
 #endif

@@ -20,7 +20,6 @@
 #define false 0 
 
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
-    "main", //I cheated a little. 
     "int",
     "void",
     "if",
@@ -93,7 +92,7 @@ Token Scanner_nextToken( Scanner s ) {
     // if I get to the final else, I will skip a char and try again. 
     // otherwise ive built a new good token.
     if( s->cur == EOF ) 
-        return Token_new( T_EOF, "", true);
+        return Token_new( T_EOF, "");
     
     else if( isalpha( s->cur ) || s->cur == '_' ) 
         consumeIdent( s );
@@ -115,7 +114,7 @@ Token Scanner_nextToken( Scanner s ) {
         return Scanner_nextToken( s ); 
     } 
     
-    return Token_new( s->token, s->buffer->stack, true ); 
+    return Token_new( s->token, s->buffer->stack ); 
 }
 
 int charIn( const char c, char * string ) {
@@ -165,10 +164,15 @@ void consumeIdent( Scanner s ) {
         if( isalpha(s->cur) || isdigit(s->cur) || s->cur == '_' ){
             Buffer_write( s->buffer, s->cur );
         } else {
-            if( isReserved ( s->buffer ) ) {
-                s->token = T_KEYWORD;
+            if(  Buffer_eq( s->buffer, "void" )
+              || Buffer_eq( s->buffer, "int"  )
+              || Buffer_eq( s->buffer, "decimal")
+              || Buffer_eq( s->buffer, "binary")
+            )
+            {
+                s->token = T_TYPE;
             } else {
-                s->token = T_IDENT;
+                s->token = T_VAR;
             }
             return;
         }
