@@ -9,11 +9,13 @@ LINKER   =
 
 BINARY = parser
 
-all : $(SOURCES) $(BINARY)
+all : generateTable.py $(BINARY)
 
-$(BINARY) : token.o scanner.o buffer.o parserTable.o parser.c
+$(BINARY) : token.o scanner.o buffer.o parserTable.o parser.c 
 	$(CC) $(SRC_PATH)/parser.c token.o scanner.o buffer.o parserTable.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
 
+generateTable.py: 
+	python ./generateTable.py
 
 scanner.o : scanner.c
 	$(CC) $(STATIC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o scanner.o

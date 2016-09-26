@@ -3,47 +3,11 @@
 
 #include <stdio.h>
 
-// token types for a LL(1) Parser. 
-typedef enum _token_t {
-/*ops    */ T_ADD = 0, //0
-            T_MULT,
-            T_RPAR,
-            T_LPAR,
-            T_RBRAC,
-            T_LBRAC,
-            T_COMMA,
-            T_SEMI,
-            T_OP, // COME BACK TO THIS TO FIX.
-       
-/*skips  */ T_COMMENT,          
-            T_META,
-            T_MCOMMENT,
-
-/*ident  */ T_VAR,
-            T_TYPE,
-            T_KEYWORD, // COME BACK TO THIS TO FIX.
-            T_IDENT, // COME BACK TO THIS TO FIX.
-
-/*number */ T_NUMBER,
-/*string */ T_STRING,
-/*eof    */ T_EOF,              
-            T_e,
-            S_DATA,
-            S_IDLIST,
-            S_IDLIST_,
-            S_ID,
-            S_ID_,
-            S_EXP,
-            S_EXP_,
-            S_TERM,
-            S_TERM_,
-            S_FACT,
-            S_FACT_
-} token_t;
-
-#define TOKEN_COUNT  (S_FACT_ + 1)
-#define TERM_COUNT   (T_EOF + 1)
-#define SYM_COUNT    (TOKEN_COUNT - TERM_COUNT)
+// Token.h.gen 
+// contains a generated enum of the available tokens.
+// plus a helper array that contains string names for tokens,
+// string names are a bit of a hack but only needed for debugging. 
+#include "token.gen.h"
 
 typedef struct _token { 
     token_t type;
@@ -52,7 +16,7 @@ typedef struct _token {
 } * Token;
 
 typedef struct _token_stack {
-    struct _token * head
+    struct _token * head;
 } * TokenStack;
 
 int        isTerminal     ( token_t );

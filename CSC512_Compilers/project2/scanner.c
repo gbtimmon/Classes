@@ -19,20 +19,6 @@
 #define true  1
 #define false 0 
 
-const char* reserved_word[ RESERVED_WORD_COUNT ] = {
-    "int",
-    "void",
-    "if",
-    "while",
-    "return",
-    "read",
-    "write",
-    "print",
-    "continue",
-    "break",
-    "binary",
-    "decimal"
-};
 //Local functions.
 int charIn( const char, char *);
 int isReserved( Buffer b );
@@ -268,15 +254,17 @@ void consumeOp( Scanner s ) {
  // if a garunteed on length op - return. 
     if( charIn( first, "(){}[],;+-*") ){
         switch( first ) {
-            case '(' : s->token = T_LPAR;  break;
-            case ')' : s->token = T_RPAR;  break;
-            case '[' : s->token = T_LBRAC; break;
-            case ']' : s->token = T_RBRAC; break;
-            case ',' : s->token = T_COMMA; break;
-            case ';' : s->token = T_SEMI;  break;
-            case '+' : s->token = T_ADD;   break;
-            case '-' : s->token = T_ADD;   break;
-            case '*' : s->token = T_MULT;  break;
+            case '(' : s->token = T_LPAR;    break;
+            case ')' : s->token = T_RPAR;    break;
+            case '[' : s->token = T_LBRACK;  break;
+            case ']' : s->token = T_RBRACK;  break;
+            case '{' : s->token = T_LBRACE;  break;
+            case '}' : s->token = T_RBRACE;  break;
+            case ',' : s->token = T_COMMA;   break;
+            case ';' : s->token = T_SEMI;    break;
+            case '+' : s->token = T_ADD;     break;
+            case '-' : s->token = T_MINUS;   break;
+            case '*' : s->token = T_MULT;    break;
         }    
         return;
     } 
