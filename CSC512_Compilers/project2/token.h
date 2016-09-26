@@ -5,38 +5,51 @@
 
 // token types for a LL(1) Parser. 
 typedef enum _token_t {
-    T_ADD,
-    T_CMP,
-    T_COMMENT,
-    T_COP,
-    T_DATA,
-    T_EMPTY,
-    T_EOF,
-    T_EXP,
-    T_EXP_PRIME,
-    T_FAC,
-    T_ID,
-    T_ID_PRIME,
-    T_IDENT,
-    T_IDLIST,
-    T_IDLIST_PRIME,
-    T_KEYWORD,
-    T_MCOMMENT,
-    T_META,
-    T_MULT,
-    T_NUMBER,
-    T_OP,
-    T_STRING,
-    T_TERM,
-    T_TERM_PRIME,
-    T_TYPE,
-    T_VAR
+/*ops    */ T_ADD = 0, //0
+            T_MULT,
+            T_RPAR,
+            T_LPAR,
+            T_RBRAC,
+            T_LBRAC,
+            T_COMMA,
+            T_SEMI,
+            T_OP, // COME BACK TO THIS TO FIX.
+       
+/*skips  */ T_COMMENT,          
+            T_META,
+            T_MCOMMENT,
+
+/*ident  */ T_VAR,
+            T_TYPE,
+            T_KEYWORD, // COME BACK TO THIS TO FIX.
+            T_IDENT, // COME BACK TO THIS TO FIX.
+
+/*number */ T_NUMBER,
+/*string */ T_STRING,
+/*eof    */ T_EOF,              
+            T_e,
+            S_DATA,
+            S_IDLIST,
+            S_IDLIST_,
+            S_ID,
+            S_ID_,
+            S_EXP,
+            S_EXP_,
+            S_TERM,
+            S_TERM_,
+            S_FACT,
+            S_FACT_
 } token_t;
+
+#define TOKEN_COUNT  (S_FACT_ + 1)
+#define TERM_COUNT   (T_EOF + 1)
+#define SYM_COUNT    (TOKEN_COUNT - TERM_COUNT)
 
 typedef struct _token { 
     token_t type;
     char*   value;
     struct _token * prev;
+    int     term;
 } * Token;
 
 typedef struct _token_stack {

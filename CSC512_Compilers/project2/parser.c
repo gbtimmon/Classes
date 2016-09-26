@@ -5,12 +5,22 @@
 #include "scanner.h"
 #include "token.h"
 
+#define true  1
+#define false 0 
+
 int main( int argc, char ** argp, char ** envp ){
-    fprintf(stdout, "%s\n", argp[1] );
-    fflush(NULL);
+
+    /** Very lazy way to encode a parser table. 
+          but works for here.  **/
+
+    fprintf( stderr, "ENTER LOOP\n");   
     Scanner s = Scanner_new( argp[1], NULL );
+    TokenStack stack = TokenStack_new();
+    TokenStack_push( stack, Token_new( T_EOF,  NULL, true ) );
+    TokenStack_push( stack, Token_new( S_DATA, NULL, false) );
+    fprintf( stderr, "ENTER LOOP\n");   
     while( 1 ) {
-       
+        
         Token t = Scanner_nextToken( s );
         Token_write( t, stdout );
         if( t->type == T_EOF ) 

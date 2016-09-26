@@ -11,8 +11,8 @@ BINARY = parser
 
 all : $(SOURCES) $(BINARY)
 
-$(BINARY) : token.o scanner.o buffer.o parser.c
-	$(CC) $(SRC_PATH)/parser.c token.o scanner.o buffer.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
+$(BINARY) : token.o scanner.o buffer.o parserTable.o parser.c
+	$(CC) $(SRC_PATH)/parser.c token.o scanner.o buffer.o parserTable.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
 
 
 scanner.o : scanner.c
@@ -23,3 +23,6 @@ buffer.o : buffer.c
 
 token.o : token.c
 	$(CC) $(STATIC) $(SRC_PATH)/token.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o token.o
+
+parserTable.o : parserTable.c 
+	$(CC) $(STATIC) $(SRC_PATH)/parserTable.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o parserTable.o

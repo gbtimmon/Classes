@@ -16,6 +16,9 @@
 #include "./buffer.h"
 #include "./scanner.h"
 
+#define true  1
+#define false 0 
+
 const char* reserved_word[ RESERVED_WORD_COUNT ] = {
     "main", //I cheated a little. 
     "int",
@@ -62,7 +65,7 @@ Scanner Scanner_new( const char * inFile, const char * outFile ) {
     n->in      = ( inFile == NULL) ? stdin : fopen( inFile, "r");
     n->out     = ( outFile == NULL)? stdout: fopen(outFile, "w");
     n->buffer  = Buffer_new(); 
-    n->token   = T_EMPTY;
+    n->token   = T_e;
     n->cur     = getc( n->in );
 }
 
@@ -90,7 +93,7 @@ Token Scanner_nextToken( Scanner s ) {
     // if I get to the final else, I will skip a char and try again. 
     // otherwise ive built a new good token.
     if( s->cur == EOF ) 
-        return Token_new( T_EOF, "");
+        return Token_new( T_EOF, "", true);
     
     else if( isalpha( s->cur ) || s->cur == '_' ) 
         consumeIdent( s );
@@ -112,7 +115,7 @@ Token Scanner_nextToken( Scanner s ) {
         return Scanner_nextToken( s ); 
     } 
     
-    return Token_new( s->token, s->buffer->stack ); 
+    return Token_new( s->token, s->buffer->stack, true ); 
 }
 
 int charIn( const char c, char * string ) {
@@ -260,7 +263,17 @@ void consumeOp( Scanner s ) {
 
  // if a garunteed on length op - return. 
     if( charIn( first, "(){}[],;+-*") ){
-        s->token = T_OP;
+        switch( first ) {
+            case '(' : s->token = T_LPAR;  break;
+            case ')' : s->token = T_RPAR;  break;
+            case '[' : s->token = T_LBRAC; break;
+            case ']' : s->token = T_RBRAC; break;
+            case ',' : s->token = T_COMMA; break;
+            case ';' : s->token = T_SEMI;  break;
+            case '+' : s->token = T_ADD;   break;
+            case '-' : s->token = T_ADD;   break;
+            case '*' : s->token = T_MULT;  break;
+        }    
         return;
     } 
 
@@ -291,8 +304,11 @@ void consumeOp( Scanner s ) {
 
  // if not a 2 char, at this point its a one char. 
     if ( charIn( first, "=></" ) ) {
-        s->token = T_OP;
-        return ; 
+        if( first == "/" ) 
+            s->token = T_MULT;
+        else
+            s->token = T_OP;
+        return; 
 
     }   
   

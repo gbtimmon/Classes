@@ -1,36 +1,23 @@
 //DATA SEGEMENT
-<data>    :: <type> <idList> ";" <data>
+<data>    :: <type> <idList> "semi" <data>
           :: e
-
 <idList>  :: <id> <idList'> 
-<idList`> :: "," <id> <idList'>
+<idList`> :: "comma" <id> <idList'>
           :: e
-
-<id>      :: <var> <id'>
-<id'>     :: "[" <exp> "]"
+<id>      :: "var" <id'>
+<id'>     :: "lBrac" <exp> "rBrac"
           :: e 
-
-<type>    :: "int" 
-          :: "void" 
-          :: "binary" 
-          :: "decimal"
-
-//EXPRESSIONS 
 <exp>     :: <term> <exp'> 
-<exp'>    :: <add> <term> <exp'>
+<exp'>    :: "add" <term> <exp'>
           :: e
-
-       
 <term>    :: <fact> <term'>
-<term'>   :: <mult> <fact> <term'>
+<term'>   :: "mult" <fact> <term'>
           :: e
-
-<fac>     :: <var> 
-          :: <var> "[" <exp> "]"
-          //:: <var> "(" <expList> ")"
-          :: <number>
-          :: "(" <exp> ")"
-
+<fact>    :: "var" <fact'>
+          :: "number"
+          :: "lPar" <exp> "rPar"
+<fact'>   :: "lBrac" <exp> "rBrac"
+          :: e
 //TERMINALS
 <cmp>    :: "=="|"!="|">" |">="|"<" |"<="
 <add>    :: "+" | "-"

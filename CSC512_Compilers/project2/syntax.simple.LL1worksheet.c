@@ -19,6 +19,7 @@ FIRST+( data   ) :: <type>, eof
 FIRST+( idList ) :: <var>
 FIRST+( idList') :: ",", ";"
 FIRST+( id     ) :: <var> 
+FIRST+( id'    ) :: "[", ";", ","
 FIRST+( exp    ) :: <var>, <number>, "("
 FIRST+( exp'   ) :: <add>, ")", "]"
 FIRST+( term   ) :: <var>, <number>, "("
