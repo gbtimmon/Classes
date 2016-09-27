@@ -25,18 +25,18 @@ int main( int argc, char ** argp, char ** envp ){
     int iter = 1;
     int max_iter = 1000; 
     while( iter++ < max_iter) {
-        fprintf( stderr, "\nIteration %d\n", iter - 1 ); 
+        //fprintf( stderr, "\nIteration %d\n", iter - 1 ); 
         while( isSkip( tok->type ) ) 
         {
             tok = Scanner_nextToken( s );
         }
 
-        fprintf( stderr, "TOS -> "); 
-        Token_write( TOS, stderr ); 
-        fprintf( stderr, "TOK -> "); 
-        Token_write( tok, stderr );
-        fprintf( stderr, "STK -> ");
-        TokenStack_write( stack, stderr);
+        //fprintf( stderr, "TOS -> "); 
+        //Token_write( TOS, stderr ); 
+        //fprintf( stderr, "TOK -> "); 
+        //Token_write( tok, stderr );
+        //fprintf( stderr, "STK -> ");
+        //TokenStack_write( stack, stderr);
 
         if( TOS->type == T_EOF && tok->type == T_EOF )
         {
@@ -47,23 +47,23 @@ int main( int argc, char ** argp, char ** envp ){
             if( TOS->type == tok->type )
             {
                 Token_free(TokenStack_pop( stack ));
-                fprintf( stdout, "%s\n", tok->value );
+                //fprintf( stdout, "%s\n", tok->value );
                 Token_free(tok);
                 tok = Scanner_nextToken( s ); 
             } 
             else 
             {
-                fprintf(stderr,"Unexpected Terminal\n");
+                fprintf(stderr,"error\n");
                 exit(1); 
             }
         }
         else 
         {
             int idx = lookup( TOS->type, tok->type );
-            fprintf( stderr, "Rule: %d\n", idx + 1 ); 
+            //fprintf( stderr, "Rule: %d\n", idx + 1 ); 
             if( idx < 0 ) 
             { 
-                fprintf(stderr,"Illegal Argument\n");
+                fprintf(stderr,"error\n");
                 exit(1);
             } 
             else 
@@ -79,7 +79,7 @@ int main( int argc, char ** argp, char ** envp ){
             }
         }      
     }
-    fprintf( stderr, "SUCCESS\n" );
+    fprintf( stderr, "pass\n" );
 }
 #endif
 
