@@ -19,7 +19,7 @@
 typedef struct _buffer {
     int index; 
     int size; 
-    char stack[1024];
+    char stack[512];
 } * Buffer; 
 
 int    Buffer_nchars  ( Buffer ) ; 

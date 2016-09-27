@@ -69,7 +69,7 @@ void Scanner_nextChar( Scanner s ) {
 // This will load the Scanner->token data with the next good token. 
 // It will overwrite the last token. The return will return the same 
 // memory location everytime, so the return is just for synatic sugar. 
-Token Scanner_nextToken( Scanner s ) {
+Token _Scanner_nextToken( Scanner s ) {
    
     if( s->cur == '\n') 
         s->lineNo++;
@@ -102,6 +102,12 @@ Token Scanner_nextToken( Scanner s ) {
     
     return Token_new( s->token, s->buffer->stack ); 
 }
+
+Token Scanner_nextToken( Scanner s ) { 
+    Token t = _Scanner_nextToken( s );
+    #include <scanner.gen.c>
+    return t;
+};
 
 int charIn( const char c, char * string ) {
     char * i = string; 
@@ -150,16 +156,7 @@ void consumeIdent( Scanner s ) {
         if( isalpha(s->cur) || isdigit(s->cur) || s->cur == '_' ){
             Buffer_write( s->buffer, s->cur );
         } else {
-            if(  Buffer_eq( s->buffer, "void" )
-              || Buffer_eq( s->buffer, "int"  )
-              || Buffer_eq( s->buffer, "decimal")
-              || Buffer_eq( s->buffer, "binary")
-            )
-            {
-                s->token = T_TYPE;
-            } else {
-                s->token = T_VAR;
-            }
+            s->token = T_VAR;
             return;
         }
         Scanner_nextChar( s ); 
@@ -253,19 +250,7 @@ void consumeOp( Scanner s ) {
 
  // if a garunteed on length op - return. 
     if( charIn( first, "(){}[],;+-*") ){
-        switch( first ) {
-            case '(' : s->token = T_LPAR;    break;
-            case ')' : s->token = T_RPAR;    break;
-            case '[' : s->token = T_LBRACK;  break;
-            case ']' : s->token = T_RBRACK;  break;
-            case '{' : s->token = T_LBRACE;  break;
-            case '}' : s->token = T_RBRACE;  break;
-            case ',' : s->token = T_COMMA;   break;
-            case ';' : s->token = T_SEMI;    break;
-            case '+' : s->token = T_ADD;     break;
-            case '-' : s->token = T_MINUS;   break;
-            case '*' : s->token = T_MULT;    break;
-        }    
+        s->token = T_OP;
         return;
     } 
 
@@ -296,10 +281,7 @@ void consumeOp( Scanner s ) {
 
  // if not a 2 char, at this point its a one char. 
     if ( charIn( first, "=></" ) ) {
-        if( first == "/" ) 
-            s->token = T_MULT;
-        else
-            s->token = T_OP;
+        s->token = T_OP;
         return; 
 
     }   

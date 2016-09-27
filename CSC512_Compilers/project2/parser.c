@@ -19,8 +19,8 @@ int main( int argc, char ** argp, char ** envp ){
     Scanner s = Scanner_new( argp[1], NULL );
     Token tok = Scanner_nextToken( s );
     TokenStack stack = TokenStack_new();
-    TokenStack_push( stack, Token_new( T_EOF,  NULL ) );
-    TokenStack_push( stack, Token_new( S_DATA, NULL ) );
+    TokenStack_push( stack, Token_new( T_EOF,   NULL ) );
+    TokenStack_push( stack, Token_new( S_START, NULL ) );
     #define TOS stack->head
     int iter = 1;
     int max_iter = 1000; 
@@ -46,7 +46,9 @@ int main( int argc, char ** argp, char ** envp ){
         {
             if( TOS->type == tok->type )
             {
-                Token_free( TokenStack_pop( stack ) );
+                Token_free(TokenStack_pop( stack ));
+                fprintf( stdout, "%s\n", tok->value );
+                Token_free(tok);
                 tok = Scanner_nextToken( s ); 
             } 
             else 

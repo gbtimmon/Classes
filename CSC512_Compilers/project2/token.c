@@ -3,6 +3,7 @@
 
 #include "token.h"
 #include <stdio.h>
+#include "token.gen.c"
 
 Token Token_new( token_t type, char * buffer ) { 
 
