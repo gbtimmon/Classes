@@ -12,6 +12,10 @@
 
 int main( int argc, char ** argp, char ** envp ){
 
+    int data = 0; 
+    int func = 0; 
+    int stmt = 0;
+
     initLookupTable();
     /** Very lazy way to encode a parser table. 
           but works for here.  **/
@@ -60,10 +64,24 @@ int main( int argc, char ** argp, char ** envp ){
         else 
         {
             int idx = lookup( TOS->type, tok->type );
+            int cidx = idx + 1; //Corrected to match the parser table. 
+            if ( cidx == 7  || cidx == 11 || cidx == 24 )
+                data++;
+
+            if ( cidx == 26 || cidx == 29 || cidx == 30  
+              || cidx == 32 || cidx == 35 || cidx == 37 
+              || cidx == 38 || cidx == 39 || cidx == 41 )
+                stmt++;
+
+            if ( cidx == 22 )
+                func++;
+                
+ 
+            
             //fprintf( stderr, "Rule: %d\n", idx + 1 ); 
             if( idx < 0 ) 
             { 
-                fprintf(stderr,"error\n");
+                fprintf(stdout,"error\n");
                 exit(1);
             } 
             else 
@@ -79,7 +97,8 @@ int main( int argc, char ** argp, char ** envp ){
             }
         }      
     }
-    fprintf( stderr, "pass\n" );
+    fprintf( stdout, "pass\n" );
+    fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
 }
 #endif
 

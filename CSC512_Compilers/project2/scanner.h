@@ -5,7 +5,12 @@
 #include "token.h"
 
 #define RESERVED_WORD_COUNT 13
- 
+/*
+ Code to create a new scanner object. 
+  This scanner will produce the token define in project one but has a recode function 
+  builtin that takes automatically generated code from the generateTable.py script that 
+  will convert generic tokens to specialized tokens. 
+*/
 typedef struct _scanner { 
     int lineNo;
     int errCnt; 

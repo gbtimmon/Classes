@@ -18,7 +18,7 @@ generateTable.py:
 	python ./generateTable.py
 
 cleanup:
-	rm -f ./*.o; rm -f ./*.gch;
+	rm -f ./*.o; rm -f ./*.gch; 
 
 scanner.o : scanner.c
 	$(CC) $(STATIC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o scanner.o
