@@ -16,7 +16,7 @@ int main( int argc, char ** argp, char ** envp ){
     /** Very lazy way to encode a parser table. 
           but works for here.  **/
 
-    Scanner s = Scanner_new( argp[1], NULL );
+    Scanner s = Scanner_new( argp[1] );
     Token tok = Scanner_nextToken( s );
     TokenStack stack = TokenStack_new();
     TokenStack_push( stack, Token_new( T_EOF,   NULL ) );

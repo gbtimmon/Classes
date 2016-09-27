@@ -18,7 +18,7 @@ Token Token_new( token_t type, char * buffer ) {
     return n;
 }
 
-Token Token_free( Token n ){
+void Token_free( Token n ){
     free(n->value); 
     free(n);
 }
@@ -38,6 +38,7 @@ int isSkip( token_t t ) {
 TokenStack TokenStack_new ( void ) {
     TokenStack s = malloc( sizeof (struct _token_stack ) );
     s->head = NULL;
+    return s;
 };
 
 void TokenStack_free( TokenStack s ){

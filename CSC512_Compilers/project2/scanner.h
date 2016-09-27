@@ -10,14 +10,14 @@ typedef struct _scanner {
     int lineNo;
     int errCnt; 
     int outFlag;
-    int cur; 
+    char cur; 
     Buffer buffer; 
     token_t token;
     FILE * in;
     FILE * out;
 } * Scanner;
 
-Scanner Scanner_new( const char * inFile, const char * outFile );
+Scanner Scanner_new( const char * inFile );
 void    Scanner_free      ( Scanner s );
 void    Scanner_setOutput ( Scanner s, int output );
 Token   Scanner_nextToken ( Scanner s);

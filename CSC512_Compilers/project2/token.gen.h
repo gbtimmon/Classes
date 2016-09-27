@@ -67,7 +67,6 @@ typedef enum _token_t {
     S_BRACK_EXP,
     S_BLOCK,
     S_ADD,
-    L_RPAR,
 } token_t;
 
 //name mapping

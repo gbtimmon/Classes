@@ -66,5 +66,4 @@ const char * tokenName[] = {
     "S_BRACK_EXP",
     "S_BLOCK",
     "S_ADD",
-    "L_RPAR",
 };

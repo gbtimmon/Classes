@@ -52,7 +52,7 @@ token_t ruleTable [][5]= {
 /* 50 : S_TERM_A      */ { T_MULT       , S_FACT       , S_TERM_A     , T_e          , T_e          , },
 /* 51 : S_TERM_A      */ { T_e          , T_e          , T_e          , T_e          , T_e          , },
 /* 52 : S_FACT        */ { T_VAR        , S_BRACK_EXP  , S_FACT_A     , T_e          , T_e          , },
-/* 53 : S_FACT_A      */ { T_LPAR       , S_EXP_LIST   , L_RPAR       , T_e          , T_e          , },
+/* 53 : S_FACT_A      */ { T_LPAR       , S_EXP_LIST   , T_RPAR       , T_e          , T_e          , },
 /* 54 : S_FACT_A      */ { T_e          , T_e          , T_e          , T_e          , T_e          , },
 /* 55 : S_FACT        */ { T_NUMBER     , T_e          , T_e          , T_e          , T_e          , },
 /* 56 : S_FACT        */ { T_MINUS      , T_NUMBER     , T_e          , T_e          , T_e          , },

@@ -4,7 +4,7 @@ SRC_PATH = .
 INC      = -I /c/MinGW/include -I .
 LIB      = -L /c/MinGW/lib
 STATIC   = -c
-CFLAGS   = -w -Wall -std=c11 -pedantic -g
+CFLAGS   = -w -Wall -std=c99 -pedantic -g
 LINKER   = 
 
 BINARY = parser

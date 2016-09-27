@@ -32,7 +32,7 @@ Token      Token_new      ( token_t, char * );
 //     @1 : token type
 //     @2 : token string data, only filled on terminal 
 
-Token      Token_free     ( Token t );
+void       Token_free     ( Token t );
 // Free a token, properly releasing all internal memory
 //     @1 : The token to free
 

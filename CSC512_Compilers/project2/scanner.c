@@ -41,16 +41,19 @@ void consumeComment( Scanner );
 //    5.) Implement constructor destructor. 
 //    6.) Implement objects for terminals (structs with label (Token)) 
 
-Scanner Scanner_new( const char * inFile, const char * outFile ) {
+Scanner Scanner_new( const char * inFile ) {
     Scanner n = malloc( sizeof (struct _scanner) );
 
     n->lineNo  = 0; 
     n->errCnt  = 0;
     n->outFlag = 0;
-    n->in      = ( inFile == NULL) ? stdin : fopen( inFile, "r");
-    n->out     = ( outFile == NULL)? stdout: fopen(outFile, "w");
+    n->in      = fopen( inFile, "r");
     n->buffer  = Buffer_new(); 
     n->token   = T_e;
+    if( n->in == NULL ){
+        fprintf(stderr, "FAILED TO OPEND FILE! %s");
+        exit(1);
+    } 
     n->cur     = getc( n->in );
 }
 
@@ -73,7 +76,6 @@ Token _Scanner_nextToken( Scanner s ) {
    
     if( s->cur == '\n') 
         s->lineNo++;
-
     // One of these braches will build a new token. 
     // if I get to the final else, I will skip a char and try again. 
     // otherwise ive built a new good token.
