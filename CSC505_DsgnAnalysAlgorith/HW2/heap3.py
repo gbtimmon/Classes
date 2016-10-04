@@ -87,7 +87,7 @@ if __name__ == '__main__' :
      if( x.startswith( "add" ) ) : 
        h.insert( int(x[3:]) )
      elif( x.startswith( "remove" ) ):
-       print h.remove()
+       h.remove()
    report()
 
 

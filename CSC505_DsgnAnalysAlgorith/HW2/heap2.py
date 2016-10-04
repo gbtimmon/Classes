@@ -1,6 +1,8 @@
 from __future__ import division
+from timer import timeFunction, function_data, report
 import sys
 import math
+
 class Heap :
   """
   Convienent get and set pattern
@@ -32,27 +34,28 @@ class Heap :
       i.heapify( m )
      
   def increaseKey( i, key, val ) :
-     if( i[key] > val ):
-       raise ValueError( "val smaller than key")
+    if( i[key] > val ):
+      raise ValueError( "val smaller than key")
 
-     i[key] = val
+    i[key] = val
 
-     c = key
-     while( 1 ) : 
-       p = i.up( c )
+    c = key
+    while( 1 ) : 
+      p = i.up( c )
 
-       if( p == 0 ) : break
+      if( p == 0 ) : break
 
-       if( i[p] > i[c] ) :
-         i[p], i[c] = i[c], i[p]
-         c = p
-       else :
-         break
-
+      if( i[p] > i[c] ) :
+        i[p], i[c] = i[c], i[p]
+        c = p
+      else :
+        break
+  @timeFunction
   def insert( i, x ) :
     i.data.append(x)
     i.increaseKey( len(i), x )
 
+  @timeFunction
   def remove( i, key=1 ):
     val = i.data.pop()
     ret = i[key]
@@ -74,11 +77,10 @@ class Heap :
     return sss
 
 if __name__ == '__main__' : 
-   h = Heap()
-   for x in sys.stdin : 
-     if( x.startswith( "add" ) ) : 
-       h.insert( int(x[3:]) )
-     elif( x.startswith( "remove" ) ):
-       print h.remove()
-
-
+  h = Heap()
+  for x in sys.stdin : 
+    if( x.startswith( "add" ) ) : 
+      h.insert( int(x[3:]) )
+    elif( x.startswith( "remove" ) ):
+      h.remove()
+  report()
