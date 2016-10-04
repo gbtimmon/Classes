@@ -3,7 +3,7 @@ from timer import timeFunction, function_data, report
 import sys
 import math
 
-class Heap :
+class Heap2 :
   """
   Convienent get and set pattern
   """
@@ -77,7 +77,7 @@ class Heap :
     return sss
 
 if __name__ == '__main__' : 
-  h = Heap()
+  h = Heap2()
   for x in sys.stdin : 
     if( x.startswith( "add" ) ) : 
       h.insert( int(x[3:]) )

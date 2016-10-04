@@ -1,7 +1,7 @@
 from __future__ import division
 from timer import timeFunction, function_data, report
 import sys
-class Heap :
+class Heap3 :
 
   """
   Convienent get and set pattern
@@ -82,7 +82,7 @@ class Heap :
     
 
 if __name__ == '__main__' : 
-   h = Heap()
+   h = Heap3()
    for x in sys.stdin : 
      if( x.startswith( "add" ) ) : 
        h.insert( int(x[3:]) )

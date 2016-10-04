@@ -1,24 +1,27 @@
 import sys
 import time 
+from heap3 import Heap3
 
 def getTime ():
   return time.time()
 
 function_data = dict()
+function_data["__main__.Heap3"] = dict()
+function_data["Heap2"] = dict()
 """
 Decorator to time a function
 """
-
 def timeFunction( func ) : 
-  function_data[ func ] = ([], [])
+  function_data["Heap3"][ func ] = ([], [])
+  function_data["Heap2"][ func ] = ([], [])
   
   def wrapper (*args, **kwargs ) :
     t0  = getTime() 
     ret = func(*args, **kwargs)
     t1  = getTime()
 
-    function_data[ func ][1].append( t1 - t0 )
-    function_data[ func ][1].append( len(args[0]) )
+    function_data[str(args[0].__class__)][ func ][0].append( t1 - t0 )
+    function_data[str(args[0].__class__)][ func ][1].append( len(args[0]) )
 
     return ret
 
