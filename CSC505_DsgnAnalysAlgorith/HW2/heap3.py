@@ -1,6 +1,7 @@
 from __future__ import division
 from timer import timeFunction, function_data, report
 import sys
+
 class Heap3 :
 
   """
@@ -60,7 +61,13 @@ class Heap3 :
 
   @timeFunction
   def remove( i, key=1 ):
+
+    if( len(i) == 0 ) : return None 
+
     val = i.data.pop()
+
+    if( len(i) == 0 ) : return val 
+
     ret = i[key]
     i[key] = val
     i.heapify( key )
