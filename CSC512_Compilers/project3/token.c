@@ -9,8 +9,7 @@ Token Token_new( token_t type, char * buffer ) {
 
     Token n  = malloc( sizeof( struct _token ) );
     n->type  = type; 
-    n->child = NULL;
-    n->peer  = NULL;
+    n->prev  = NULL;
     n->value = NULL;
     
     if( buffer ) n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
@@ -36,6 +35,7 @@ int isSkip( token_t t ) {
     return ( t == T_COMMENT || t == T_META || t == T_MCOMMENT );
 };
 
+
 TokenStack TokenStack_new ( void ) {
     TokenStack s = malloc( sizeof (struct _token_stack ) );
     s->head = NULL;
@@ -43,32 +43,35 @@ TokenStack TokenStack_new ( void ) {
 };
 
 void TokenStack_free( TokenStack s ){
-    TokenStackEle e = s->head;
+    TokenStackElement e = s->head;
     while( e != NULL ) {
-        TokenStackEle n = e->next;
-        Token_free( e );
-        e = n;
-    };
+        TokenStackElement p = e->prev;
+        Token_free( e->token );
+        free( e );
+        e = p;
+    }
     free( s );
 };
 
 void TokenStack_push( TokenStack s, Token t ) {
-
-    TokenStackEle n = malloc( sizeof( struct _token_stack_ele ) );
-    n->ele = t;
-    n->next = s->head;
-    s->head = n;
+    TokenStackElement e = malloc( sizeof( struct _tokenStackElement ) );
+    e->token = t; 
+    e->prev  = s->head;
+    s->head  = e;
 };
 
 Token TokenStack_pop ( TokenStack s ) {
     if( s->head == NULL ) 
         return NULL;
 
-    TokenStackEle e = s->head;
-    Token t         = e->ele;
-    s->head         = e->next;
+    TokenStackElement e = s->head;
+    Token t = e->token; 
+    s->head = e->prev;
+    e->prev = NULL;
+    e->token = NULL;
     free( e );
     return t;
+  
 };
 
 void TokenStack_write( TokenStack s, FILE * f ){
@@ -76,13 +79,13 @@ void TokenStack_write( TokenStack s, FILE * f ){
     fprintf(f, "\n");
 };
 
-void TokenStack_writeRecurse( TokenStackEle t, FILE * f ){
+void TokenStack_writeRecurse( TokenStackElement t, FILE * f ){
 
-    if( t->next != NULL ) {
-       TokenStack_writeRecurse( t->next, f ); 
+    if( t->prev != NULL ) {
+       TokenStack_writeRecurse( t->prev, f ); 
        fprintf(f, ", ");
     }
-    fprintf(f, "%s", tokenName[ (int) t->ele->type ] ); 
+    fprintf(f, "%s", tokenName[ (int) t->token->type ] ); 
 };
    
 #endif

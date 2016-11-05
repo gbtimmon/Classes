@@ -7,29 +7,22 @@
 // contains a generated enum of the available tokens.
 // plus a helper array that contains string names for tokens,
 // string names are a bit of a hack but only needed for debugging. 
-
-// EDITS FOR PROJECT 3 
-// So I can build a tree from the symbols as the comthrough the parser, 
-// and produce a IR for the code, I have added an additional pointers "sibling" 
-// and "child". Ive rewritten the stack code to keep the token code uncluttered. 
-// and pop will clear existing pointers. As we pop and create each 
 #include "token.gen.h"
 
 typedef struct _token { 
     token_t type;
     char*   value;
-    struct _token * peer;
-    struct _token * child;
+    struct _token * prev;
 } * Token;
 
-typedef struct _token_stack {
-    struct _token_stack_ele * head;
-} * TokenStack;
+typedef struct _tokenStackElement {
+    struct _token * token;
+    struct _tokenStackElement * prev;
+} * TokenStackElement;
 
-typedef struct _token_stack_ele {
-    struct _token * ele;
-    struct _token_stack_ele * next;
-} * TokenStackEle; 
+typedef struct _token_stack {
+    struct _tokenStackElement * head;
+} * TokenStack;
 
 int        isTerminal     ( token_t );
 // Report if a token_t is a terminal type. Its hacky, but it works and is quick to code. 

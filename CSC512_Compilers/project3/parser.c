@@ -25,24 +25,14 @@ int main( int argc, char ** argp, char ** envp ){
     TokenStack stack = TokenStack_new();
     TokenStack_push( stack, Token_new( T_EOF,   NULL ) );
     TokenStack_push( stack, Token_new( S_START, NULL ) );
-    #define TOS stack->head->ele
+    #define TOS stack->head->token
     int iter = 1;
     int max_iter = 1000; 
     while( iter++ < max_iter) {
         //fprintf( stderr, "\nIteration %d\n", iter - 1 ); 
-
-        while( 1 ) {
-
-            if ( isSkip( tok->type ) ) {
-
-                fprintf( stdout, "%s\n", tok->value );
-                tok = Scanner_nextToken( s );
-
-            } else {
-
-                break;           
-
-            }
+        while( isSkip( tok->type ) ) 
+        {
+            tok = Scanner_nextToken( s );
         }
 
         //fprintf( stderr, "TOS -> "); 
@@ -61,12 +51,7 @@ int main( int argc, char ** argp, char ** envp ){
             if( TOS->type == tok->type )
             {
                 Token_free(TokenStack_pop( stack ));
-                fprintf( stdout, "%s ", tok->value );
-                if( tok->type == T_LCURL
-                 || tok->type == T_SEMI 
-                 || tok->type == T_RCURL
-                ) fprintf( stdout, "\n" );
-
+                //fprintf( stdout, "%s\n", tok->value );
                 Token_free(tok);
                 tok = Scanner_nextToken( s ); 
             } 
