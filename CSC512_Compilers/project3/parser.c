@@ -10,6 +10,8 @@
 #define true  1
 #define false 0 
 
+#define TOS stack->head->token
+
 int main( int argc, char ** argp, char ** envp ){
 
     int data = 0; 
@@ -20,18 +22,22 @@ int main( int argc, char ** argp, char ** envp ){
     /** Very lazy way to encode a parser table. 
           but works for here.  **/
 
-    Scanner s = Scanner_new( argp[1] );
-    Token tok = Scanner_nextToken( s );
+    Scanner s   = Scanner_new( argp[1] );
+    Token tok   = Scanner_nextToken( s );
+    Token tree  = Token_new( S_START, NULL );
+    Token eof   = Token_new( T_EOF, NULL );
+
     TokenStack stack = TokenStack_new();
-    TokenStack_push( stack, Token_new( T_EOF,   NULL ) );
-    TokenStack_push( stack, Token_new( S_START, NULL ) );
-    #define TOS stack->head->token
+    TokenStack_push( stack, eof  );
+    TokenStack_push( stack, tree );
+
     int iter = 1;
-    int max_iter = 1000; 
-    while( iter++ < max_iter) {
-        //fprintf( stderr, "\nIteration %d\n", iter - 1 ); 
+    int max_iter = 1000000; 
+    while( -1 ) {
+        //fprintf( stdout, "\nIteration %d\n", iter - 1 ); 
         while( isSkip( tok->type ) ) 
         {
+            Token_appendChild( TOS, tok );
             tok = Scanner_nextToken( s );
         }
 
@@ -50,10 +56,11 @@ int main( int argc, char ** argp, char ** envp ){
         {
             if( TOS->type == tok->type )
             {
-                Token_free(TokenStack_pop( stack ));
-                //fprintf( stdout, "%s\n", tok->value );
-                Token_free(tok);
-                tok = Scanner_nextToken( s ); 
+                Token term = TokenStack_pop( stack );
+                term->value = tok->value;
+                tok->value = NULL;
+                Token_free( tok ); 
+                tok  = Scanner_nextToken( s ); 
             } 
             else 
             {
@@ -86,19 +93,25 @@ int main( int argc, char ** argp, char ** envp ){
             } 
             else 
             {
-                Token_free( TokenStack_pop( stack ) );
+                Token parent = TokenStack_pop( stack );
+
+                
                 token_t * rule = ruleTable[ idx ];
                 for( int i = RULE_LENGTH-1; i >= 0; i-- ){
                     if( rule[i] == T_e)
                         continue;
                     Token newT = Token_new( rule[i], "" );
+                    Token_appendChild( parent, newT ); 
                     TokenStack_push( stack, newT );
                 }
             }
         }      
     }
-    fprintf( stdout, "pass\n" );
-    fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
+    //fprintf( stdout, "pass\n" );
+    //fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
+
+    transform( tree ); 
+    Token_printTree( tree );
 }
 #endif
 

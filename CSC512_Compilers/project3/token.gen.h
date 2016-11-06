@@ -1,6 +1,8 @@
 // Tokens list 
 typedef enum _token_t {
     T_e,
+    T_XTYPE,
+    T_XDATA,
     T_WRITE,
     T_WHILE,
     T_VOID,
@@ -71,5 +73,5 @@ typedef enum _token_t {
 
 //name mapping
 const char * tokenName[];
-#define TERM_COUNT 33
+#define TERM_COUNT 35
 #define SYM_COUNT  34

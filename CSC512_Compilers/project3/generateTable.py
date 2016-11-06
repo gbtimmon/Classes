@@ -27,7 +27,9 @@ token_list = {
     "T_OP"       : 1,
     "T_STRING"   : 1,
     "T_NUMBER"   : 1,
-    "T_MULT"     : 1
+    "T_MULT"     : 1,
+    "T_XDATA"    : 1,
+    "T_XTYPE"    : 1
 }
 rules      = []
 ptble      = []

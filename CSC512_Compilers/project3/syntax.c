@@ -75,8 +75,6 @@ S_EXP_LIST_A  :: T_COMMA      S_EXP_LIST_B                                      
 S_EXP_LIST_A  :: T_e                                                             FIRST+: T_RPAR
 S_EXP_LIST_B  :: S_EXP        S_EXP_LIST_A                                       FIRST+: T_VAR T_NUMBER T_MINUS T_LPAR
 S_EXP_LIST_B  :: T_STRING     S_EXP_LIST_A                                       FIRST+: T_STRING
-
-
  
 [CAST]  T_VAR  "int"      T_TYPE
 [CAST]  T_VAR  "void"     T_VOID

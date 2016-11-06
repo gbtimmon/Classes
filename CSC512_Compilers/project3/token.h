@@ -10,9 +10,14 @@
 #include "token.gen.h"
 
 typedef struct _token { 
-    token_t type;
-    char*   value;
-    struct _token * prev;
+    token_t type;             // what kind of token am I
+    char*   value;            // what is the char data from the original source (If Im terminal )
+    int    id;                // A unique ID to keep the tree eaiser to debug. 
+    void * data;              // A struct contiaining special data used during transform. 
+    struct _token * parent;   // The symbol that created me. 
+    struct _token * child;    // The head of a doubly linked lists of the symbols I created. 
+    struct _token * peer;     // The next in the dobuly linked list
+    struct _token * lpeer;    // The prev in the doubley linked list
 } * Token;
 
 typedef struct _tokenStackElement {
@@ -32,6 +37,18 @@ int        isSkip         ( token_t );
 // Report if the parser should skip this token.
 //     @1 : token that is being checked.
 
+void       Token_appendChild ( Token, Token );
+// Add a child to the current token at the end of the list
+//     @1 : the token to add 
+
+void       Token_prependChild( Token, Token ); 
+// Add a child to the current token at the start of the list. 
+//     @1 : the token to prepend
+
+void       Token_printTree( Token );
+// Output the IR tree
+//     @1 : The head of the tree
+
 Token      Token_new      ( token_t, char * );
 // Create a new token struct. 
 //     @1 : token type
@@ -48,6 +65,10 @@ void       Token_write    ( Token, FILE * );
 TokenStack TokenStack_new ( void );
 // Create a token stack. Overkill for such a simple structure but I like the consitent
 // coding style since it behaves like the other objects in this project. 
+
+char *     Token_toString( Token ); 
+// Returns a string on the head that is a representation of the pass in token. 
+//     @1 : Token to represent
 
 void       TokenStack_free( TokenStack s ); 
 // Frees a token stack, has a side effect of freeing all tokens inside the stack as well

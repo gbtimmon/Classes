@@ -1,5 +1,7 @@
 const char * tokenName[] = {
     "T_e",
+    "T_XTYPE",
+    "T_XDATA",
     "T_WRITE",
     "T_WHILE",
     "T_VOID",
