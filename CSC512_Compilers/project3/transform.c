@@ -31,6 +31,42 @@ char * getPayloadString ( Token t ) {
     }
 };
 
+void buildSymbolTable( Token t ) {
+
+    Token c = t->child; 
+    while( c->type != S_XDATA ) c = c->peer; 
+
+    Token ele = c->child;
+    symbol_t  = -1; 
+
+     
+      
+
+    printf("build symbol table\n"); 
+};
+
+void collapseUp( Token t ){ 
+    // collapse upwards since I dont need depth. 
+    Token c     = t->child; 
+    Token first = t->child; 
+    Token last  = t->child; 
+
+    while( c != NULL ) {
+        last = c; 
+        c->parent = t->parent; 
+        c = c->peer; 
+    }
+
+    first->lpeer   = t->lpeer; 
+    if( t->lpeer != NULL ) 
+        t->lpeer->peer = first; 
+   
+    last->peer = t->peer; 
+    if( t->peer != NULL )
+        t->peer->lpeer = last; 
+
+    Token_free( t ); 
+}
 
 void doTransform( Token t ) {
 
@@ -45,6 +81,30 @@ void doTransform( Token t ) {
                t->parent->child = c; 
             return; 
         }
+        case S_PARM_LIST_A :{ 
+            //S_PARM_LIST_B is useless just delete it. 
+            Token oldlist = t->child; 
+            Token newlist = t->child->peer->child; //
+            
+            t->child = newlist; 
+         
+            Token c = t->child; 
+            while( c != NULL ) {
+                c->parent = t;
+                c = c->peer; 
+            }
+   
+            Token d = oldlist; 
+            while( d != NULL ) {
+                Token next = d->peer; 
+                Token_free( d );   
+                d = next;
+            }
+
+            collapseUp( t ); 
+            
+            return;
+        }
         case S_IDLIST : {
      
             // I dont need the comma.  
@@ -52,54 +112,52 @@ void doTransform( Token t ) {
             Token_free( t->child->lpeer );
             t->child->lpeer = NULL;
             
-            // collapse upwards since I dont need depth. 
-            Token c    = t->child; 
-            Token last;
-            while( c != NULL ) {
-                last = c; 
-                c->parent = t->parent; 
-                c = c->peer; 
-            }
-
-            Token first = t->child; 
-   
-            first->lpeer   = t->lpeer; 
-            t->lpeer->peer = first; 
-   
-            last->peer = t->peer; 
-            if( t->peer != NULL )
-                t->peer->lpeer = last; 
-                 
+            collapseUp( t ); 
             return; 
         }
         case S_START_A : {
-            //Lets roll the S_START_A into the start list. 
-            Token parent  = t->parent;
-            Token left    = t->lpeer; 
-            Token right   = t->child; 
-            left->peer    = right;
-            right->lpeer  = left; 
-    
-            BREAK();
-
-            Token c = t->child;
-            while( c != NULL ) {
-                c->parent = parent; 
-                c = c->peer; 
-            }
-            //Token_free(t); 
+            collapseUp( t ); 
             return;
         }    
         case S_START : {
 
-            // I may or may not start with data
-            // S_START   -> S_TYPE, T_VAR, S_START_A;
-            // and 
-            // S_START_A -> T_LPAR etc...
-            // implies a function , not data. 
-            // Ive rolled up the S_START_A above to shrink tree. 
-
-            
+            // The lowest start is the start of the code. 
+            // other wise starts will chain with data init. 
+            Token c = t->child; 
+            while( c != NULL ) {
+               if( c->type == S_XCODE) break;
+               c = c->peer; 
+            }
+            // If there no root below me, I am the start of code. 
+            if( c == NULL ) {
+                t->type = S_XCODE; 
+            } else {
+                if( t->parent != NULL ) 
+                    collapseUp( t ); 
+                else {
+                    Token data = Token_new( S_XDATA, NULL ); 
+                    c = t->child; 
+                    while( c != NULL ) {
+                        Token next = c->peer; 
+                        if( c->type != S_XCODE ) {
+                            c->parent = NULL;    
+                            c->child  = NULL;
+                            c->peer   = NULL;
+                            c->lpeer  = NULL;
+                            Token_prependChild( data, c ); 
+                        } else {
+                            c->lpeer = NULL;
+                            c->peer  = NULL;
+                            t->child = c;
+                        }
+                        c = next; 
+                    }
+                    Token_appendChild( t, data );  
+ 
+                    buildSymbolTable( t ); 
+                }
+            }
+            return; 
         };
     };
 };

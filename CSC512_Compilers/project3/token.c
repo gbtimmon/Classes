@@ -27,6 +27,7 @@ Token Token_new( token_t type, char * buffer ) {
     n->peer    = NULL;   // pointer to my peer ( I am part of a linked list whose head is pointed to by my parent )
     n->lpeer   = NULL;   // pointer to me left peer ( its a doublely linked list ). 
     n->data    = NULL;   // pointer to a data struct. 
+    n->scope   = NULL;   // a symbol table if one exists here. 
     
     if( buffer ) n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
     if( buffer ) strcpy( n->value, buffer ); 
@@ -60,6 +61,7 @@ char * Token_toString( Token n ) {
 void Token_free( Token n ){
     free(n->data); 
     free(n->value); 
+    if( n->scope != NULL ) SymbolTable_free( n->scope ); 
     free(n);
 };
 

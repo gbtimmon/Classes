@@ -1,6 +1,7 @@
 const char * tokenName[] = {
     "T_e",
     "T_XTYPE",
+    "T_XPARM",
     "T_XDATA",
     "T_WRITE",
     "T_WHILE",
@@ -34,6 +35,8 @@ const char * tokenName[] = {
     "T_CMP",
     "T_BREAK",
     "T_BOOL_OP",
+    "S_XDATA",
+    "S_XCODE",
     "S_TYPE",
     "S_TERM_A",
     "S_TERM",

@@ -11,14 +11,17 @@ BINARY = parser
 
 all : generateTable.py $(BINARY) cleanup
 
-$(BINARY) : token.o scanner.o buffer.o parserTable.o parser.c transform.o
-	$(CC) $(SRC_PATH)/parser.c token.o scanner.o buffer.o transform.o parserTable.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
+$(BINARY) : symbol.o token.o scanner.o buffer.o parserTable.o parser.c transform.o
+	$(CC) $(SRC_PATH)/parser.c symbol.o token.o scanner.o buffer.o transform.o parserTable.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
 
 generateTable.py: 
 	python ./generateTable.py
 
 cleanup:
 	rm -f ./*.o; rm -f ./*.gch; 
+
+symbol.o : symbol.c
+	$(CC) $(STATIC) $(SRC_PATH)/symbol.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o symbol.o
 
 scanner.o : scanner.c
 	$(CC) $(STATIC) $(SRC_PATH)/scanner.c $(INC) $(LIB) $(CFLAGS) $(LINKER) -o scanner.o

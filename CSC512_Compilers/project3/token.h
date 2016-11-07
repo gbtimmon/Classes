@@ -2,6 +2,7 @@
 #define _TOKEN_H_
 
 #include <stdio.h>
+#include "symbol.h"
 
 // Token.h.gen 
 // contains a generated enum of the available tokens.
@@ -18,6 +19,8 @@ typedef struct _token {
     struct _token * child;    // The head of a doubly linked lists of the symbols I created. 
     struct _token * peer;     // The next in the dobuly linked list
     struct _token * lpeer;    // The prev in the doubley linked list
+    SymbolTable scope;        // the variables available at this level.
+    
 } * Token;
 
 typedef struct _tokenStackElement {
