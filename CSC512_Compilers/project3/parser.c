@@ -37,7 +37,8 @@ int main( int argc, char ** argp, char ** envp ){
         //fprintf( stdout, "\nIteration %d\n", iter - 1 ); 
         while( isSkip( tok->type ) ) 
         {
-            Token_appendChild( TOS, tok );
+            //Token_appendChild( TOS, tok );
+            fprintf( stderr, "NEED TO HANDLE METAS!\n" ); 
             tok = Scanner_nextToken( s );
         }
 
@@ -107,11 +108,12 @@ int main( int argc, char ** argp, char ** envp ){
             }
         }      
     }
-    //fprintf( stdout, "pass\n" );
-    //fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
+    fprintf( stdout, "pass\n" );
+    fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
 
     transform( tree ); 
     Token_printTree( tree );
+    printf("\n===EXIT NORMAL!===\n");
 }
 #endif
 

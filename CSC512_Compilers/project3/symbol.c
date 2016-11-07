@@ -19,15 +19,31 @@ void SymbolTable_free( SymbolTable s ){
     free( s ); 
 };
 
-Symbol Symbol_new( symbol_t type, const char * name ) { 
+void SymbolTable_add( SymbolTable s,  symbol_t type, const char * name ){
   
-    Symbol s = malloc( sizeof( struct _symbol ) ); 
-    s->type = type; 
-    s->name = malloc( sizeof(char) * (strlen( name ) + 2) );
-    strcpy( s->name, name ); 
+    Symbol new = malloc( sizeof( struct _symbol ) ); 
+    new->type = type; 
+    new->name = malloc( sizeof(char) * (strlen( name ) + 2) );
+    strcpy( new->name, name ); 
 
-    return s; 
+    s->data[ s->size ] = new; 
+    s->size = s->size + 1; 
 };
+
+void SymbolTable_write( SymbolTable s ) {
+    printf( "--SYMBOLS--\n" );
+    for( int i = 0; i < s->size; i++ ) {
+        Symbol t = s->data[i]; 
+        char * type; 
+        if( t->type == TYPE_INT )     type = "int";
+        if( t->type == TYPE_VOID )    type = "void";
+        if( t->type == TYPE_DECIMAL ) type = "decimal";
+        if( t->type == TYPE_BINARY )  type = "binary";
+        if( t->type == TYPE_UNDEF )   type = "undef";
+
+        printf("   Symbol [ %s %s ]\n", type, t->name ); 
+    }
+}
 
 void Symbol_free( Symbol s ) {
     free( s->name );  

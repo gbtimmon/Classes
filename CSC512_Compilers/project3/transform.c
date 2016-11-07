@@ -7,6 +7,8 @@
 int _break_; 
 #define BREAK() {printf("BREAK %d\n", _break_++);fflush(NULL);}
 
+#define EQ(x,y) strcmp( x, y ) == 0 
+
 /** Recode the IR Tree formed by the parser. 
     Do a depth / last item first scan and recode as we go. 
     This way subtrees are recoded before we recode a node. 
@@ -36,129 +38,154 @@ void buildSymbolTable( Token t ) {
     Token c = t->child; 
     while( c->type != S_XDATA ) c = c->peer; 
 
+    int varCount = 0; 
     Token ele = c->child;
-    symbol_t  = -1; 
-
-     
-      
-
-    printf("build symbol table\n"); 
-};
-
-void collapseUp( Token t ){ 
-    // collapse upwards since I dont need depth. 
-    Token c     = t->child; 
-    Token first = t->child; 
-    Token last  = t->child; 
-
-    while( c != NULL ) {
-        last = c; 
-        c->parent = t->parent; 
-        c = c->peer; 
+    while( ele != NULL ) { 
+        if( ele->type == T_VAR ) varCount ++;
+        ele = ele->peer; 
     }
 
-    first->lpeer   = t->lpeer; 
-    if( t->lpeer != NULL ) 
-        t->lpeer->peer = first; 
-   
-    last->peer = t->peer; 
-    if( t->peer != NULL )
-        t->peer->lpeer = last; 
+    t->scope = SymbolTable_new( varCount ); 
 
-    Token_free( t ); 
+    ele = c->child; 
+    symbol_t sym = TYPE_UNDEF; 
+
+    while( ele != NULL ) {
+        if( ele->type == T_XTYPE ) {
+             if( EQ( ele->value, "int" ) )     sym = TYPE_INT; 
+             if( EQ( ele->value, "binary" ) )  sym = TYPE_BINARY; 
+             if( EQ( ele->value, "void" ) )    sym = TYPE_VOID; 
+             if( EQ( ele->value, "decimal" ) ) sym = TYPE_DECIMAL;
+        } else if ( ele->type == T_VAR ) {
+             SymbolTable_add( t->scope, sym, ele->value ); 
+        } else if ( ele->type == T_SEMI ) {
+             sym = TYPE_UNDEF; 
+        } 
+        ele = ele->peer; 
+    }
+};
+
+void findAndCollapse( Token t, token_t type ){
+
+    Token c = Token_findChild( t, type ); 
+    while( c != NULL ) {
+        Token_collapse( c );     
+        c = Token_findChild( t, type ); 
+    }
+};
+
+void transformSType( Token t ) {
+
+    //The SType just wraps another type object.
+    // so just delete the SType from the tree. 
+
+    Token c   = t->child;              
+    Token old = Token_replace( t, c ); 
+    c->type   = T_XTYPE; 
+    Token_free( old ); 
+};
+
+void transformSParmListA( Token t ) {
+     Token c; 
+  
+     c = Token_remove( t->child ); //remove the comma.
+     Token_free(c); 
+
+     c = Token_remove( t->child ); //remove the ParmListB
+     Token_join( t, c );           //append it to my list; 
+};
+
+void transformSParmList( Token t ) {
+     findAndCollapse( t, S_PARM_LIST_A ); 
+};
+
+
+void transformSIdList( Token t ) {
+     // I dont need the comma.  
+     Token_remove( t->child ); 
+     findAndCollapse( t, S_IDLIST ); 
+};
+
+void transformSStart( Token t ) {
+
+    findAndCollapse( t, S_START_A ); 
+
+    Token start = Token_findChild( t, S_START ); 
+    Token func  = Token_findChild( t, S_XFUNC ); 
+
+    if( start == NULL && func == NULL && t->parent == NULL ){
+        Token func = Token_new( S_XFUNC, NULL );
+        Token c = t->child; 
+        Token n; 
+
+        while( c != NULL ) {
+            n = c->peer; 
+            Token_remove( c ); 
+            Token_appendChild( func, c );
+            c = n; 
+        }
+   
+        Token_appendChild( t, func ); 
+
+    } else if( start == NULL && func == NULL ) {
+       t->type = S_XFUNC;
+    } else if ( start != NULL ) {
+       Token_collapse( start );
+    }
+
+    //wrangle data in to a data table node. 
+    if( t->parent == NULL ) {
+        Token data = Token_new( S_XDATA, NULL ); 
+        Token c    = Token_findChild( t, S_XFUNC )->lpeer; 
+        Token next; 
+
+        while( c != NULL ){
+            next = c->lpeer; 
+            Token_remove( c ); 
+            Token_appendChild( data, c ); 
+            c = next; 
+        }
+ 
+        Token_appendChild( t, data ); 
+ 
+        buildSymbolTable( t ); 
+
+        //then order the functions. 
+        c = Token_findChild( t, S_XFUNC ); 
+        while( c != NULL ){
+            c = Token_findChild( c, S_CODE );
+            if( c != NULL ){
+                Token_remove( c );
+                c->type = S_XFUNC;
+                Token_prependChild( t, c ); 
+            }
+        }  
+    }
 }
+
+void transformSStartA( Token t ) {
+    findAndCollapse( t, S_IDLIST ); 
+}; 
+
+void transformSData( Token t ) {
+     if( t->parent->type == S_DATA ) {
+         //collapseUp(t); 
+     } else if( t->parent->type == S_FUNC_DEF ) { 
+
+     }
+}; 
 
 void doTransform( Token t ) {
 
     switch( t->type ) {
-        case S_TYPE : { 
-            Token c   = t->child;
-            c->type   = T_XTYPE;
-            c->peer   = t->peer; 
-            c->lpeer  = t->lpeer; 
-            c->parent = t->parent;
-            if( t->parent->child->lpeer == NULL ) //Im first in the list
-               t->parent->child = c; 
-            return; 
-        }
-        case S_PARM_LIST_A :{ 
-            //S_PARM_LIST_B is useless just delete it. 
-            Token oldlist = t->child; 
-            Token newlist = t->child->peer->child; //
-            
-            t->child = newlist; 
-         
-            Token c = t->child; 
-            while( c != NULL ) {
-                c->parent = t;
-                c = c->peer; 
-            }
-   
-            Token d = oldlist; 
-            while( d != NULL ) {
-                Token next = d->peer; 
-                Token_free( d );   
-                d = next;
-            }
-
-            collapseUp( t ); 
-            
-            return;
-        }
-        case S_IDLIST : {
-     
-            // I dont need the comma.  
-            t->child = t->child->peer; 
-            Token_free( t->child->lpeer );
-            t->child->lpeer = NULL;
-            
-            collapseUp( t ); 
-            return; 
-        }
-        case S_START_A : {
-            collapseUp( t ); 
-            return;
-        }    
-        case S_START : {
-
-            // The lowest start is the start of the code. 
-            // other wise starts will chain with data init. 
-            Token c = t->child; 
-            while( c != NULL ) {
-               if( c->type == S_XCODE) break;
-               c = c->peer; 
-            }
-            // If there no root below me, I am the start of code. 
-            if( c == NULL ) {
-                t->type = S_XCODE; 
-            } else {
-                if( t->parent != NULL ) 
-                    collapseUp( t ); 
-                else {
-                    Token data = Token_new( S_XDATA, NULL ); 
-                    c = t->child; 
-                    while( c != NULL ) {
-                        Token next = c->peer; 
-                        if( c->type != S_XCODE ) {
-                            c->parent = NULL;    
-                            c->child  = NULL;
-                            c->peer   = NULL;
-                            c->lpeer  = NULL;
-                            Token_prependChild( data, c ); 
-                        } else {
-                            c->lpeer = NULL;
-                            c->peer  = NULL;
-                            t->child = c;
-                        }
-                        c = next; 
-                    }
-                    Token_appendChild( t, data );  
- 
-                    buildSymbolTable( t ); 
-                }
-            }
-            return; 
-        };
+        // The type can collapse into a simpler element. 
+        case S_TYPE        : transformSType( t );      break;
+        case S_PARM_LIST_A : transformSParmListA( t ); break;
+        case S_PARM_LIST   : transformSParmList( t );  break; 
+        case S_IDLIST      : transformSIdList( t );    break;
+        case S_START_A     : transformSStartA( t );    break;
+        case S_START       : transformSStart( t );     break;
+        //case S_DATA :        transformSData( t );      break;
     };
 };
 

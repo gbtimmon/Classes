@@ -2,13 +2,13 @@
 #define _SYMBOL_TABLE_H_
 
 typedef enum _symbol_t {  
-    S_INT, 
-    S_VOID, 
-    S_BINARY, 
-    S_DECIMAL, 
-    S_UNDEF
+    TYPE_INT, 
+    TYPE_VOID, 
+    TYPE_BINARY, 
+    TYPE_DECIMAL, 
+    TYPE_UNDEF
 } symbol_t; 
-    
+
 typedef struct _symbol {
     symbol_t type;       
     char *   name; 
@@ -22,7 +22,8 @@ typedef struct _sTable {
 } * SymbolTable; 
 
 SymbolTable  SymbolTable_new ( int );
+void         SymbolTable_add ( SymbolTable, symbol_t, const char * ); 
+void         SymbolTable_write( SymbolTable );
 void         SymbolTable_free( SymbolTable );
-Symbol       Symbol_new( symbol_t , const char * );
-void         Symbol_free( Symbol ); 
-endif
+
+#endif

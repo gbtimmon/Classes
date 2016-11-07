@@ -1,0 +1,142 @@
+pass
+variable 5 function 6 statement 48
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 2 statement 21
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 1 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+error
+pass
+variable 2 function 1 statement 3
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 5 function 3 statement 17
+--SYMBOLS--
+   Symbol [ int array ]
+
+===EXIT NORMAL!===
+pass
+variable 12 function 2 statement 31
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 1 function 8 statement 10
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 1 function 5 statement 7
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 4 function 2 statement 15
+--SYMBOLS--
+   Symbol [ int array_1 ]
+   Symbol [ int array_2 ]
+
+===EXIT NORMAL!===
+pass
+variable 2 function 1 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 8 function 6 statement 34
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 2 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 1 function 2 statement 5
+--SYMBOLS--
+
+===EXIT NORMAL!===
+error
+pass
+variable 2 function 3 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 2 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 1 function 2 statement 5
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 3 function 2 statement 4
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 2 statement 21
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 1 function 8 statement 10
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 9 function 3 statement 127
+--SYMBOLS--
+   Symbol [ int array_1 ]
+   Symbol [ int array_2 ]
+   Symbol [ int array_3 ]
+   Symbol [ int array_4 ]
+
+===EXIT NORMAL!===
+pass
+variable 2 function 2 statement 6
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 24 function 2 statement 87
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 2 function 3 statement 4
+--SYMBOLS--
+
+===EXIT NORMAL!===
+pass
+variable 8 function 4 statement 4
+--SYMBOLS--
+   Symbol [ int j ]
+   Symbol [ int k ]
+   Symbol [ int z ]
+   Symbol [ int d ]
+   Symbol [ int l ]
+   Symbol [ int m ]
+   Symbol [ decimal o ]
+   Symbol [ decimal p ]
+
+===EXIT NORMAL!===
+pass
+variable 1 function 2 statement 3
+--SYMBOLS--
+
+===EXIT NORMAL!===

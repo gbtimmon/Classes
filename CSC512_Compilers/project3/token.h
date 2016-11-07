@@ -48,6 +48,25 @@ void       Token_prependChild( Token, Token );
 // Add a child to the current token at the start of the list. 
 //     @1 : the token to prepend
 
+Token      Token_remove( Token );
+// Remove a token from its location in the tree
+//     @1 : the child to remove
+
+Token      Token_replace( Token, Token );
+//Replace a token in the tree with another tree. 
+//     @1 : the location were I will put the new token. 
+//     @2 : the token that will be moved into the new location. 
+
+Token Token_findChild( Token, token_t ); 
+//Returns the first child of a certain type in a child list. 
+// will return NULL if non are present. 
+//     @1 : Token to search
+//     @2 : type to look for
+
+void Token_collapse( Token ); 
+//Remove the current token and inserts it children in its place in the tree. 
+//     @1 : Token to collapse
+
 void       Token_printTree( Token );
 // Output the IR tree
 //     @1 : The head of the tree

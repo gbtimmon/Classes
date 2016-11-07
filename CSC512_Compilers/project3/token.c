@@ -11,6 +11,9 @@
 
 int global_id = 1; 
 
+int _break_=0; 
+#define BREAK() {printf("BREAK %d\n", _break_++ ); fflush( NULL ); }
+#define RBREAK() { _break_ = 0; BREAK() }
 int isTerminal( token_t t ) {
     return (t < TERM_COUNT);
 };
@@ -53,7 +56,6 @@ char * Token_toString( Token n ) {
     char * fmt = "<%3d:%s [%s]%s>";
     char * str = malloc( sizeof( char ) * (15+len+len2+len3) ); 
     sprintf( str, fmt, n->id, NAME(n), pstr, temp );
-
     free( pstr ); 
     return str; 
 };
@@ -100,6 +102,103 @@ void Token_prependChild( Token b, Token c ) {
 
 };
 
+Token Token_findChild( Token p, token_t type ) {
+
+    Token c = p->child; 
+    while( c != NULL ) {
+        if( c->type == type )
+           return c; 
+        c = c->peer; 
+    }
+    return NULL;
+}; 
+
+void Token_collapse( Token t ) {
+     Token start = t->lpeer; 
+     Token end   = t->peer; 
+     Token c     = t->child; 
+
+     //if im empty just remove. 
+     if( c == NULL ){
+         Token_remove( t ); 
+         Token_free( t ); 
+         return;
+     }
+
+     c->lpeer    = start; 
+     if( c->lpeer != NULL ) 
+         c->lpeer->peer = c; 
+     else 
+         t->parent->child = c; 
+
+     c->parent = t->parent; 
+     while( c->peer != NULL ) {
+         c = c->peer; 
+         c->parent = t->parent; 
+     }
+
+     c->peer = end; 
+     if( c->peer != NULL )
+         c->peer->lpeer = c; 
+
+     Token_free( t ); 
+     return; 
+};
+
+Token Token_remove( Token t ) {
+
+    //connect my left to my right
+    if( t->lpeer != NULL ) t->lpeer->peer = t->peer; 
+    //connect my right to my left
+    if( t->peer  != NULL ) t->peer->lpeer = t->lpeer; 
+    //if I am first in the list, move the parent pointer to the next. 
+    if( t->lpeer  == NULL && t->parent != NULL ) t->parent->child = t->peer;
+
+    //forget where I was. 
+    t->parent = NULL; 
+    t->peer   = NULL;
+    t->lpeer  = NULL;
+
+    return t; 
+};
+
+Token Token_replace( Token dest, Token src ) { 
+    Token_remove( src ); 
+    
+    //My neighbors are what used to be my dest neighbors
+    src->peer  = dest->peer; 
+    src->lpeer = dest->lpeer;  
+
+    //Let my new neighbors know Im here.
+    if( src->peer  != NULL ) src->peer->lpeer = src; 
+    if( src->lpeer != NULL ) src->lpeer->peer = src; 
+    src->parent = dest->parent;
+
+    //If the dest is the first in the list, let the parent know. 
+    if( dest->parent != NULL && dest->parent->child->id == dest->id )
+       dest->parent->child = src; 
+
+    dest->peer   = NULL;  
+    dest->lpeer  = NULL;
+    dest->parent = NULL;
+    return dest; 
+}
+
+Token Token_join( Token dest, Token src ) { 
+
+
+    Token_remove( src ); 
+
+    //For each child of from, insert it into the dest
+    while( src->child != NULL ) { 
+        Token c = Token_remove( src->child ); 
+        Token_prependChild( dest, c ); 
+    }
+
+    Token_free(src); 
+};
+
+
 void Token_printTree( Token h ) {
 
    char * myself = Token_toString( h ); 
@@ -108,7 +207,7 @@ void Token_printTree( Token h ) {
    if( h->child == NULL && !isTerminal( h->type) ){
        printf( "%s ->", myself ); 
        printf(" NULL\n"); 
-   } else if( !isTerminal( h->type ) ) {
+   } else if( !isTerminal( h->type ) && h->type != S_XDATA ) {
        printf( "%s ->", myself ); 
        Token c = h->child; 
        while( c != NULL ){
@@ -118,6 +217,9 @@ void Token_printTree( Token h ) {
            c = c->peer; 
        }
        printf("\n"); 
+
+       if( h->scope != NULL )
+           SymbolTable_write( h->scope ); 
    }
    free( myself ); 
    if( h->child != NULL ) Token_printTree( h->child ); 
