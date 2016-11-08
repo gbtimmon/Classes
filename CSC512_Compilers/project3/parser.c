@@ -113,7 +113,7 @@ int main( int argc, char ** argp, char ** envp ){
     fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
 
     transform( tree ); 
-   // Token_printTree( tree );
+    Token_printTree( tree );
 
     generate( stdout, tree ); 
     printf("\n===EXIT NORMAL!===\n");

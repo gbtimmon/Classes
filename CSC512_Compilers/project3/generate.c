@@ -14,22 +14,29 @@ void writeMeta( FILE * f, Token t ) {
 
 void writeFunc( FILE * f, Token t ) {
    Token type = Token_findChild( t, T_XTYPE ); 
-   if( type == NULL ) type = Token_findChild( t, T_TYPE ); 
-
    Token name = Token_findChild( t, T_VAR ); 
-   Token parm = Token_findChild( t, S_PARM_LIST); 
+   Token parm = Token_findChild( t, S_PARM_LIST ); 
+   Token data = Token_findChild( t, S_XDATA ); 
+   Token stat = Token_findChild( t, S_STATEMENT ); 
 
-   int local_cound = t->scope->ref; 
+   int local_count = t->scope->ref; 
 
-   fprintf( "int %s( %s )
+   printf( "int %s ( parms )", name->value ); 
 
-
-
+   if( stat == NULL )
+      printf( ";\n"); 
+   else {
+      printf( "{\n"); 
+      if( local_count > 0 )
+          printf("    int local[%d];\n", local_count ); 
+      printf("};\n"); 
+   }
 }
+
 void generate( FILE * f, Token t ) {
 
     int global_size = t->scope->ref;
-    printf( "int GLOBAL[%d];\n", global_size ); 
+    printf( "int global[%d];\n", global_size ); 
    
     Token c = t->child; 
     while( c != NULL ) {
