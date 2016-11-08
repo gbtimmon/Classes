@@ -3,6 +3,7 @@
 
 #include "transform.h"
 #include "assert.h"
+#include <stdbool.h>
 
 int _break_; 
 #define BREAK() {printf("BREAK %d\n", _break_++);fflush(NULL);}
@@ -13,7 +14,6 @@ int _break_;
     Do a depth / last item first scan and recode as we go. 
     This way subtrees are recoded before we recode a node. 
      **/
-
 
 
 char * getPayloadString ( Token t ) {
@@ -33,40 +33,7 @@ char * getPayloadString ( Token t ) {
     }
 };
 
-void buildSymbolTable( Token t ) {
-
-    Token c = t->child; 
-    while( c->type != S_XDATA ) c = c->peer; 
-
-    int varCount = 0; 
-    Token ele = c->child;
-    while( ele != NULL ) { 
-        if( ele->type == T_VAR ) varCount ++;
-        ele = ele->peer; 
-    }
-
-    t->scope = SymbolTable_new( varCount ); 
-
-    ele = c->child; 
-    symbol_t sym = TYPE_UNDEF; 
-
-    while( ele != NULL ) {
-        if( ele->type == T_XTYPE ) {
-             if( EQ( ele->value, "int" ) )     sym = TYPE_INT; 
-             if( EQ( ele->value, "binary" ) )  sym = TYPE_BINARY; 
-             if( EQ( ele->value, "void" ) )    sym = TYPE_VOID; 
-             if( EQ( ele->value, "decimal" ) ) sym = TYPE_DECIMAL;
-        } else if ( ele->type == T_VAR ) {
-             SymbolTable_add( t->scope, sym, ele->value ); 
-        } else if ( ele->type == T_SEMI ) {
-             sym = TYPE_UNDEF; 
-        } 
-        ele = ele->peer; 
-    }
-};
-
 void findAndCollapse( Token t, token_t type ){
-
     Token c = Token_findChild( t, type ); 
     while( c != NULL ) {
         Token_collapse( c );     
@@ -74,6 +41,14 @@ void findAndCollapse( Token t, token_t type ){
     }
 };
 
+void findAndRemove( Token t, token_t type ) {
+    Token c = Token_findChild( t, type ); 
+    while( c != NULL ) {
+        Token_remove( c ); 
+        Token_free( c ); 
+        c = Token_findChild( t, type ); 
+    }
+};
 void transformSType( Token t ) {
 
     //The SType just wraps another type object.
@@ -97,13 +72,6 @@ void transformSParmListA( Token t ) {
 
 void transformSParmList( Token t ) {
      findAndCollapse( t, S_PARM_LIST_A ); 
-};
-
-
-void transformSIdList( Token t ) {
-     // I dont need the comma.  
-     Token_remove( t->child ); 
-     findAndCollapse( t, S_IDLIST ); 
 };
 
 void transformSStart( Token t ) {
@@ -146,13 +114,17 @@ void transformSStart( Token t ) {
             c = next; 
         }
  
+        findAndRemove( data, T_SEMI ); 
         Token_appendChild( t, data ); 
  
-        buildSymbolTable( t ); 
-
         //then order the functions. 
         c = Token_findChild( t, S_XFUNC ); 
+        findAndRemove( c, T_LPAR ); 
+        findAndRemove( c, T_RPAR ); 
+
         while( c != NULL ){
+
+            // for each function remove the parenthesis. 
             c = Token_findChild( c, S_CODE );
             if( c != NULL ){
                 Token_remove( c );
@@ -167,13 +139,45 @@ void transformSStartA( Token t ) {
     findAndCollapse( t, S_IDLIST ); 
 }; 
 
-void transformSData( Token t ) {
-     if( t->parent->type == S_DATA ) {
-         //collapseUp(t); 
-     } else if( t->parent->type == S_FUNC_DEF ) { 
+void transformSFunc( Token t ) { 
+    Token_collapse( t ); 
+};
 
-     }
-}; 
+void transformSCode( Token t ) {
+    Token c = Token_findChild( t, T_LPAR ); 
+    Token d = Token_findChild( t, T_RPAR ); 
+
+    Token_remove( c ); 
+    Token_remove( d ); 
+
+    Token_free( c ); 
+    Token_free( d ); 
+};
+
+void transformSFuncDef( Token t ) {
+
+    if( t->child->type == T_SEMI ) {
+        Token_remove( t ); 
+        Token_free( t ); 
+        return; 
+    }
+
+    findAndRemove( t, T_LCURL ); 
+    findAndRemove( t, T_RCURL ); 
+    Token_collapse( t ); 
+};
+
+void transformSIdList( Token t ) {
+     Token_remove( t->child ); 
+     findAndCollapse( t, S_IDLIST ); 
+};
+
+void transformSData( Token t ) { 
+     findAndCollapse( t, S_IDLIST ); 
+     findAndCollapse( t, S_XDATA ); 
+     t->type = S_XDATA; 
+}
+
 
 void doTransform( Token t ) {
 
@@ -182,10 +186,13 @@ void doTransform( Token t ) {
         case S_TYPE        : transformSType( t );      break;
         case S_PARM_LIST_A : transformSParmListA( t ); break;
         case S_PARM_LIST   : transformSParmList( t );  break; 
-        case S_IDLIST      : transformSIdList( t );    break;
         case S_START_A     : transformSStartA( t );    break;
         case S_START       : transformSStart( t );     break;
-        //case S_DATA :        transformSData( t );      break;
+        case S_FUNC        : transformSFunc( t );      break; 
+        case S_CODE        : transformSCode( t );      break; 
+        case S_FUNC_DEF    : transformSFuncDef( t );   break; 
+        case S_IDLIST      : transformSIdList( t );    break; 
+        case S_DATA :        transformSData( t );      break;
     };
 };
 
@@ -203,18 +210,88 @@ int clearEmptySymbol( Token t ) {
     this will identify the cases where the symbol mathced a T_e **/
 int isEmptySymbol( Token t ) {
     return ( ! isTerminal(t->type) && t->child == NULL );
-}
+};
 
+void shapeTransform( Token t ) {
 
-void transform( Token t ) {
-
-    if( t->peer  != NULL ) transform( t->peer  );
+    if( t->peer  != NULL ) shapeTransform( t->peer  );
 
     if( isEmptySymbol(t) ) {
         clearEmptySymbol( t ); 
     } else {
-        if( t->child != NULL ) transform( t->child ); 
+        if( t->child != NULL ) shapeTransform( t->child ); 
         doTransform( t );
     }
+};
+
+symbol_t toType( const char * c ) {
+    if( EQ( c, "int" ) ) return TYPE_INT; 
+    if( EQ( c, "void" ) ) return TYPE_VOID; 
+    if( EQ( c, "binary" ) ) return TYPE_BINARY; 
+    if( EQ( c, "decimal" ) ) return TYPE_DECIMAL; 
+    return TYPE_UNDEF; 
+};
+
+void loadVarList( SymbolTable s, Token t, bool referenced ) {
+    // Data elements after transform have the form 
+    // type var var var type var var etc ...
+    // load a token in this form to a symbol table. 
+
+    Token c = t->child; 
+    symbol_t type = TYPE_UNDEF; 
+     
+    while( c != NULL ) { 
+        if( c->type == T_XTYPE || c->type == T_TYPE ) 
+           type = toType( c->value ); 
+    	else if (c->type == T_VAR )
+           SymbolTable_add( s, type, c->value, referenced ); 
+
+        c = c->peer; 
+    };
 }
+ 
+     
+void buildSymbolTables( Token t ){
+
+     // static analysis of the space we need. 
+     Token data = Token_findChild( t, S_XDATA ); 
+     int cnt1 = Token_countChild( data, T_VAR  ); 
+     int cnt2 = Token_countChild( t, S_XFUNC ); 
+     printf( "GLOBAL VARS -> %d vars, %d funcs\n", cnt1, cnt2 ); 
+
+     t->scope = SymbolTable_new( cnt1 + cnt2 ); 
+     loadVarList( t->scope, data, true ); 
+
+     Token c = t->child; 
+     while( c != NULL ) {
+         if( c->type == S_XFUNC ) {
+             Token type  = Token_findChild( c, T_XTYPE ); 
+             Token name  = Token_findChild( c, T_VAR ); 
+             Token parms = Token_findChild( c, S_PARM_LIST );
+             Token fdata = Token_findChild( c, S_XDATA ); 
+
+             cnt1 = Token_countChild( parms, T_VAR ); 
+             cnt2 = Token_countChild( fdata, T_VAR ); 
+             
+             printf("FUNC ( %s %s ) -> %d parms, %d locals\n", type->value, name->value, cnt1, cnt2 ); 
+
+             c->scope = SymbolTable_new( cnt1 + cnt2 ); 
+             SymbolTable_add( t->scope, TYPE_FUNC, name->value, false ); 
+             if( fdata != NULL ) 
+                 loadVarList( c->scope, fdata, true ); 
+
+             if( parms != NULL ) 
+                 loadVarList( c->scope, parms, false); 
+
+
+         }
+         c = c->peer; 
+     }
+};
+
+void transform( Token t ) {
+    shapeTransform( t ); 
+    buildSymbolTables( t ); 
+} 
+
 #endif

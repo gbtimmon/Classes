@@ -1,142 +1,591 @@
+
+Testing ./Tests/automaton.c
 pass
 variable 5 function 6 statement 48
+GLOBAL VARS -> 0 vars, 10 funcs
+FUNC ( void state_0 ) -> 0 parms, 0 locals
+FUNC ( void state_1 ) -> 0 parms, 0 locals
+FUNC ( void state_2 ) -> 0 parms, 0 locals
+FUNC ( void state_3 ) -> 0 parms, 0 locals
+FUNC ( int getnextdigit ) -> 0 parms, 1 locals
+FUNC ( void state_0 ) -> 0 parms, 1 locals
+FUNC ( void state_1 ) -> 0 parms, 1 locals
+FUNC ( void state_2 ) -> 0 parms, 1 locals
+FUNC ( void state_3 ) -> 0 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 0 locals
+--SYMBOLS--
+   Symbol [ func state_0 -1 ]
+   Symbol [ func state_1 -1 ]
+   Symbol [ func state_2 -1 ]
+   Symbol [ func state_3 -1 ]
+   Symbol [ func getnextdigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int n 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 --SYMBOLS--
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/binrep.c
 pass
 variable 2 function 2 statement 21
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( void recursedigit ) -> 1 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func recursedigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int on 0 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/branch.c
 pass
 variable 2 function 1 statement 6
+GLOBAL VARS -> 0 vars, 1 funcs
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/errorString.c
 error
+
+Testing ./Tests/expression.c
 pass
 variable 2 function 1 statement 3
+GLOBAL VARS -> 0 vars, 1 funcs
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int sum 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/fibonacci.c
 pass
 variable 5 function 3 statement 17
+GLOBAL VARS -> 1 vars, 3 funcs
+FUNC ( void initialize_array ) -> 0 parms, 2 locals
+FUNC ( int fib ) -> 1 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
-   Symbol [ int array ]
+   Symbol [ int array 0 ]
+   Symbol [ func initialize_array -1 ]
+   Symbol [ func fib -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+--SYMBOLS--
+   Symbol [ int val -1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/formulae.c
 pass
 variable 12 function 2 statement 31
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int getinput ) -> 0 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 11 locals
 --SYMBOLS--
+   Symbol [ func getinput -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int coneradius 0 ]
+   Symbol [ int coneheight 1 ]
+   Symbol [ int circleradius 2 ]
+   Symbol [ int trianglebase 3 ]
+   Symbol [ int triangleheight 4 ]
+   Symbol [ int sphereradius 5 ]
+   Symbol [ int cone 6 ]
+   Symbol [ int circle 7 ]
+   Symbol [ int triangle 8 ]
+   Symbol [ int sphere 9 ]
+   Symbol [ int pi 10 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/funcall.c
 pass
 variable 1 function 8 statement 10
+GLOBAL VARS -> 0 vars, 8 funcs
+FUNC ( int g ) -> 0 parms, 0 locals
+FUNC ( int f ) -> 0 parms, 0 locals
+FUNC ( int e ) -> 0 parms, 0 locals
+FUNC ( int d ) -> 0 parms, 0 locals
+FUNC ( int c ) -> 0 parms, 0 locals
+FUNC ( int b ) -> 0 parms, 0 locals
+FUNC ( int a ) -> 0 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/funcall2.c
 pass
 variable 1 function 5 statement 7
+GLOBAL VARS -> 0 vars, 5 funcs
+FUNC ( int c ) -> 0 parms, 0 locals
+FUNC ( int b ) -> 0 parms, 0 locals
+FUNC ( int a ) -> 0 parms, 0 locals
+FUNC ( int foo ) -> 3 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+   Symbol [ int c -1 ]
+--SYMBOLS--
+   Symbol [ int val 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/illegal.c
 pass
 variable 4 function 2 statement 15
+GLOBAL VARS -> 2 vars, 2 funcs
+FUNC ( void populate_arrays ) -> 0 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
-   Symbol [ int array_1 ]
-   Symbol [ int array_2 ]
+   Symbol [ int array_1 0 ]
+   Symbol [ int array_2 1 ]
+   Symbol [ func populate_arrays -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/loop.c
 pass
 variable 2 function 1 statement 6
+GLOBAL VARS -> 0 vars, 1 funcs
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int sum 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/mandel.c
 pass
 variable 8 function 6 statement 34
+GLOBAL VARS -> 0 vars, 6 funcs
+FUNC ( int square ) -> 1 parms, 0 locals
+FUNC ( int complex_abs_squared ) -> 2 parms, 0 locals
+FUNC ( int check_for_bail ) -> 2 parms, 0 locals
+FUNC ( int absval ) -> 1 parms, 0 locals
+FUNC ( int checkpixel ) -> 2 parms, 5 locals
+FUNC ( int main ) -> 0 parms, 3 locals
 --SYMBOLS--
+   Symbol [ func square -1 ]
+   Symbol [ func complex_abs_squared -1 ]
+   Symbol [ func check_for_bail -1 ]
+   Symbol [ func absval -1 ]
+   Symbol [ func checkpixel -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int x -1 ]
+--SYMBOLS--
+   Symbol [ int real -1 ]
+   Symbol [ int imag -1 ]
+--SYMBOLS--
+   Symbol [ int real -1 ]
+   Symbol [ int imag -1 ]
+--SYMBOLS--
+   Symbol [ int x -1 ]
+--SYMBOLS--
+   Symbol [ int real 0 ]
+   Symbol [ int imag 1 ]
+   Symbol [ int temp 2 ]
+   Symbol [ int iter 3 ]
+   Symbol [ int bail 4 ]
+   Symbol [ int x -1 ]
+   Symbol [ int y -1 ]
+--SYMBOLS--
+   Symbol [ int x 0 ]
+   Symbol [ int y 1 ]
+   Symbol [ int on 2 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/max.c
 pass
 variable 2 function 2 statement 6
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int max ) -> 2 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func max -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/parameter.c
 pass
 variable 1 function 2 statement 5
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( void foo ) -> 2 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int m -1 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/parse.c
 error
+
+Testing ./Tests/parse2.c
 pass
 variable 2 function 3 statement 6
+GLOBAL VARS -> 0 vars, 3 funcs
+FUNC ( void bar ) -> 0 parms, 2 locals
+FUNC ( void foo ) -> 0 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 0 locals
+--SYMBOLS--
+   Symbol [ func bar -1 ]
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int x 0 ]
+   Symbol [ int y 1 ]
+--SYMBOLS--
 --SYMBOLS--
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/polymorphism.c
 pass
 variable 2 function 2 statement 6
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( void print_two ) -> 2 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func print_two -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ binary b 0 ]
+   Symbol [ decimal a 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/recursion.c
 pass
 variable 1 function 2 statement 5
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int recursionsum ) -> 1 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func recursionsum -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/samp1.c
 pass
 variable 3 function 2 statement 4
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int add ) -> 1 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func add -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int b 0 ]
+   Symbol [ int a -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/samp2.c
 pass
 variable 2 function 2 statement 21
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( void recursedigit ) -> 1 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func recursedigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int on 0 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/samp3.c
 pass
 variable 1 function 8 statement 10
+GLOBAL VARS -> 0 vars, 8 funcs
+FUNC ( int g ) -> 0 parms, 0 locals
+FUNC ( int f ) -> 0 parms, 0 locals
+FUNC ( int e ) -> 0 parms, 0 locals
+FUNC ( int d ) -> 0 parms, 0 locals
+FUNC ( int c ) -> 0 parms, 0 locals
+FUNC ( int b ) -> 0 parms, 0 locals
+FUNC ( int a ) -> 0 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/sort.c
 pass
 variable 9 function 3 statement 127
+GLOBAL VARS -> 4 vars, 3 funcs
+FUNC ( void populate_arrays ) -> 0 parms, 0 locals
+FUNC ( void print_arrays ) -> 0 parms, 2 locals
+FUNC ( int main ) -> 0 parms, 3 locals
 --SYMBOLS--
-   Symbol [ int array_1 ]
-   Symbol [ int array_2 ]
-   Symbol [ int array_3 ]
-   Symbol [ int array_4 ]
+   Symbol [ int array_1 0 ]
+   Symbol [ int array_2 1 ]
+   Symbol [ int array_3 2 ]
+   Symbol [ int array_4 3 ]
+   Symbol [ func populate_arrays -1 ]
+   Symbol [ func print_arrays -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+   Symbol [ int temp 2 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/square.c
 pass
 variable 2 function 2 statement 6
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int square ) -> 1 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
+   Symbol [ func square -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int x 0 ]
+--SYMBOLS--
+   Symbol [ int val 0 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/tax.c
 pass
 variable 24 function 2 statement 87
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( int getinput ) -> 0 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 23 locals
 --SYMBOLS--
+   Symbol [ func getinput -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int line1 0 ]
+   Symbol [ int line2 1 ]
+   Symbol [ int line3 2 ]
+   Symbol [ int line4 3 ]
+   Symbol [ int line5 4 ]
+   Symbol [ int line6 5 ]
+   Symbol [ int line7 6 ]
+   Symbol [ int line8 7 ]
+   Symbol [ int line9 8 ]
+   Symbol [ int line10 9 ]
+   Symbol [ int line11 10 ]
+   Symbol [ int line12 11 ]
+   Symbol [ int dependant 12 ]
+   Symbol [ int single 13 ]
+   Symbol [ int a 14 ]
+   Symbol [ int b 15 ]
+   Symbol [ int c 16 ]
+   Symbol [ int d 17 ]
+   Symbol [ int e 18 ]
+   Symbol [ int f 19 ]
+   Symbol [ int g 20 ]
+   Symbol [ int eic 21 ]
+   Symbol [ int spousedependant 22 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/times8.c
 pass
 variable 2 function 3 statement 4
+GLOBAL VARS -> 0 vars, 3 funcs
+FUNC ( int add ) -> 2 parms, 0 locals
+FUNC ( int times_eight ) -> 1 parms, 0 locals
+FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
+   Symbol [ func add -1 ]
+   Symbol [ func times_eight -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/tiny.c
 pass
-variable 8 function 4 statement 4
+variable 14 function 4 statement 4
+GLOBAL VARS -> 8 vars, 5 funcs
+FUNC ( int a ) -> 3 parms, 0 locals
+FUNC ( int a ) -> 3 parms, 6 locals
+FUNC ( int a2 ) -> 2 parms, 0 locals
+FUNC ( int a3 ) -> 2 parms, 0 locals
+FUNC ( int a4 ) -> 2 parms, 0 locals
 --SYMBOLS--
-   Symbol [ int j ]
-   Symbol [ int k ]
-   Symbol [ int z ]
-   Symbol [ int d ]
-   Symbol [ int l ]
-   Symbol [ int m ]
-   Symbol [ decimal o ]
-   Symbol [ decimal p ]
+   Symbol [ int j 0 ]
+   Symbol [ int k 1 ]
+   Symbol [ int z 2 ]
+   Symbol [ int d 3 ]
+   Symbol [ int l 4 ]
+   Symbol [ int m 5 ]
+   Symbol [ decimal o 6 ]
+   Symbol [ decimal p 7 ]
+   Symbol [ func a -1 ]
+   Symbol [ func a2 -1 ]
+   Symbol [ func a3 -1 ]
+   Symbol [ func a4 -1 ]
+--SYMBOLS--
+   Symbol [ int b -1 ]
+   Symbol [ int c -1 ]
+   Symbol [ binary e -1 ]
+--SYMBOLS--
+   Symbol [ int l 0 ]
+   Symbol [ int m 1 ]
+   Symbol [ int o 2 ]
+   Symbol [ binary y 3 ]
+   Symbol [ binary z 4 ]
+   Symbol [ binary f 5 ]
+   Symbol [ int b -1 ]
+   Symbol [ int c -1 ]
+   Symbol [ binary e -1 ]
+--SYMBOLS--
+   Symbol [ decimal j -1 ]
+   Symbol [ decimal e -1 ]
+--SYMBOLS--
+   Symbol [ decimal j -1 ]
+   Symbol [ decimal e -1 ]
+--SYMBOLS--
+   Symbol [ decimal j -1 ]
+   Symbol [ decimal e -1 ]
 
 ===EXIT NORMAL!===
+
+Testing ./Tests/trivial.c
 pass
 variable 1 function 2 statement 3
+GLOBAL VARS -> 0 vars, 2 funcs
+FUNC ( void foo ) -> 0 parms, 1 locals
+FUNC ( int main ) -> 0 parms, 0 locals
+--SYMBOLS--
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
 --SYMBOLS--
 
 ===EXIT NORMAL!===

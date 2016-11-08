@@ -1,8 +1,15 @@
+#define taco 1
+#define monky taco
+
 int j, k,z,d; 
 int l, m; 
 decimal o, p;
 
+int a( int b, int c, binary e ); 
+
 int a( int b, int c, binary e ) { 
+    int l, m, o; 
+    binary y, z, f; 
     return 5; 
 }
 

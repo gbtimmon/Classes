@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "scanner.h"
 #include "token.h"
+#include "generate.h"
 #include "parserTable.h"
 
 #define true  1
@@ -37,17 +38,17 @@ int main( int argc, char ** argp, char ** envp ){
         //fprintf( stdout, "\nIteration %d\n", iter - 1 ); 
         while( isSkip( tok->type ) ) 
         {
-            //Token_appendChild( TOS, tok );
-            fprintf( stderr, "NEED TO HANDLE METAS!\n" ); 
+            //Token_appendMeta( TOS, tok );
+            //printf( "META : %s\n", tok->value ) ; 
             tok = Scanner_nextToken( s );
         }
 
-        //fprintf( stderr, "TOS -> "); 
-        //Token_write( TOS, stderr ); 
-        //fprintf( stderr, "TOK -> "); 
-        //Token_write( tok, stderr );
-        //fprintf( stderr, "STK -> ");
-        //TokenStack_write( stack, stderr);
+       // fprintf( stderr, "TOS -> "); 
+       // Token_write( TOS, stderr ); 
+       // fprintf( stderr, "TOK -> "); 
+       // Token_write( tok, stderr );
+       // fprintf( stderr, "STK -> ");
+       // TokenStack_write( stack, stderr);
 
         if( TOS->type == T_EOF && tok->type == T_EOF )
         {
@@ -112,7 +113,9 @@ int main( int argc, char ** argp, char ** envp ){
     fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
 
     transform( tree ); 
-    Token_printTree( tree );
+   // Token_printTree( tree );
+
+    generate( stdout, tree ); 
     printf("\n===EXIT NORMAL!===\n");
 }
 #endif

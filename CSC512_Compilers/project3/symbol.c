@@ -2,12 +2,15 @@
 #define _SYMBOL_TABLE_C_
 
 #include "symbol.h" 
+#include "stdio.h"
 
+#define EQ(x,y) ( strcmp( x, y ) == 0 ) 
 SymbolTable SymbolTable_new ( int initSize ) { 
 
     SymbolTable new = malloc( sizeof( struct _sTable ) ); 
     new->data = malloc( sizeof( struct _symbol * ) * initSize ); 
     new->size = 0; 
+    new->ref  = 0; 
     new->cap  = initSize; 
 }; 
 
@@ -19,15 +22,35 @@ void SymbolTable_free( SymbolTable s ){
     free( s ); 
 };
 
-void SymbolTable_add( SymbolTable s,  symbol_t type, const char * name ){
+int  SymbolTable_add( SymbolTable s,  symbol_t type, const char * name, bool referenced ){
   
+    if( SymbolTable_find( s, name ) != NULL ) 
+        return -1; 
+
     Symbol new = malloc( sizeof( struct _symbol ) ); 
     new->type = type; 
     new->name = malloc( sizeof(char) * (strlen( name ) + 2) );
     strcpy( new->name, name ); 
 
+    if( referenced ) {
+        new->ref = s->ref; 
+        s->ref += 1;  
+    } else 
+        new->ref = -1; 
+
     s->data[ s->size ] = new; 
     s->size = s->size + 1; 
+
+    return 0; 
+};
+
+Symbol SymbolTable_find( SymbolTable s, const char * name ) {
+    
+    for( int i = 0; i < s->size; i++ ) {
+        Symbol t = s->data[i]; 
+        if( EQ(t->name, name ) ) return t;
+    }
+    return NULL;
 };
 
 void SymbolTable_write( SymbolTable s ) {
@@ -39,9 +62,10 @@ void SymbolTable_write( SymbolTable s ) {
         if( t->type == TYPE_VOID )    type = "void";
         if( t->type == TYPE_DECIMAL ) type = "decimal";
         if( t->type == TYPE_BINARY )  type = "binary";
+        if( t->type == TYPE_FUNC )    type = "func"; 
         if( t->type == TYPE_UNDEF )   type = "undef";
 
-        printf("   Symbol [ %s %s ]\n", type, t->name ); 
+        printf("   Symbol [ %s %s %d ]\n", type, t->name, t->ref ); 
     }
 }
 

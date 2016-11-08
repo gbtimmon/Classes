@@ -29,6 +29,7 @@ Token Token_new( token_t type, char * buffer ) {
     n->parent  = NULL;   // pointer to the token that generated me
     n->peer    = NULL;   // pointer to my peer ( I am part of a linked list whose head is pointed to by my parent )
     n->lpeer   = NULL;   // pointer to me left peer ( its a doublely linked list ). 
+    n->meta    = NULL;
     n->data    = NULL;   // pointer to a data struct. 
     n->scope   = NULL;   // a symbol table if one exists here. 
     
@@ -84,6 +85,17 @@ void Token_appendChild( Token parent, Token lchild ) {
     }
 };
 
+void Token_appendMeta( Token p, Token m ) { 
+    if( p->meta == NULL){
+        p->meta = m; 
+        return;
+    }
+
+    Token c = p->meta;
+    while( c->peer != NULL ) c = c->peer; 
+    c->peer = m; 
+}
+
 void Token_prependChild( Token b, Token c ) { 
 
     c->parent = b; 
@@ -113,6 +125,24 @@ Token Token_findChild( Token p, token_t type ) {
     return NULL;
 }; 
 
+int Token_countChild( Token t, token_t  type ) {
+
+    if( t == NULL ) return 0; 
+
+    Token c = t->child; 
+
+    int i = 0; 
+    while( c != NULL ) {
+        if( type == -1 ) {
+            i++; 
+        } else if ( c->type == type ) {
+            i++; 
+        }
+        c = c->peer; 
+    }
+    return i;
+}; 
+
 void Token_collapse( Token t ) {
      Token start = t->lpeer; 
      Token end   = t->peer; 
@@ -124,6 +154,8 @@ void Token_collapse( Token t ) {
          Token_free( t ); 
          return;
      }
+
+     Token_appendMeta( t->parent, t->meta ); 
 
      c->lpeer    = start; 
      if( c->lpeer != NULL ) 

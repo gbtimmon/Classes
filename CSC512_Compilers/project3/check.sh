@@ -3,6 +3,8 @@
 > ./Tests/output
 
 for f in ./Tests/*.c; do 
+   echo >> ./Tests/output
+   echo Testing $f >> ./Tests/output
    ./parser.exe $f | grep -v "<.*>" >> ./Tests/output 2>&1;
 done
 
