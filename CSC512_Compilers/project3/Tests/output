@@ -1,156 +1,9 @@
 
 Testing ./Tests/automaton.c
-pass
-variable 5 function 6 statement 48
---SYMBOLS--
-   Symbol [ func state_0 -1 ]
-   Symbol [ func state_1 -1 ]
-   Symbol [ func state_2 -1 ]
-   Symbol [ func state_3 -1 ]
-   Symbol [ func getnextdigit -1 ]
-   Symbol [ func main -1 ]
---SYMBOLS--
---SYMBOLS--
---SYMBOLS--
---SYMBOLS--
---SYMBOLS--
-   Symbol [ int n 0 ]
---SYMBOLS--
-   Symbol [ int a 0 ]
---SYMBOLS--
-   Symbol [ int a 0 ]
---SYMBOLS--
-   Symbol [ int a 0 ]
---SYMBOLS--
-   Symbol [ int a 0 ]
---SYMBOLS--
-int global[0];
-
-int state_0 ();
-
-int state_1 ();
-
-int state_2 ();
-
-int state_3 ();
-
-int getnextdigit (){
-
-    int local[6];
-
-    local[1] = ( 0 == 0 );
-    while ( local[1] );
-    return local[0];
-};
-int state_0 (){
-
-    int local[6];
-
-    local[1] = getnextdigit ( );
-    local[0] = local[1];
-    local[3] = - 1;
-    local[2] = ( local[3] == local[0] );
-    if ( local[2] );
-    local[4] = ( 0 == local[0] );
-    if ( local[4] );
-    local[5] = ( 1 == local[0] );
-    if ( local[5] );
-};
-int state_1 (){
-
-    int local[6];
-
-    local[1] = getnextdigit ( );
-    local[0] = local[1];
-    local[3] = - 1;
-    local[2] = ( local[3] == local[0] );
-    if ( local[2] );
-    local[4] = ( 0 == local[0] );
-    if ( local[4] );
-    local[5] = ( 1 == local[0] );
-    if ( local[5] );
-};
-int state_2 (){
-
-    int local[6];
-
-    local[1] = getnextdigit ( );
-    local[0] = local[1];
-    local[3] = - 1;
-    local[2] = ( local[3] == local[0] );
-    if ( local[2] );
-    local[4] = ( 0 == local[0] );
-    if ( local[4] );
-    local[5] = ( 1 == local[0] );
-    if ( local[5] );
-};
-int state_3 (){
-
-    int local[6];
-
-    local[1] = getnextdigit ( );
-    local[0] = local[1];
-    local[3] = - 1;
-    local[2] = ( local[3] == local[0] );
-    if ( local[2] );
-    local[4] = ( 0 == local[0] );
-    if ( local[4] );
-    local[5] = ( 1 == local[0] );
-    if ( local[5] );
-};
-int main (){
-
-    state_0 ( );
-};
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/binrep.c
-pass
-variable 2 function 2 statement 21
---SYMBOLS--
-   Symbol [ func recursedigit -1 ]
-   Symbol [ func main -1 ]
---SYMBOLS--
-   Symbol [ int on 0 ]
-   Symbol [ int n -1 ]
---SYMBOLS--
-   Symbol [ int a 0 ]
-int global[0];
-
-int recursedigit ( int n ){
-
-    int local[12];
-
-    local[1] = ( 1 == local[0] );
-    if ( local[1] );
-    local[2] = ( 0 == local[0] );
-    if ( local[2] );
-    recursedigit ( );
-    local[9] = n / 2;
-    local[8] = ( local[9] );
-    local[7] = local[8] * 2;
-    local[6] = ( local[7] );
-    local[5] = n - local[6];
-    local[4] = ( local[5] );
-    local[3] = ( 0 != local[4] );
-    if ( local[3] );
-    local[0] = 0;
-    local[10] = ( 0 == n );
-    if ( local[10] );
-};
-int main (){
-
-    int local[3];
-
-    local[0] = 0;
-    local[1] = ( 0 >= local[0] );
-    while ( local[1] );
-    print ( "The binary representation of: " );
-    print ( "is: " );
-    recursedigit ( );
-    print ( "\n\n" );
-};
 
 ===EXIT NORMAL!===
 
@@ -172,6 +25,7 @@ int main (){
     if ( local[2] );
     local[3] = ( local[0] >= local[1] );
     if ( local[3] );
+     ( );
 };
 
 ===EXIT NORMAL!===
@@ -378,10 +232,10 @@ int main (){
     print ( "The volume of the cone is: " );
     getinput ( );
     print ( "The area of the circle is: " );
-    local[10] ( );
+    getinput ( );
     print ( "The area of the triangle is: " );
     print ( "The volume of the sphere is: " );
-     ( );
+    getinput ( );
 };
 
 ===EXIT NORMAL!===
@@ -439,7 +293,7 @@ int main (){
     local[1] = foo (  );
     local[0] = local[1];
     print ( "I calculate the answer to be: " );
-     ( );
+    c ( );
 };
 
 ===EXIT NORMAL!===
@@ -628,6 +482,8 @@ int main (){
 
     int local[3];
 
+     ( );
+    a ( );
 };
 
 ===EXIT NORMAL!===
@@ -658,6 +514,7 @@ int main (){
 
     int local[1];
 
+    m ( );
     foo ( );
      ( );
 };
@@ -689,6 +546,8 @@ int main (){
 
     int local[2];
 
+     ( );
+     ( );
     print_two ( );
     print_two ( );
 };
@@ -721,7 +580,7 @@ int main (){
 
     int local[2];
 
-    n ( );
+    recursionsum ( );
 };
 
 ===EXIT NORMAL!===
@@ -746,13 +605,13 @@ int add ( int a ){
 
     local[1] = a + local[0];
     return local[1];
+    a ( );
 };
 int main (){
 
     int local[3];
 
-    a ( );
-    local[0] ( );
+     ( );
 };
 
 ===EXIT NORMAL!===
@@ -799,6 +658,7 @@ int main (){
     local[1] = ( 0 >= local[0] );
     while ( local[1] );
     print ( "The binary representation of: " );
+    local[0] ( );
     print ( "is: " );
     recursedigit ( );
     print ( "\n\n" );
@@ -974,9 +834,8 @@ int main (){
     int local[2];
 
     print ( "Give me a number: " );
-     ( );
     print ( "Your number squared is: " );
-     ( );
+    local[0] ( );
 };
 
 ===EXIT NORMAL!===
@@ -1058,6 +917,7 @@ int main (){
     local[32] = ( local[5] < 0 );
     if ( local[32] );
     print ( "Your taxable income is: " );
+    local[4] ( );
     print ( "Enter the amount of Federal income tax withheld: " );
     local[33] = getinput ( );
     local[6] = local[33];
@@ -1070,14 +930,13 @@ int main (){
     local[36] = local[7] + local[6];
     local[8] = local[36];
     print ( "Your total tax payments amount to: " );
-    local[12] ( );
     local[40] = local[5] * 28;
     local[39] = local[40] + 50;
     local[38] = ( local[39] );
     local[37] = local[38] / 100;
     local[9] = local[37];
     print ( "Your total tax liability is: " );
-    local[3] ( );
+    local[12] ( );
     local[41] = local[8] - local[9];
     local[10] = local[41];
     local[42] = ( local[10] < 0 );
@@ -1174,6 +1033,8 @@ int foo (){
 
     int local[1];
 
+     ( );
+     ( );
 };
 int main (){
 
