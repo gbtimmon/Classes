@@ -33,7 +33,8 @@ token_list = {
     "T_XPARM"    : 1,
     "S_XDATA"    : 1,
     "S_XCODE"    : 1,
-    "S_XFUNC"    : 1
+    "S_XFUNC"    : 1, 
+    "S_XOPER"    : 1
 }
 rules      = []
 ptble      = []

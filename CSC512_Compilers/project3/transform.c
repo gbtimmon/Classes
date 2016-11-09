@@ -167,9 +167,8 @@ void transformSData( Token t ) {
      findAndCollapse( t, S_XDATA ); 
      t->type = S_XDATA; 
 };
-
-
-
+ 
+     
 void transformSStatement( Token t ) {
 
     token_t collapse_type[] = {
@@ -204,6 +203,67 @@ void transformSBlock( Token t ) {
     findAndRemove( t, T_LCURL );
     findAndRemove( t, T_RCURL ); 
 };
+
+void splitOper( Token t ) {
+    Token cur = t; 
+    while( cur != NULL ){
+        int len = Token_countChild( cur, -1 );
+        if( len > 3 ) {
+            Token oper  = Token_new( S_XOPER, NULL ); 
+            Token child = cur->child->peer->peer; 
+            while( child != NULL ){
+                Token next = child->peer; 
+                Token_remove( child );    
+                Token_appendChild( oper, child ); 
+                child = next;
+            } 
+            Token_prependChild( cur, oper);
+            cur = oper; 
+        } else {
+            return;
+        }
+    }
+};
+
+void transformSExp( Token t ){
+    findAndCollapse( t, S_EXP_A ); 
+
+    if( t->child->peer == NULL ) {
+        Token_replace( t, t->child ); 
+        Token_free( t ); 
+    };
+
+    t->type = S_XOPER;
+    splitOper( t ); 
+};
+
+void transformSTerm( Token t ){
+    findAndCollapse( t, S_TERM_A ); 
+
+    if( t->child->peer == NULL ) {
+        Token_replace( t, t->child ); 
+        Token_free( t ); 
+    };
+   
+    t->type = S_XOPER; 
+    splitOper( t ); 
+};
+
+void transformSFact( Token t ) {
+    findAndCollapse( t, S_FACT_A ); 
+    findAndCollapse( t, S_BRACK_EXP ); 
+    if( t->child->peer == NULL ){
+       Token_replace( t, t->child ); 
+       Token_free( t );
+    } else {
+       t->type = S_XOPER;
+    };
+};
+    
+void transformSAdd( Token t ){
+    Token_replace( t, t->child ); 
+    Token_free( t ); 
+}
    
 void doTransform( Token t ) {
 
@@ -215,9 +275,13 @@ void doTransform( Token t ) {
         case S_PARM_LIST_A : transformSParmListA( t ); break;
         case S_PARM_LIST   : transformSParmList( t );  break; 
         case S_START_A     : transformSStartA( t );    break;
+        case S_ADD         : transformSAdd( t );       break;
         case S_START       : transformSStart( t );     break;
         case S_FUNC        : transformSFunc( t );      break; 
         case S_CODE        : transformSCode( t );      break; 
+        case S_EXP         : transformSExp( t );       break; 
+        case S_TERM        : transformSTerm( t );      break;
+        case S_FACT        : transformSFact( t );      break;
         case S_FUNC_DEF    : transformSFuncDef( t );   break; 
         case S_IDLIST      : transformSIdList( t );    break; 
         case S_DATA        : transformSData( t );      break;
@@ -278,6 +342,20 @@ void loadVarList( SymbolTable s, Token t, bool referenced ) {
         c = c->peer; 
     };
 }
+
+int countOper( Token t ){
+    int cnt = 0; 
+    if( t->type == S_XOPER ) cnt++; 
+  
+    Token c = t->child; 
+    while( c != NULL ) {
+       cnt += countOper( c ); 
+       c = c->peer; 
+    }
+    return cnt;
+}
+
+    
  
 void buildSymbolTables( Token t ){
 
@@ -304,6 +382,11 @@ void buildSymbolTables( Token t ){
              printf("FUNC ( %s %s ) -> %d parms, %d locals\n", type->value, name->value, cnt1, cnt2 ); 
 
              c->scope = SymbolTable_new( cnt1 + cnt2 ); 
+
+             // Count the temp vars. 
+             printf( "!!%d!!\n", countOper( c ) ) ;
+             SymbolTable_addTemp( c->scope, countOper( c ) ); 
+
              SymbolTable_add( t->scope, TYPE_FUNC, name->value, false ); 
              if( fdata != NULL ) 
                  loadVarList( c->scope, fdata, true ); 

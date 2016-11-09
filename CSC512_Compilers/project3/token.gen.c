@@ -35,6 +35,7 @@ const char * tokenName[] = {
     "T_CMP",
     "T_BREAK",
     "T_BOOL_OP",
+    "S_XOPER",
     "S_XFUNC",
     "S_XDATA",
     "S_XCODE",

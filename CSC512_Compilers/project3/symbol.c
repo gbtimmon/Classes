@@ -8,10 +8,12 @@
 SymbolTable SymbolTable_new ( int initSize ) { 
 
     SymbolTable new = malloc( sizeof( struct _sTable ) ); 
-    new->data = malloc( sizeof( struct _symbol * ) * initSize ); 
-    new->size = 0; 
-    new->ref  = 0; 
-    new->cap  = initSize; 
+    new->data  = malloc( sizeof( struct _symbol * ) * initSize ); 
+    new->size  = 0;         // how many total names
+    new->ref   = 0;         // how many referenced vars. 
+    new->temp  = 0;         // how many temps I can allocate. 
+    new->tempa = 0;         // how many temps I have allocated. 
+    new->cap   = initSize;  // how many names i might store
 }; 
 
 void SymbolTable_free( SymbolTable s ){
@@ -20,6 +22,19 @@ void SymbolTable_free( SymbolTable s ){
     }
     free( s->data ); 
     free( s ); 
+};
+
+int  SymbolTable_addTemp( SymbolTable s, int count ){
+     s->temp += count; 
+};
+
+int  SymbolTable_getTemp( SymbolTable s ) {
+     s->tempa = s->tempa + 1; 
+     return s->ref + s->tempa - 1; 
+}
+
+int  SymbolTable_getAllocSize( SymbolTable s ) { 
+     return s->ref + s->temp; 
 };
 
 int  SymbolTable_add( SymbolTable s,  symbol_t type, const char * name, bool referenced ){
@@ -40,7 +55,6 @@ int  SymbolTable_add( SymbolTable s,  symbol_t type, const char * name, bool ref
 
     s->data[ s->size ] = new; 
     s->size = s->size + 1; 
-
     return 0; 
 };
 
