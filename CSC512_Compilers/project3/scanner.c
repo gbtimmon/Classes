@@ -99,7 +99,7 @@ Token _Scanner_nextToken( Scanner s ) {
 
     else if( charIn( s->cur, " \t\n") ){ 
         Scanner_nextChar( s );
-        return Scanner_nextToken( s ); 
+        return _Scanner_nextToken( s ); 
     } else {
         fprintf(stderr, "Illegal char %c at line %d.\n",s->cur, s->lineNo);
         exit(1); 

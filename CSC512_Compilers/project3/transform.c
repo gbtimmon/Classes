@@ -233,7 +233,7 @@ void transformSExp( Token t ){
         Token_free( t ); 
     };
 
-    t->type = S_XOPER;
+    //t->type = S_XOPER;
     splitOper( t ); 
 };
 

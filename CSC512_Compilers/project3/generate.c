@@ -160,6 +160,7 @@ void putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
     }
     tabCheat(depth);
     printf( "%s;\n", out );
+    free(out);
 }
 void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth ) { 
     Token c = t->child; 
