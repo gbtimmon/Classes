@@ -1,7 +1,5 @@
 
 Testing ./Tests/automaton.c
-pass
-variable 5 function 6 statement 48
 --SYMBOLS--
    Symbol [ func state_0 -1 ]
    Symbol [ func state_1 -1 ]
@@ -106,8 +104,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/binrep.c
-pass
-variable 2 function 2 statement 21
 --SYMBOLS--
    Symbol [ func recursedigit -1 ]
    Symbol [ func main -1 ]
@@ -120,24 +116,19 @@ int global[0];
 
 int recursedigit ( int n ){
 
-    int local[12];
+    int local[11];
 
     local[1] = ( 1 == local[0] );
     if ( local[1] );
     local[2] = ( 0 == local[0] );
     if ( local[2] );
     recursedigit ( );
-    local[9] = n / 2;
-    local[8] = ( local[9] );
-    local[7] = local[8] * 2;
-    local[6] = ( local[7] );
-    local[5] = n - local[6];
-    local[4] = ( local[5] );
+    local[4] = (  );
     local[3] = ( 0 != local[4] );
     if ( local[3] );
     local[0] = 0;
-    local[10] = ( 0 == n );
-    if ( local[10] );
+    local[5] = ( 0 == n );
+    if ( local[5] );
 };
 int main (){
 
@@ -147,6 +138,7 @@ int main (){
     local[1] = ( 0 >= local[0] );
     while ( local[1] );
     print ( "The binary representation of: " );
+    PâN ( );
     print ( "is: " );
     recursedigit ( );
     print ( "\n\n" );
@@ -155,8 +147,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/branch.c
-pass
-variable 2 function 1 statement 6
 --SYMBOLS--
    Symbol [ func main -1 ]
 --SYMBOLS--
@@ -172,6 +162,8 @@ int main (){
     if ( local[2] );
     local[3] = ( local[0] >= local[1] );
     if ( local[3] );
+    P8˜ ( );
+    P8˜ ( );
 };
 
 ===EXIT NORMAL!===
@@ -179,8 +171,6 @@ int main (){
 Testing ./Tests/errorString.c
 
 Testing ./Tests/exp.c
-pass
-variable 4 function 2 statement 4
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int b 1 ]
@@ -196,30 +186,20 @@ int global[3];
 
 int f (){
 
-    int local[1];
-
-    local[0] = global[0] + global[1];
-    return local[0];
+    return;
 };
 int d ( int e, int f ){
 
-    int local[6];
+    int local[5];
 
     f ( );
-    local[4] = f [ global[0] ];
-    local[3] = e * local[4];
-    local[5] = global[1] * global[2];
-    local[2] = local[3] - local[5];
-    local[1] = global[0] + local[2];
-    local[0] = local[1];
+    local[0] =;
     return local[0];
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/expression.c
-pass
-variable 2 function 1 statement 3
 --SYMBOLS--
    Symbol [ func main -1 ]
 --SYMBOLS--
@@ -229,22 +209,19 @@ int global[0];
 
 int main (){
 
-    int local[6];
+    int local[5];
 
-     ( );
-    local[4] = local[0] + 1;
-    local[3] = ( local[4] );
-    local[5] = 2 / local[0];
-    local[2] = local[3] * local[5];
+    PH« ( );
+    local[3] = (  );
+    local[4] = 2 / local[0];
+    local[2] = local[3] * local[4];
     local[1] = local[2];
-     ( );
+    PH« ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/fibonacci.c
-pass
-variable 5 function 3 statement 17
 --SYMBOLS--
    Symbol [ int array 0 ]
    Symbol [ func initialize_array -1 ]
@@ -262,7 +239,7 @@ int global[1];
 
 int initialize_array (){
 
-    int local[5];
+    int local[4];
 
     local[1] = 16;
     local[0] = 0;
@@ -271,7 +248,7 @@ int initialize_array (){
 };
 int fib ( int val ){
 
-    int local[10];
+    int local[7];
 
     local[0] = ( val < 2 );
     if ( local[0] );
@@ -284,7 +261,7 @@ int fib ( int val ){
 };
 int main (){
 
-    int local[5];
+    int local[4];
 
     local[1] = 16;
     initialize_array ( );
@@ -297,8 +274,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/formulae.c
-pass
-variable 12 function 2 statement 31
 --SYMBOLS--
    Symbol [ func getinput -1 ]
    Symbol [ func main -1 ]
@@ -329,7 +304,7 @@ int getinput (){
 };
 int main (){
 
-    int local[38];
+    int local[35];
 
     local[10] = 3141;
     print ( "Give me a radius for the base of a cone: " );
@@ -350,48 +325,105 @@ int main (){
     print ( "Give me a radius for a sphere: " );
     local[16] = getinput ( );
     local[5] = local[16];
-    local[22] = local[0] * local[0];
-    local[21] = local[1] * local[22];
-    local[20] = local[10] * local[21];
-    local[19] = local[20] + 500;
-    local[18] = ( local[19] );
+    local[18] = (  );
     local[17] = local[18] / 3000;
     local[6] = local[17];
-    local[27] = local[2] * local[2];
-    local[26] = local[10] * local[27];
-    local[25] = local[26] + 500;
-    local[24] = ( local[25] );
-    local[23] = local[24] / 1000;
-    local[7] = local[23];
-    local[30] = local[3] * local[4];
-    local[29] = ( local[30] );
-    local[28] = local[29] / 2;
-    local[8] = local[28];
-    local[37] = local[5] * local[5];
-    local[36] = local[10] * local[37];
-    local[35] = local[5] * local[36];
-    local[34] = 4 * local[35];
-    local[33] = local[34] + 500;
-    local[32] = ( local[33] );
-    local[31] = local[32] / 3000;
-    local[9] = local[31];
+    local[20] = (  );
+    local[19] = local[20] / 1000;
+    local[7] = local[19];
+    local[23] = local[3] * local[4];
+    local[22] = ( local[23] );
+    local[21] = local[22] / 2;
+    local[8] = local[21];
+    local[25] = (  );
+    local[24] = local[25] / 3000;
+    local[9] = local[24];
     print ( "The volume of the cone is: " );
-    getinput ( );
+    €Ò ( );
     print ( "The area of the circle is: " );
-    local[10] ( );
+    €Ò ( );
     print ( "The area of the triangle is: " );
+    €Ò ( );
     print ( "The volume of the sphere is: " );
-     ( );
+    €Ò ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/funcall.c
-Binary file (standard input) matches
+--SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int g (){
+
+    return 1;
+};
+int f (){
+
+    int local[1];
+
+    return;
+};
+int e (){
+
+    int local[1];
+
+    return;
+};
+int d (){
+
+    int local[1];
+
+    return;
+};
+int c (){
+
+    int local[1];
+
+    return;
+};
+int b (){
+
+    int local[1];
+
+    return;
+};
+int a (){
+
+    int local[1];
+
+    return;
+};
+int main (){
+
+    int local[2];
+
+    local[1] = a ( );
+    local[0] = local[1];
+    print ( "I calculate the answer to be: " );
+    `ó± ( );
+};
+
+===EXIT NORMAL!===
 
 Testing ./Tests/funcall2.c
-pass
-variable 1 function 5 statement 7
 --SYMBOLS--
    Symbol [ func c -1 ]
    Symbol [ func b -1 ]
@@ -423,13 +455,9 @@ int a (){
 };
 int foo ( int a, int b, int c ){
 
-    int local[5];
+    int local[4];
 
-    local[2] = a * 3;
-    local[4] = b * 2;
-    local[3] = c + local[4];
-    local[1] = local[2] + local[3];
-    local[0] = ( local[1] );
+    local[0] = (  );
     return local[0];
 };
 int main (){
@@ -439,14 +467,12 @@ int main (){
     local[1] = foo (  );
     local[0] = local[1];
     print ( "I calculate the answer to be: " );
-     ( );
+    @Î ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/illegal.c
-pass
-variable 4 function 2 statement 15
 --SYMBOLS--
    Symbol [ int array_1 0 ]
    Symbol [ int array_2 1 ]
@@ -471,7 +497,7 @@ int populate_arrays (){
 };
 int main (){
 
-    int local[5];
+    int local[4];
 
     populate_arrays ( );
     local[0] = 0;
@@ -484,8 +510,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/loop.c
-pass
-variable 2 function 1 statement 6
 --SYMBOLS--
    Symbol [ func main -1 ]
 --SYMBOLS--
@@ -495,18 +519,18 @@ int global[0];
 
 int main (){
 
-    int local[5];
+    int local[3];
 
+    Ph% ( );
     local[2] = ( local[0] > 0 );
     while ( local[2] );
     local[1] = 0;
+    Ph% ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/mandel.c
-pass
-variable 8 function 6 statement 34
 --SYMBOLS--
    Symbol [ func square -1 ]
    Symbol [ func complex_abs_squared -1 ]
@@ -540,22 +564,17 @@ int global[0];
 
 int square ( int x ){
 
-    int local[4];
+    int local[3];
 
-    local[3] = x * x;
-    local[2] = local[3] + 500;
-    local[1] = ( local[2] );
+    local[1] = (  );
     local[0] = local[1] / 1000;
     return local[0];
 };
 int complex_abs_squared ( int real, int imag ){
 
-    int local[3];
+    int local[2];
 
-    local[1] = square (  );
-    local[2] = square (  );
-    local[0] = local[1] + local[2];
-    return local[0];
+    return;
 };
 int check_for_bail ( int real, int imag ){
 
@@ -580,7 +599,7 @@ int absval ( int x ){
 };
 int checkpixel ( int x, int y ){
 
-    int local[22];
+    int local[17];
 
     local[0] = 0;
     local[1] = 0;
@@ -592,7 +611,7 @@ int checkpixel ( int x, int y ){
 };
 int main (){
 
-    int local[12];
+    int local[10];
 
     local[1] = 950;
     local[4] = - 950;
@@ -603,8 +622,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/max.c
-pass
-variable 2 function 2 statement 6
 --SYMBOLS--
    Symbol [ func max -1 ]
    Symbol [ func main -1 ]
@@ -628,13 +645,14 @@ int main (){
 
     int local[3];
 
+    p‚% ( );
+    p‚% ( );
+    p‚% ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/parameter.c
-pass
-variable 1 function 2 statement 5
 --SYMBOLS--
    Symbol [ func foo -1 ]
    Symbol [ func main -1 ]
@@ -647,19 +665,16 @@ int global[0];
 
 int foo ( int m, int n ){
 
-    int local[2];
-
-    local[0] = n + m;
-    n = local[0];
-    local[1] = m + n;
-    m = local[1];
+    n =;
+    m =;
 };
 int main (){
 
     int local[1];
 
+    À}\ ( );
     foo ( );
-     ( );
+    À}\ ( );
 };
 
 ===EXIT NORMAL!===
@@ -669,8 +684,6 @@ Testing ./Tests/parse.c
 Testing ./Tests/parse2.c
 
 Testing ./Tests/polymorphism.c
-pass
-variable 2 function 2 statement 6
 --SYMBOLS--
    Symbol [ func print_two -1 ]
    Symbol [ func main -1 ]
@@ -684,11 +697,15 @@ int global[0];
 
 int print_two ( int a, int b ){
 
+    À`° ( );
+    À`° ( );
 };
 int main (){
 
     int local[2];
 
+    À`° ( );
+    À`° ( );
     print_two ( );
     print_two ( );
 };
@@ -696,8 +713,6 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/recursion.c
-pass
-variable 1 function 2 statement 5
 --SYMBOLS--
    Symbol [ func recursionsum -1 ]
    Symbol [ func main -1 ]
@@ -709,26 +724,23 @@ int global[0];
 
 int recursionsum ( int n ){
 
-    int local[4];
+    int local[2];
 
-    local[1] = recursionsum (  );
-    local[0] = n + local[1];
-    return local[0];
-    local[2] = ( n == 0 );
-    if ( local[2] );
+    return;
+    local[0] = ( n == 0 );
+    if ( local[0] );
 };
 int main (){
 
     int local[2];
 
-    n ( );
+    pŸ¶ ( );
+    pŸ¶ ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/samp1.c
-pass
-variable 3 function 2 statement 4
 --SYMBOLS--
    Symbol [ func add -1 ]
    Symbol [ func main -1 ]
@@ -742,24 +754,22 @@ int global[0];
 
 int add ( int a ){
 
-    int local[2];
+    int local[1];
 
-    local[1] = a + local[0];
-    return local[1];
+    return;
+    à ( );
 };
 int main (){
 
     int local[3];
 
-    a ( );
-    local[0] ( );
+    à ( );
+    à ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/samp2.c
-pass
-variable 2 function 2 statement 21
 --SYMBOLS--
    Symbol [ func recursedigit -1 ]
    Symbol [ func main -1 ]
@@ -772,24 +782,19 @@ int global[0];
 
 int recursedigit ( int n ){
 
-    int local[12];
+    int local[11];
 
     local[1] = ( 1 == local[0] );
     if ( local[1] );
     local[2] = ( 0 == local[0] );
     if ( local[2] );
     recursedigit ( );
-    local[9] = n / 2;
-    local[8] = ( local[9] );
-    local[7] = local[8] * 2;
-    local[6] = ( local[7] );
-    local[5] = n - local[6];
-    local[4] = ( local[5] );
+    local[4] = (  );
     local[3] = ( 0 != local[4] );
     if ( local[3] );
     local[0] = 0;
-    local[10] = ( 0 == n );
-    if ( local[10] );
+    local[5] = ( 0 == n );
+    if ( local[5] );
 };
 int main (){
 
@@ -799,6 +804,7 @@ int main (){
     local[1] = ( 0 >= local[0] );
     while ( local[1] );
     print ( "The binary representation of: " );
+    P‚’ ( );
     print ( "is: " );
     recursedigit ( );
     print ( "\n\n" );
@@ -807,11 +813,79 @@ int main (){
 ===EXIT NORMAL!===
 
 Testing ./Tests/samp3.c
-Binary file (standard input) matches
+--SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int g (){
+
+    return 1;
+};
+int f (){
+
+    int local[1];
+
+    return;
+};
+int e (){
+
+    int local[1];
+
+    return;
+};
+int d (){
+
+    int local[1];
+
+    return;
+};
+int c (){
+
+    int local[1];
+
+    return;
+};
+int b (){
+
+    int local[1];
+
+    return;
+};
+int a (){
+
+    int local[1];
+
+    return;
+};
+int main (){
+
+    int local[2];
+
+    local[1] = a ( );
+    local[0] = local[1];
+    print ( "I calculate the answer to be: " );
+    `S$ ( );
+};
+
+===EXIT NORMAL!===
 
 Testing ./Tests/sort.c
-pass
-variable 9 function 3 statement 127
 --SYMBOLS--
    Symbol [ int array_1 0 ]
    Symbol [ int array_2 1 ]
@@ -899,7 +973,7 @@ int populate_arrays (){
 };
 int print_arrays (){
 
-    int local[14];
+    int local[10];
 
     local[1] = 16;
     print ( "Array_1:\n" );
@@ -922,36 +996,30 @@ int print_arrays (){
 };
 int main (){
 
-    int local[47];
+    int local[27];
 
     local[1] = 16;
     populate_arrays ( );
     print_arrays ( );
     local[1] = 16;
     local[0] = 0;
-    local[4] = local[1] - 1;
-    local[3] = ( local[0] < local[4] );
+    local[3] = ( local[0] <  );
     while ( local[3] );
     local[0] = 0;
-    local[6] = local[1] - 1;
-    local[5] = ( local[0] < local[6] );
+    local[4] = ( local[0] <  );
+    while ( local[4] );
+    local[0] = 0;
+    local[5] = ( local[0] <  );
     while ( local[5] );
     local[0] = 0;
-    local[8] = local[1] - 1;
-    local[7] = ( local[0] < local[8] );
-    while ( local[7] );
-    local[0] = 0;
-    local[10] = local[1] - 1;
-    local[9] = ( local[0] < local[10] );
-    while ( local[9] );
+    local[6] = ( local[0] <  );
+    while ( local[6] );
     print_arrays ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/square.c
-pass
-variable 2 function 2 statement 6
 --SYMBOLS--
    Symbol [ func square -1 ]
    Symbol [ func main -1 ]
@@ -974,16 +1042,14 @@ int main (){
     int local[2];
 
     print ( "Give me a number: " );
-     ( );
+    àˆN ( );
     print ( "Your number squared is: " );
-     ( );
+    àˆN ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/tax.c
-pass
-variable 24 function 2 statement 87
 --SYMBOLS--
    Symbol [ func getinput -1 ]
    Symbol [ func main -1 ]
@@ -1027,7 +1093,7 @@ int getinput (){
 };
 int main (){
 
-    int local[60];
+    int local[52];
 
     print ( "Welcome to the United States 1040 federal income tax program.\n" );
     print ( "(Note: this isn't the real 1040 form. If you try to submit your\n" );
@@ -1043,61 +1109,53 @@ int main (){
     print ( "Permanent Fund dividends? " );
     local[25] = getinput ( );
     local[2] = local[25];
-    local[27] = local[2] + local[1];
-    local[26] = local[0] + local[27];
-    local[3] = local[26];
+    local[3] =;
     print ( "Your adjusted gross income is: " );
-    local[28] = getinput ( );
-    local[12] = local[28];
-    local[29] = ( 0 != local[12] );
+    0vM ( );
+    local[26] = getinput ( );
+    local[12] = local[26];
+    local[27] = ( 0 != local[12] );
+    if ( local[27] );
+    local[28] = ( 0 == local[12] );
+    if ( local[28] );
+    local[5] =;
+    local[29] = ( local[5] < 0 );
     if ( local[29] );
-    local[30] = ( 0 == local[12] );
-    if ( local[30] );
-    local[31] = local[3] - local[4];
-    local[5] = local[31];
-    local[32] = ( local[5] < 0 );
-    if ( local[32] );
     print ( "Your taxable income is: " );
+    0vM ( );
     print ( "Enter the amount of Federal income tax withheld: " );
-    local[33] = getinput ( );
-    local[6] = local[33];
+    local[30] = getinput ( );
+    local[6] = local[30];
     print ( "enter 0 otherwise: " );
-    local[34] = getinput ( );
-    local[21] = local[34];
+    local[31] = getinput ( );
+    local[21] = local[31];
     local[7] = 0;
-    local[35] = ( 0 != local[21] );
-    if ( local[35] );
-    local[36] = local[7] + local[6];
-    local[8] = local[36];
+    local[32] = ( 0 != local[21] );
+    if ( local[32] );
+    local[8] =;
     print ( "Your total tax payments amount to: " );
-    local[12] ( );
-    local[40] = local[5] * 28;
-    local[39] = local[40] + 50;
-    local[38] = ( local[39] );
-    local[37] = local[38] / 100;
-    local[9] = local[37];
+    0vM ( );
+    local[34] = (  );
+    local[33] = local[34] / 100;
+    local[9] = local[33];
     print ( "Your total tax liability is: " );
-    local[3] ( );
-    local[41] = local[8] - local[9];
-    local[10] = local[41];
-    local[42] = ( local[10] < 0 );
-    if ( local[42] );
-    local[43] = ( local[10] > 0 );
-    if ( local[43] );
-    local[44] = local[9] - local[8];
-    local[11] = local[44];
-    local[45] = ( local[11] >= 0 );
-    if ( local[45] );
-    local[46] = ( local[11] < 0 );
-    if ( local[46] );
+    0vM ( );
+    local[10] =;
+    local[35] = ( local[10] < 0 );
+    if ( local[35] );
+    local[36] = ( local[10] > 0 );
+    if ( local[36] );
+    local[11] =;
+    local[37] = ( local[11] >= 0 );
+    if ( local[37] );
+    local[38] = ( local[11] < 0 );
+    if ( local[38] );
     print ( "Thank you for using ez-tax.\n" );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/times8.c
-pass
-variable 2 function 3 statement 4
 --SYMBOLS--
    Symbol [ func add -1 ]
    Symbol [ func times_eight -1 ]
@@ -1114,10 +1172,7 @@ int global[0];
 
 int add ( int a, int b ){
 
-    int local[1];
-
-    local[0] = a + b;
-    return local[0];
+    return;
 };
 int times_eight ( int a ){
 
@@ -1130,13 +1185,13 @@ int main (){
 
     int local[3];
 
+    `RÈ ( );
+    `RÈ ( );
 };
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/tiny.c
-pass
-variable 2 function 1 statement 5
 --SYMBOLS--
    Symbol [ int k 0 ]
    Symbol [ func a2 -1 ]
@@ -1148,7 +1203,7 @@ int global[1];
 
 int a2 ( decimal j, decimal e ){
 
-    int local[7];
+    int local[4];
 
     local[0] = j;
     a2 ( );
@@ -1160,8 +1215,6 @@ int a2 ( decimal j, decimal e ){
 ===EXIT NORMAL!===
 
 Testing ./Tests/trivial.c
-pass
-variable 1 function 2 statement 3
 --SYMBOLS--
    Symbol [ func foo -1 ]
    Symbol [ func main -1 ]
@@ -1174,6 +1227,8 @@ int foo (){
 
     int local[1];
 
+    à7	 ( );
+    à7	 ( );
 };
 int main (){
 

@@ -40,7 +40,9 @@ int main( int argc, char ** argp, char ** envp ){
         {
             //Token_appendMeta( TOS, tok );
             //printf( "META : %s\n", tok->value ) ; 
+            Token_free( tok ); 
             tok = Scanner_nextToken( s );
+   
         }
 
        // fprintf( stderr, "TOS -> "); 
@@ -109,13 +111,13 @@ int main( int argc, char ** argp, char ** envp ){
             }
         }      
     }
-    fprintf( stdout, "pass\n" );
-    fprintf( stdout, "variable %d function %d statement %d\n", data, func, stmt );
+    TokenStack_free( stack ); 
+    Scanner_free(s); 
 
     transform( tree ); 
     Token_printTree( tree );
-
     generate( stdout, tree ); 
+
     printf("\n===EXIT NORMAL!===\n");
 }
 #endif

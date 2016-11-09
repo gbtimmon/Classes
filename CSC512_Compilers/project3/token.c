@@ -60,6 +60,7 @@ void Token_free( Token n ){
     free(n->value); 
     if( n->scope != NULL ) SymbolTable_free( n->scope ); 
     free(n);
+
 };
 
 void Token_appendChild( Token parent, Token lchild ) {
