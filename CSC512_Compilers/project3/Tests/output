@@ -35,6 +35,47 @@ FUNC ( int main ) -> 0 parms, 0 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
 --SYMBOLS--
+int global[0];
+int state_0 ( parms );
+int state_1 ( parms );
+int state_2 ( parms );
+int state_3 ( parms );
+int getnextdigit ( parms ){
+    int local[1];
+    ( ) ;
+    ;
+};
+int state_0 ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
+int state_1 ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
+int state_2 ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
+int state_3 ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
+int main ( parms ){
+    state_0 ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -52,6 +93,26 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int n -1 ]
 --SYMBOLS--
    Symbol [ int a 0 ]
+int global[0];
+int recursedigit ( parms ){
+    int local[1];
+    ( ) ;
+    ( ) ;
+    recursedigit ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    recursedigit ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -65,6 +126,14 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int b 1 ]
+int global[0];
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -81,6 +150,13 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int sum 1 ]
+int global[0];
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    local[1] = ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -104,6 +180,26 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int idx 0 ]
    Symbol [ int bound 1 ]
+int global[1];
+int initialize_array ( parms ){
+    int local[2];
+    local[1] = ;
+    local[0] = ;
+    ( ) ;
+};
+int fib ( parms ){
+    ( ) ;
+    ( ) ;
+    ;
+};
+int main ( parms ){
+    int local[2];
+    local[1] = ;
+    initialize_array ( ) ;
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -130,6 +226,41 @@ FUNC ( int main ) -> 0 parms, 11 locals
    Symbol [ int triangle 8 ]
    Symbol [ int sphere 9 ]
    Symbol [ int pi 10 ]
+int global[0];
+int getinput ( parms ){
+    int local[1];
+    ;
+    ( ) ;
+    local[0] = ;
+};
+int main ( parms ){
+    int local[11];
+    local[10] = ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    local[1] = ;
+    ( ) ;
+    local[2] = ;
+    ( ) ;
+    local[3] = ;
+    ( ) ;
+    local[4] = ;
+    ( ) ;
+    local[5] = ;
+    local[6] = ;
+    local[7] = ;
+    local[8] = ;
+    local[9] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -163,6 +294,34 @@ FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
 --SYMBOLS--
    Symbol [ int val 0 ]
+int global[0];
+int g ( parms ){
+    ;
+};
+int f ( parms ){
+    ;
+};
+int e ( parms ){
+    ;
+};
+int d ( parms ){
+    ;
+};
+int c ( parms ){
+    ;
+};
+int b ( parms ){
+    ;
+};
+int a ( parms ){
+    ;
+};
+int main ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -190,6 +349,25 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int c -1 ]
 --SYMBOLS--
    Symbol [ int val 0 ]
+int global[0];
+int c ( parms ){
+    ;
+};
+int b ( parms ){
+    ;
+};
+int a ( parms ){
+    ;
+};
+int foo ( parms ){
+    ;
+};
+int main ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -208,6 +386,25 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int idx 0 ]
    Symbol [ int bound 1 ]
+int global[2];
+int populate_arrays ( parms ){
+    global[0] = ;
+    global[0] = ;
+    global[0] = ;
+    global[0] = ;
+    global[1] = ;
+    global[1] = ;
+    global[1] = ;
+    global[1] = ;
+};
+int main ( parms ){
+    int local[2];
+    populate_arrays ( ) ;
+    local[0] = ;
+    local[1] = ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -221,6 +418,14 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int sum 1 ]
+int global[0];
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+    local[1] = ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -263,6 +468,36 @@ FUNC ( int main ) -> 0 parms, 3 locals
    Symbol [ int x 0 ]
    Symbol [ int y 1 ]
    Symbol [ int on 2 ]
+int global[0];
+int square ( parms ){
+    ;
+};
+int complex_abs_squared ( parms ){
+    ;
+};
+int check_for_bail ( parms ){
+    ( ) ;
+    ( ) ;
+    ;
+};
+int absval ( parms ){
+    ( ) ;
+    ;
+};
+int checkpixel ( parms ){
+    int local[5];
+    local[0] = ;
+    local[1] = ;
+    local[3] = ;
+    local[4] = ;
+    ( ) ;
+    ;
+};
+int main ( parms ){
+    int local[3];
+    local[1] = ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -281,6 +516,17 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int b 1 ]
+int global[0];
+int max ( parms ){
+    ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -298,6 +544,17 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int n -1 ]
 --SYMBOLS--
    Symbol [ int a 0 ]
+int global[0];
+int foo ( parms ){
+    n = ;
+    m = ;
+};
+int main ( parms ){
+    int local[1];
+    ( ) ;
+    foo ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -320,6 +577,19 @@ FUNC ( int main ) -> 0 parms, 0 locals
    Symbol [ int y 1 ]
 --SYMBOLS--
 --SYMBOLS--
+int global[0];
+int bar ( parms ){
+    int local[2];
+    ;
+    local[0] = ;
+    ( ) ;
+};
+int foo ( parms ){
+    bar ( ) ;
+};
+int main ( parms ){
+    foo ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -338,6 +608,18 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ binary b 0 ]
    Symbol [ decimal a 1 ]
+int global[0];
+int print_two ( parms ){
+    ( ) ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+    print_two ( ) ;
+    print_two ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -354,6 +636,16 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int n -1 ]
 --SYMBOLS--
    Symbol [ int a 0 ]
+int global[0];
+int recursionsum ( parms ){
+    ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[1];
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -372,6 +664,17 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int b 1 ]
+int global[0];
+int add ( parms ){
+    int local[1];
+    ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -389,6 +692,26 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int n -1 ]
 --SYMBOLS--
    Symbol [ int a 0 ]
+int global[0];
+int recursedigit ( parms ){
+    int local[1];
+    ( ) ;
+    ( ) ;
+    recursedigit ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    recursedigit ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -422,6 +745,34 @@ FUNC ( int main ) -> 0 parms, 1 locals
 --SYMBOLS--
 --SYMBOLS--
    Symbol [ int val 0 ]
+int global[0];
+int g ( parms ){
+    ;
+};
+int f ( parms ){
+    ;
+};
+int e ( parms ){
+    ;
+};
+int d ( parms ){
+    ;
+};
+int c ( parms ){
+    ;
+};
+int b ( parms ){
+    ;
+};
+int a ( parms ){
+    ;
+};
+int main ( parms ){
+    int local[1];
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -448,6 +799,106 @@ FUNC ( int main ) -> 0 parms, 3 locals
    Symbol [ int idx 0 ]
    Symbol [ int bound 1 ]
    Symbol [ int temp 2 ]
+int global[4];
+int populate_arrays ( parms ){
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+    global[0] = ;
+    global[1] = ;
+    global[2] = ;
+    global[3] = ;
+};
+int print_arrays ( parms ){
+    int local[2];
+    local[1] = ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    ( ) ;
+};
+int main ( parms ){
+    int local[3];
+    local[1] = ;
+    populate_arrays ( ) ;
+    print_arrays ( ) ;
+    local[1] = ;
+    local[0] = ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    print_arrays ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -464,6 +915,19 @@ FUNC ( int main ) -> 0 parms, 1 locals
    Symbol [ int x 0 ]
 --SYMBOLS--
    Symbol [ int val 0 ]
+int global[0];
+int square ( parms ){
+    int local[1];
+    ;
+    local[0] = ;
+};
+int main ( parms ){
+    int local[1];
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -502,6 +966,59 @@ FUNC ( int main ) -> 0 parms, 23 locals
    Symbol [ int g 20 ]
    Symbol [ int eic 21 ]
    Symbol [ int spousedependant 22 ]
+int global[0];
+int getinput ( parms ){
+    int local[1];
+    ;
+    ( ) ;
+    local[0] = ;
+};
+int main ( parms ){
+    int local[23];
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    local[0] = ;
+    ( ) ;
+    local[1] = ;
+    ( ) ;
+    ( ) ;
+    local[2] = ;
+    local[3] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    local[12] = ;
+    ( ) ;
+    ( ) ;
+    local[5] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+    local[6] = ;
+    ( ) ;
+    ( ) ;
+    local[21] = ;
+    local[7] = ;
+    ( ) ;
+    local[8] = ;
+    ( ) ;
+    ( ) ;
+    local[9] = ;
+    ( ) ;
+    ( ) ;
+    local[10] = ;
+    ( ) ;
+    ( ) ;
+    local[11] = ;
+    ( ) ;
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
@@ -524,54 +1041,41 @@ FUNC ( int main ) -> 0 parms, 2 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
    Symbol [ int b 1 ]
+int global[0];
+int add ( parms ){
+    ;
+};
+int times_eight ( parms ){
+    ;
+};
+int main ( parms ){
+    int local[2];
+    ( ) ;
+    ( ) ;
+};
 
 ===EXIT NORMAL!===
 
 Testing ./Tests/tiny.c
 pass
-variable 14 function 4 statement 4
-GLOBAL VARS -> 8 vars, 5 funcs
-FUNC ( int a ) -> 3 parms, 0 locals
-FUNC ( int a ) -> 3 parms, 6 locals
-FUNC ( int a2 ) -> 2 parms, 0 locals
-FUNC ( int a3 ) -> 2 parms, 0 locals
-FUNC ( int a4 ) -> 2 parms, 0 locals
+variable 2 function 1 statement 5
+GLOBAL VARS -> 1 vars, 1 funcs
+FUNC ( int a2 ) -> 2 parms, 1 locals
 --SYMBOLS--
-   Symbol [ int j 0 ]
-   Symbol [ int k 1 ]
-   Symbol [ int z 2 ]
-   Symbol [ int d 3 ]
-   Symbol [ int l 4 ]
-   Symbol [ int m 5 ]
-   Symbol [ decimal o 6 ]
-   Symbol [ decimal p 7 ]
-   Symbol [ func a -1 ]
+   Symbol [ int k 0 ]
    Symbol [ func a2 -1 ]
-   Symbol [ func a3 -1 ]
-   Symbol [ func a4 -1 ]
 --SYMBOLS--
-   Symbol [ int b -1 ]
-   Symbol [ int c -1 ]
-   Symbol [ binary e -1 ]
---SYMBOLS--
-   Symbol [ int l 0 ]
-   Symbol [ int m 1 ]
-   Symbol [ int o 2 ]
-   Symbol [ binary y 3 ]
-   Symbol [ binary z 4 ]
-   Symbol [ binary f 5 ]
-   Symbol [ int b -1 ]
-   Symbol [ int c -1 ]
-   Symbol [ binary e -1 ]
---SYMBOLS--
+   Symbol [ int v 0 ]
    Symbol [ decimal j -1 ]
    Symbol [ decimal e -1 ]
---SYMBOLS--
-   Symbol [ decimal j -1 ]
-   Symbol [ decimal e -1 ]
---SYMBOLS--
-   Symbol [ decimal j -1 ]
-   Symbol [ decimal e -1 ]
+int global[1];
+int a2 ( parms ){
+    int local[1];
+    local[0] = ;
+    a2 ( ) ;
+    ( ) ;
+    ;
+};
 
 ===EXIT NORMAL!===
 
@@ -587,5 +1091,14 @@ FUNC ( int main ) -> 0 parms, 0 locals
 --SYMBOLS--
    Symbol [ int a 0 ]
 --SYMBOLS--
+int global[0];
+int foo ( parms ){
+    int local[1];
+    ( ) ;
+    ( ) ;
+};
+int main ( parms ){
+    foo ( ) ;
+};
 
 ===EXIT NORMAL!===

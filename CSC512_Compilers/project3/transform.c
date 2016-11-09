@@ -7,31 +7,13 @@
 
 int _break_; 
 #define BREAK() {printf("BREAK %d\n", _break_++);fflush(NULL);}
-
+#define SIZE_OF_ARRAY(_array) (sizeof(_array) / sizeof(_array[0]))
 #define EQ(x,y) strcmp( x, y ) == 0 
 
 /** Recode the IR Tree formed by the parser. 
     Do a depth / last item first scan and recode as we go. 
     This way subtrees are recoded before we recode a node. 
      **/
-
-
-char * getPayloadString ( Token t ) {
-    switch( t->type ) {
-        case T_XDATA : {
-            char * fmt = "Value Count %3d";
-            char * str = malloc( sizeof( char ) * strlen( fmt ) + 5 ); 
-            struct xData * data = (struct xData * ) t->data; 
-            sprintf( str, fmt, data->varCount ); 
-            return str; 
-        }
-        default :{
-            char * str = malloc( sizeof( char ) ); 
-            sprintf( str, "%s", "" ); 
-            return str; 
-        }
-    }
-};
 
 void findAndCollapse( Token t, token_t type ){
     Token c = Token_findChild( t, type ); 
@@ -114,7 +96,7 @@ void transformSStart( Token t ) {
             c = next; 
         }
  
-        findAndRemove( data, T_SEMI ); 
+        //findAndRemove( data, T_SEMI ); 
         Token_appendChild( t, data ); 
  
         //then order the functions. 
@@ -132,6 +114,27 @@ void transformSStart( Token t ) {
                 Token_prependChild( t, c ); 
             }
         }  
+
+        //now for each func, wrangle the code. 
+        Token func = t->child; 
+        while( func != NULL ){
+            if( func->type == S_XFUNC ){
+                Token statement = func->child; 
+                Token code      = Token_new( S_XCODE, NULL);
+                while( statement != NULL ) {
+                    Token next = statement->peer; 
+                    if( statement->type == S_STATEMENT ) {
+                        Token_remove( statement ); 
+                        Token_prependChild( code, statement ); 
+                    }
+                    statement = next; 
+                }
+                if ( code->child != NULL ) {
+                    Token_prependChild( func, code ); 
+                };
+            }
+            func = func->peer; 
+        }
     }
 }
 
@@ -144,24 +147,11 @@ void transformSFunc( Token t ) {
 };
 
 void transformSCode( Token t ) {
-    Token c = Token_findChild( t, T_LPAR ); 
-    Token d = Token_findChild( t, T_RPAR ); 
-
-    Token_remove( c ); 
-    Token_remove( d ); 
-
-    Token_free( c ); 
-    Token_free( d ); 
+    findAndRemove( t, T_LPAR ); 
+    findAndRemove( t, T_RPAR ); 
 };
 
 void transformSFuncDef( Token t ) {
-
-    if( t->child->type == T_SEMI ) {
-        Token_remove( t ); 
-        Token_free( t ); 
-        return; 
-    }
-
     findAndRemove( t, T_LCURL ); 
     findAndRemove( t, T_RCURL ); 
     Token_collapse( t ); 
@@ -176,13 +166,51 @@ void transformSData( Token t ) {
      findAndCollapse( t, S_IDLIST ); 
      findAndCollapse( t, S_XDATA ); 
      t->type = S_XDATA; 
-}
+};
 
 
+
+void transformSStatement( Token t ) {
+
+    token_t collapse_type[] = {
+        S_STATEMENT_A, 
+        S_STATEMENT_B, 
+        S_STATEMENT_P, 
+        S_STATEMENT_R 
+    };
+
+    Token c; 
+    for( int i = 0; i < SIZE_OF_ARRAY( collapse_type ); i++){
+        c = Token_findChild( t, collapse_type[i] ); 
+        if( c != NULL ){
+             Token_collapse( c ) ; 
+        }
+    }
+
+    Token d = Token_findChild( t, S_STATEMENT ); 
+    while( d != NULL ) {
+        Token_remove( d );
+        Token_prependChild( t->parent, d ); 
+        d = Token_findChild( t, S_STATEMENT ); 
+    };
+};
+
+void transformTSemi( Token t ) {
+    Token_remove( t ); 
+    Token_free( t ); 
+};
+
+void transformSBlock( Token t ) {
+    findAndRemove( t, T_LCURL );
+    findAndRemove( t, T_RCURL ); 
+};
+   
 void doTransform( Token t ) {
 
     switch( t->type ) {
         // The type can collapse into a simpler element. 
+        case S_BLOCK       : transformSBlock( t );     break;
+        case T_SEMI        : transformTSemi( t );      break; 
         case S_TYPE        : transformSType( t );      break;
         case S_PARM_LIST_A : transformSParmListA( t ); break;
         case S_PARM_LIST   : transformSParmList( t );  break; 
@@ -192,7 +220,8 @@ void doTransform( Token t ) {
         case S_CODE        : transformSCode( t );      break; 
         case S_FUNC_DEF    : transformSFuncDef( t );   break; 
         case S_IDLIST      : transformSIdList( t );    break; 
-        case S_DATA :        transformSData( t );      break;
+        case S_DATA        : transformSData( t );      break;
+        case S_STATEMENT   : transformSStatement( t ); break;
     };
 };
 
@@ -250,7 +279,6 @@ void loadVarList( SymbolTable s, Token t, bool referenced ) {
     };
 }
  
-     
 void buildSymbolTables( Token t ){
 
      // static analysis of the space we need. 
@@ -292,6 +320,6 @@ void buildSymbolTables( Token t ){
 void transform( Token t ) {
     shapeTransform( t ); 
     buildSymbolTables( t ); 
-} 
+};
 
 #endif

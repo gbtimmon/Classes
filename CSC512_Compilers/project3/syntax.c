@@ -56,7 +56,8 @@ S_EXP_A       :: T_e                                                            
 S_TERM        :: S_FACT       S_TERM_A                                           FIRST+: T_VAR T_LPAR T_NUMBER T_MINUS                        
 S_TERM_A      :: T_MULT       S_FACT        S_TERM_A                             FIRST+: T_MULT
 S_TERM_A      :: T_e                                                             FIRST+: T_PLUS T_MINUS T_CMP T_RPAR T_BOOL_OP T_SEMI T_RBRACK T_COMMA
-S_FACT        :: T_VAR        S_BRACK_EXP   S_FACT_A                             FIRST+: T_VAR
+S_FACT        :: T_VAR        S_FACT_A                                           FIRST+: T_VAR
+S_FACT_A      :: S_BRACK_EXP                                                     FIRST+: T_LBRACK
 S_FACT_A      :: T_LPAR       S_EXP_LIST    T_RPAR                               FIRST+: T_LPAR
 S_FACT_A      :: T_e                                                             FIRST+: T_RPAR T_BOOL_OP T_SEMI T_MINUS T_PLUS T_MULT T_CMP T_RBRACK T_COMMA
 S_FACT        :: T_NUMBER                                                        FIRST+: T_NUMBER

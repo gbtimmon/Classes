@@ -46,6 +46,8 @@ int  SymbolTable_add( SymbolTable s,  symbol_t type, const char * name, bool ref
 
 Symbol SymbolTable_find( SymbolTable s, const char * name ) {
     
+    if( s == NULL ) printf("ASASDFASFASF"); 
+
     for( int i = 0; i < s->size; i++ ) {
         Symbol t = s->data[i]; 
         if( EQ(t->name, name ) ) return t;

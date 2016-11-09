@@ -14,7 +14,6 @@ typedef struct _token {
     token_t type;             // what kind of token am I
     char*   value;            // what is the char data from the original source (If Im terminal )
     int    id;                // A unique ID to keep the tree eaiser to debug. 
-    void * data;              // A struct contiaining special data used during transform. 
     struct _token * meta;     // keep meta statements off to the side -- eaiser to manage this way. 
     struct _token * parent;   // The symbol that created me. 
     struct _token * child;    // The head of a doubly linked lists of the symbols I created. 

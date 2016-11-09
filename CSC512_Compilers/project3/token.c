@@ -30,7 +30,6 @@ Token Token_new( token_t type, char * buffer ) {
     n->peer    = NULL;   // pointer to my peer ( I am part of a linked list whose head is pointed to by my parent )
     n->lpeer   = NULL;   // pointer to me left peer ( its a doublely linked list ). 
     n->meta    = NULL;
-    n->data    = NULL;   // pointer to a data struct. 
     n->scope   = NULL;   // a symbol table if one exists here. 
     
     if( buffer ) n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
@@ -42,9 +41,6 @@ Token Token_new( token_t type, char * buffer ) {
 char * Token_toString( Token n ) {
     int len = strlen( NAME(n) ); 
 
-    char * pstr = getPayloadString( n );
-    int len2 = strlen( pstr );   
-    
     int len3 = ( isTerminal( n->type ) ) ? strlen(n->value)+5 : 0 ;
 
     char temp[250]; 
@@ -54,15 +50,13 @@ char * Token_toString( Token n ) {
         sprintf( temp, "" ); 
 
  
-    char * fmt = "<%3d:%s [%s]%s>";
-    char * str = malloc( sizeof( char ) * (15+len+len2+len3) ); 
-    sprintf( str, fmt, n->id, NAME(n), pstr, temp );
-    free( pstr ); 
+    char * fmt = "<%3d:%s %s>";
+    char * str = malloc( sizeof( char ) * (15+len+len3) ); 
+    sprintf( str, fmt, n->id, NAME(n), temp );
     return str; 
 };
 
 void Token_free( Token n ){
-    free(n->data); 
     free(n->value); 
     if( n->scope != NULL ) SymbolTable_free( n->scope ); 
     free(n);
