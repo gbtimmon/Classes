@@ -57,7 +57,7 @@ char * getReference( SymbolTable global, SymbolTable local,  Token c ) {
        }
     } else {
        fprintf(stderr, "Undefined reference to variable %s.\n", c->value ); 
-       exit(1); 
+       //exit(1); 
     }
     return ret;
 }
@@ -182,6 +182,23 @@ SymbolTable getGlobalScope( Token t ){
     return c->scope; 
 }
 
+void putParms( Token t ) {
+    if( t == NULL || t->child == NULL || t->child->peer == NULL )
+        return; 
+
+    Token c = t->child;
+    printf(" %s %s", c->value, c->peer->value ); 
+    
+    c = c->peer->peer; 
+
+    while( c != NULL ) {
+        printf(", %s %s", c->value, c->peer->value ); 
+        c = c->peer->peer; 
+    }
+    printf(" "); 
+
+};
+
 void writeFunc( FILE * f, Token t ) {
 
    SymbolTable local  = getLocalScope( t ); 
@@ -195,7 +212,9 @@ void writeFunc( FILE * f, Token t ) {
 
    int local_count = SymbolTable_getAllocSize(local); 
 
-   printf( "int %s ( parms )", name->value ); 
+   printf( "int %s (", name->value ); 
+   putParms( parm ); 
+   printf( ")" );
 
    if( stat == NULL )
       printf( ";\n\n"); 

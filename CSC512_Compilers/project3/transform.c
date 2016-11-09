@@ -260,6 +260,27 @@ void transformSFact( Token t ) {
     };
 };
     
+void transformSCondExp( Token t ){
+    findAndCollapse( t, S_COND_EXP_A ); 
+    if( t->child->peer == NULL ){
+       Token_replace( t, t->child ); 
+       Token_free( t );
+    } else {
+       t->type = S_XOPER;
+    };
+};
+    
+void transformSCond( Token t ){
+    if( t->child->peer == NULL ){
+       Token_replace( t, t->child ); 
+       Token_free( t );
+    } else {
+       t->type = S_XOPER;
+       Token_appendChild( t, Token_new( T_LPAR, "(" )); 
+       Token_prependChild( t, Token_new( T_RPAR, ")" )); 
+    };
+}
+
 void transformSAdd( Token t ){
     Token_replace( t, t->child ); 
     Token_free( t ); 
@@ -270,12 +291,14 @@ void doTransform( Token t ) {
     switch( t->type ) {
         // The type can collapse into a simpler element. 
         case S_BLOCK       : transformSBlock( t );     break;
+        case S_COND        : transformSCond( t );      break; 
         case T_SEMI        : transformTSemi( t );      break; 
         case S_TYPE        : transformSType( t );      break;
         case S_PARM_LIST_A : transformSParmListA( t ); break;
         case S_PARM_LIST   : transformSParmList( t );  break; 
         case S_START_A     : transformSStartA( t );    break;
         case S_ADD         : transformSAdd( t );       break;
+        case S_COND_EXP    : transformSCondExp( t );   break; 
         case S_START       : transformSStart( t );     break;
         case S_FUNC        : transformSFunc( t );      break; 
         case S_CODE        : transformSCode( t );      break; 
@@ -363,7 +386,6 @@ void buildSymbolTables( Token t ){
      Token data = Token_findChild( t, S_XDATA ); 
      int cnt1 = Token_countChild( data, T_VAR  ); 
      int cnt2 = Token_countChild( t, S_XFUNC ); 
-     printf( "GLOBAL VARS -> %d vars, %d funcs\n", cnt1, cnt2 ); 
 
      t->scope = SymbolTable_new( cnt1 + cnt2 ); 
      loadVarList( t->scope, data, true ); 
@@ -379,12 +401,9 @@ void buildSymbolTables( Token t ){
              cnt1 = Token_countChild( parms, T_VAR ); 
              cnt2 = Token_countChild( fdata, T_VAR ); 
              
-             printf("FUNC ( %s %s ) -> %d parms, %d locals\n", type->value, name->value, cnt1, cnt2 ); 
-
              c->scope = SymbolTable_new( cnt1 + cnt2 ); 
 
              // Count the temp vars. 
-             printf( "!!%d!!\n", countOper( c ) ) ;
              SymbolTable_addTemp( c->scope, countOper( c ) ); 
 
              SymbolTable_add( t->scope, TYPE_FUNC, name->value, false ); 

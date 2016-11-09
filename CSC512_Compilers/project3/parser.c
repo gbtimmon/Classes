@@ -66,7 +66,7 @@ int main( int argc, char ** argp, char ** envp ){
             } 
             else 
             {
-                fprintf(stderr,"error\n");
+                fprintf(stderr,"Error, illegal token at line number %d\n", s->lineNo + 1);
                 exit(1); 
             }
         }
@@ -90,7 +90,7 @@ int main( int argc, char ** argp, char ** envp ){
             //fprintf( stderr, "Rule: %d\n", idx + 1 ); 
             if( idx < 0 ) 
             { 
-                fprintf(stdout,"error\n");
+                fprintf(stderr,"Error, illegal token at line number %d\n", s->lineNo + 1);
                 exit(1);
             } 
             else 

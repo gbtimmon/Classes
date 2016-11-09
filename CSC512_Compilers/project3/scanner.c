@@ -97,10 +97,13 @@ Token _Scanner_nextToken( Scanner s ) {
     else if( charIn(s->cur, "(){}[],;+-*/<>=|&!") ) 
         consumeOp( s );
 
-    else { 
+    else if( charIn( s->cur, " \t\n") ){ 
         Scanner_nextChar( s );
         return Scanner_nextToken( s ); 
-    } 
+    } else {
+        fprintf(stderr, "Illegal char %c at line %d.\n",s->cur, s->lineNo);
+        exit(1); 
+    }
     
     return Token_new( s->token, s->buffer->stack ); 
 }
