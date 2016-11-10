@@ -11,5 +11,5 @@ int add(int a) {
 int main() {
   int a, b;
   read(a);
-  write(add(a,add() + 5 ,4,5));
+  write(add(a));
 }

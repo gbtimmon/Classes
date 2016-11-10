@@ -1,4 +1,3 @@
-S_TYPE        :: T_VOID                                                          FIRST+: T_VOID 
 S_TYPE        :: T_TYPE                                                          FIRST+: T_TYPE
 S_ADD         :: T_PLUS                                                          FIRST+: T_PLUS
 S_ADD         :: T_MINUS                                                         FIRST+: T_MINUS

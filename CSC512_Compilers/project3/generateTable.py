@@ -34,7 +34,8 @@ token_list = {
     "S_XDATA"    : 1,
     "S_XCODE"    : 1,
     "S_XFUNC"    : 1, 
-    "S_XOPER"    : 1
+    "S_XOPER"    : 1,
+    "S_XLOAD"    : 1
 }
 rules      = []
 ptble      = []

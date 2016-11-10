@@ -27,12 +27,20 @@ void tabCheat( int depth ){
    if( depth > 0 ) printf( tab_str_cheat ); 
 }
    
-char * extendBuf( char * old, int newSize ){
-    char * new = malloc( sizeof( char ) * newSize); 
-    strcpy( new, old ); 
-    free( old ); 
-    return new; 
+//very lazy -- but perfroms well enough for quick coding. 
+//Java esque style immutable. Dont judge me, Im running out of time ;). 
+void dynamicStrcat( char ** dest, char * src ){
+     int news = strlen( *dest ) + strlen( src ); 
+  
+     char * new = malloc( sizeof( char ) * (news + 2 ) ); 
+     strcpy( new, *dest ); 
+     strcat( new, src ); 
+
+     free(*dest); 
+     *dest = new; 
 }
+     
+
 
 char * getReference( SymbolTable global, SymbolTable local,  Token c ) { 
 
@@ -68,44 +76,26 @@ int putOperChain(SymbolTable global, SymbolTable local, Token t, int depth ) {
 
     int ref = SymbolTable_getTemp( local ); 
 
-    int buf  = 100; 
-    int used = 0;  
-    char * out = malloc( sizeof( char ) * buf );   
-
+    char * out = malloc( sizeof( char ) * 25 );   
     sprintf( out, "local[%d] =", ref ); 
-    used = strlen( out ); 
     
     Token c = t->child; 
     while ( c != NULL ) {
         if( c->type == S_XOPER ) {
-           
-            // Make sure I have space. 
-            if( used + 10 > buf ){
-                buf = buf * 2; 
-                out = extendBuf( out, buf ); 
-            }
+                      
             int newref = putOperChain( global, local, c, depth); 
-            sprintf( out, "%s local[%d]", out, newref ); 
-            used = strlen( out ); 
+            char * newrefs[10]; 
+            sprintf( newrefs, " local[%d]", newref );
+            dynamicStrcat( &out, newrefs ); 
+
         } else if ( c->type == T_VAR ) {
             char * refName = getReference( global, local, c ); 
-            
-            if( used + strlen(refName) + 2 > buf ){
-                buf = buf*2; 
-                out = extendBuf( out, buf ); 
-            }
-
-            sprintf( out, "%s %s", out, refName ); 
+            dynamicStrcat( &out, " "); 
+            dynamicStrcat( &out, refName); 
             free( refName );
         } else {
-
-            int newSize = strlen(c->value ) + 3; 
-            if( used + newSize > buf ) {
-                buf = buf * 2; 
-                out = extendBuf( out, buf ); 
-            };
-            sprintf( out, "%s %s", out, c->value); 
-            used = strlen(out);           
+            dynamicStrcat( &out, " "); 
+            dynamicStrcat( &out, c->value ); 
         }
 
         c = c->peer; 
@@ -120,7 +110,7 @@ void putLiteral( Token c ) {
      printf( "%s ", c->value); 
 }
 
-char * _putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
+char * putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
     Token c = t->child; 
 
     int buf  = 100; 
@@ -131,56 +121,68 @@ char * _putStatement( SymbolTable global, SymbolTable local, Token t, int depth 
     while( c != NULL ){
         if( c->type == T_VAR ){ 
             char * name = getReference( global, local, c ); 
-           
-            if( strlen(name) + used + 5 > buf ){
-                buf = buf * 2; 
-                out = extendBuf( out, buf ); 
-            }
-            sprintf(out, "%s %s", out, name ); 
+            dynamicStrcat( &out, " " );
+            dynamicStrcat( &out, name );
             free( name );
+
         } else if( isTerminal(c->type) ) {
+            dynamicStrcat( &out, " " );
+            dynamicStrcat( &out, c->value );
 
-            if( strlen(c->value) + used + 3 > buf ){
-                buf = buf * 2; 
-                out = extendBuf( out, buf ); 
-            }
-
-            sprintf( out, "%s %s", out, c->value ); 
         } else if( c->type == S_XOPER ) { 
        
             int ref = putOperChain( global, local, c, depth ); 
-            
-            if( used + 20 > buf ){ 
-                buf = buf * 2; 
-                out = extendBuf( out, buf); 
-            }
-
-            sprintf( out, "%s local[%d]", out, ref); 
+            char * temp [20];          
+            sprintf( temp, " local[%d]", ref); 
+            dynamicStrcat( &out, temp ); 
         } 
-            
-        used = strlen(out); 
         c= c->peer; 
     }
-    return out; 
-}
-
-void putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
-    char * out = _putStatement( global, local, t, depth ); 
     tabCheat(depth); 
     printf("%s;\n", out);
     free( out ); 
-}; 
+}
 
-void putStatementStub( SymbolTable global, SymbolTable local, Token t, int depth ){
-    char * out = _putStatement( global, local, t, depth ); 
-    tabCheat(depth); 
-    printf("%s ", out);
-    free( out ); 
-};
-
-void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth );
 void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth ) { 
-     putStatementStub( global, local, t, depth );
+
+     
+     Token exp  = Token_findChild( t, S_COND_EXP ); 
+     Token cnd  = exp->child; 
+
+     int buf = 100; 
+     char * out = malloc( sizeof(char) * buf ); 
+     sprintf( out, "if(" ); 
+     int used = strlen( out ); 
+
+     while( cnd != NULL ) {
+         if( cnd ->type == S_COND ){
+             Token opr = cnd->child; 
+             while( opr != NULL ) {
+                 if( opr->type == S_XOPER ){
+                     int ref = putOperChain( global, local, opr, depth ); 
+                     char * temp[20];
+                     sprintf(temp, "local[%d]", ref ); 
+                     dynamicStrcat( &out, temp ); 
+                 } else if ( opr->type == T_VAR ){
+                     char * ref = getReference( global, local, opr ); 
+                     dynamicStrcat( &out, ref ); 
+                     free( ref ); 
+                 } else {
+                     dynamicStrcat( &out, opr->value ); 
+                 } 
+                 opr = opr->peer; 
+             } 
+         } else {
+             dynamicStrcat(&out, " "); 
+             dynamicStrcat(&out, cnd->value ); 
+         }
+         cnd = cnd -> peer; 
+     }
+            
+     tab(depth);    
+     printf( out ); 
+     printf( ") ");
+     free(out); 
 
      int label1 = LABEL_COUNT++; 
      int label2 = LABEL_COUNT++; 
@@ -240,6 +242,26 @@ void putParms( Token t ) {
 
 };
 
+void loadParms( SymbolTable local, Token t, int depth ) {
+
+    Token c = t->child; 
+    while( c != NULL ) { 
+    
+        if( c->type == T_VAR ) {
+         
+            Symbol sym = SymbolTable_find( local, c->value ); 
+    
+            if( sym != NULL ) {
+                tab(depth);
+                printf( "local[%d] = %s;\n", sym->ref, c->value); 
+            }
+        }
+
+        c = c->peer; 
+    }
+    printf( "\n"); 
+};
+
 void writeFunc( FILE * f, Token t ) {
 
    SymbolTable local  = getLocalScope( t ); 
@@ -262,6 +284,7 @@ void writeFunc( FILE * f, Token t ) {
    else {
       printf( "{\n\n"); 
       if( local_count > 0 ) printf("    int local[%d];\n\n", local_count ); 
+      if( parm != NULL ) loadParms( local, parm, 1 ); 
       writeStatements( global, local, stat, 1 ); 
       printf("};\n"); 
    }
@@ -270,7 +293,9 @@ void writeFunc( FILE * f, Token t ) {
 void generate( FILE * f, Token t ) {
 
     int global_size = SymbolTable_getAllocSize( t->scope ); 
-    printf( "int global[%d];\n\n", global_size ); 
+
+    if( global_size > 0 )
+        printf( "int global[%d];\n\n", global_size ); 
    
     Token c = t->child; 
     while( c != NULL ) {

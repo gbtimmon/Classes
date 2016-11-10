@@ -257,33 +257,20 @@ void transformSFact( Token t ) {
     if( t->child->peer == NULL ){
        Token_replace( t, t->child ); 
        Token_free( t );
+    } else if( t->child->type == T_LPAR ){
+       Token c = Token_findChild( t, S_XOPER ); 
+       Token_replace( t, c ); 
+       Token_free( t ); 
     } else {
        t->type = S_XOPER;
     };
 };
     
 void transformSCondExp( Token t ){
-    findAndCollapse( t, S_COND_EXP_A ); 
-    if( t->child->peer == NULL ){
-       Token_replace( t, t->child ); 
-       Token_free( t );
-    } else {
-       t->type = S_XOPER;
-       Token_appendChild( t, Token_new( T_LPAR, "(" )); 
-       Token_prependChild( t, Token_new( T_RPAR, ")" )); 
-    };
 };
     
 void transformSCond( Token t ){
-    if( t->child->peer == NULL ){
-       Token_replace( t, t->child ); 
-       Token_free( t );
-    } else {
-       t->type = S_XOPER;
-       Token_appendChild( t, Token_new( T_LPAR, "(" )); 
-       Token_prependChild( t, Token_new( T_RPAR, ")" )); 
-    };
-}
+};
 
 void transformSAdd( Token t ){
     Token_replace( t, t->child ); 
@@ -292,6 +279,7 @@ void transformSAdd( Token t ){
    
 void transformSExpList( Token t ){
     findAndCollapse( t, S_EXP_LIST_A ); 
+    Token_collapse( t ); 
 };
 
 void transformSExpListA( Token t ){
@@ -363,20 +351,65 @@ symbol_t toType( const char * c ) {
     return TYPE_UNDEF; 
 };
 
-void loadVarList( SymbolTable s, Token t, bool referenced ) {
+int isVarUsed( Token root, Token var ) {
+    if( root->type == S_XFUNC ) {
+        return isVarUsedInFunc( root, var ); 
+    }
+
+    Token c = root->child;  
+    while( c != NULL ) {
+        if( c->type == S_XFUNC ){
+            int retval = isVarUsedInFunc( c, var ); 
+            if( retval ) return retval; 
+        }
+        c = c->peer; 
+    }
+    return 0;
+}
+
+int isVarUsedInFunc( Token func, Token var ) {
+
+    Token code = Token_findChild( func, S_XCODE );
+    return _dfs( code, var ); 
+}
+
+int _dfs( Token node, Token target ){
+    if( node == NULL )
+        return false; 
+
+    if( node->value != NULL && EQ(node->value, target->value ) )
+        return true; 
+
+    if( node->child == NULL ) 
+        return false; 
+
+    Token child = node->child; 
+    while( child != NULL ){
+        if( _dfs( child, target) ) 
+            return true; 
+        child = child->peer; 
+    }
+    return false; 
+}
+
+void loadVarList( Token container, Token data ) {
     // Data elements after transform have the form 
     // type var var var type var var etc ...
     // load a token in this form to a symbol table. 
 
-    Token c = t->child; 
+    Token c = data->child; 
+    SymbolTable s = container->scope; 
     symbol_t type = TYPE_UNDEF; 
      
     while( c != NULL ) { 
         if( c->type == T_XTYPE || c->type == T_TYPE ) 
            type = toType( c->value ); 
-    	else if (c->type == T_VAR )
-           SymbolTable_add( s, type, c->value, referenced ); 
-
+    	else if (c->type == T_VAR){
+            if( isVarUsed( container, c ) )
+                SymbolTable_add( container->scope, type, c->value, true  ); 
+            else
+                printf( "INFO : removing unused var %s.\n", c->value ); 
+        }
         c = c->peer; 
     };
 }
@@ -403,7 +436,7 @@ void buildSymbolTables( Token t ){
      int cnt2 = Token_countChild( t, S_XFUNC ); 
 
      t->scope = SymbolTable_new( cnt1 + cnt2 ); 
-     loadVarList( t->scope, data, true ); 
+     loadVarList( t, data ); 
 
      Token c = t->child; 
      while( c != NULL ) {
@@ -419,14 +452,14 @@ void buildSymbolTables( Token t ){
              c->scope = SymbolTable_new( cnt1 + cnt2 ); 
 
              // Count the temp vars. 
-             SymbolTable_addTemp( c->scope, countOper( c ) ); 
+             SymbolTable_addTemp(c->scope, countOper( c ) ); 
 
              SymbolTable_add( t->scope, TYPE_FUNC, name->value, false ); 
              if( fdata != NULL ) 
-                 loadVarList( c->scope, fdata, true ); 
+                 loadVarList( c, fdata ); 
 
              if( parms != NULL ) 
-                 loadVarList( c->scope, parms, false); 
+                 loadVarList( c, parms ); 
 
 
          }
