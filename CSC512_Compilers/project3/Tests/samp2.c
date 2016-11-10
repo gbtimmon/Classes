@@ -24,10 +24,19 @@ void recursedigit(int n) {
 int main() {
     int a;
     a = 0;
+    continue;
     while (0 >= a) {
 	print("Give me a number: ");
 	read(a);
-	
+        while ( 7 < 8 ) {
+	    if (a < 5 ){
+                continue;
+            }
+
+            if( a > 5 ){
+                break;
+            }
+        }
 	if (0 >= a) {
 	    print("I need a positive integer.\n");
 	}

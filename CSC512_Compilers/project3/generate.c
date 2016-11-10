@@ -110,7 +110,7 @@ void putLiteral( Token c ) {
      printf( "%s ", c->value); 
 }
 
-char * putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
+char * putStatement( SymbolTable global, SymbolTable local, Token t, int depth, int continuel, int breakl ){
     Token c = t->child; 
 
     int buf  = 100; 
@@ -143,16 +143,77 @@ char * putStatement( SymbolTable global, SymbolTable local, Token t, int depth )
     free( out ); 
 }
 
-void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth ) { 
+void putWhileStatement( SymbolTable global, SymbolTable local, Token t, int depth  ) { 
+
+     int looplbl = LABEL_COUNT++; 
+     int exitlbl = LABEL_COUNT++; 
+     int okaylbl = LABEL_COUNT++; 
 
      
      Token exp  = Token_findChild( t, S_COND_EXP ); 
      Token cnd  = exp->child; 
 
-     int buf = 100; 
-     char * out = malloc( sizeof(char) * buf ); 
+     tab( depth ); 
+     printf( "label_%d: ;\n", looplbl ); 
+
+     char * out = malloc( sizeof(char) * 100 ); 
      sprintf( out, "if(" ); 
-     int used = strlen( out ); 
+
+     while( cnd != NULL ) {
+         if( cnd ->type == S_COND ){
+             Token opr = cnd->child; 
+             while( opr != NULL ) {
+                 if( opr->type == S_XOPER ){
+                     int ref = putOperChain( global, local, opr, depth ); 
+                     char * temp[20];
+                     sprintf(temp, "local[%d]", ref ); 
+                     dynamicStrcat( &out, temp ); 
+                 } else if ( opr->type == T_VAR ){
+                     char * ref = getReference( global, local, opr ); 
+                     dynamicStrcat( &out, ref ); 
+                     free( ref ); 
+                 } else {
+                     dynamicStrcat( &out, opr->value ); 
+                 } 
+                 opr = opr->peer; 
+             } 
+         } else {
+             dynamicStrcat(&out, " "); 
+             dynamicStrcat(&out, cnd->value ); 
+         }
+         cnd = cnd -> peer; 
+     }
+
+     tab(depth); 
+     printf( out ); 
+     free( out ); 
+    
+     printf( ") goto labal_%d;\n", okaylbl ); 
+
+     tab(depth);
+     printf("goto label_%d;\n", exitlbl ); 
+     
+     tab(depth); 
+     printf("label_%d: ;\n", okaylbl ); 
+
+     Token statements = Token_findChild( t, S_BLOCK );
+     writeStatements( global, local, statements, depth + 1, looplbl, exitlbl );
+
+     tab(depth);   
+     printf("goto label_%d: ;\n", looplbl); 
+
+     tab(depth);   
+     printf("label_%d: ;\n", exitlbl); 
+
+}
+void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth, int continuel, int breakl ) { 
+
+     
+     Token exp  = Token_findChild( t, S_COND_EXP ); 
+     Token cnd  = exp->child; 
+
+     char * out = malloc( sizeof(char) * 100 ); 
+     sprintf( out, "if(" ); 
 
      while( cnd != NULL ) {
          if( cnd ->type == S_COND ){
@@ -194,19 +255,31 @@ void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth )
      printf("label_%d: ;\n", label1); 
 
      Token statements = Token_findChild( t, S_BLOCK );
-     writeStatements( global, local, statements, depth + 1 );
+     writeStatements( global, local, statements, depth + 1, continuel, breakl );
 
      tab(depth);   
      printf("label_%d: ;\n", label2); 
 }
 
-void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth ) { 
+void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth, int continuel, int breakl ) { 
     Token c = t->child; 
     while( c != NULL ) {
         if( c->child->type == T_IF ) {
-            putIfStatement( global, local, c, depth ); 
+            putIfStatement( global, local, c, depth, continuel, breakl ); 
+        } else if( c->child->type == T_WHILE ) {
+            putWhileStatement( global, local, c, depth ); 
+        } else if ( c->child->type == T_CONTINUE ){
+            if( continuel == -1 )
+               fprintf( stderr, "continue statement outside of block\n");
+            tab(depth); 
+            printf("goto label_%d\n", continuel);
+        } else if ( c->child->type == T_BREAK ){
+            if( continuel == -1 )
+               fprintf( stderr, "break statement outside of block\n");
+            tab(depth); 
+            printf("goto label_%d\n", breakl);
         } else {
-            putStatement( global, local, c, depth ); 
+            putStatement( global, local, c, depth, continuel, breakl ); 
         }
         c=c->peer; 
     }
@@ -285,7 +358,7 @@ void writeFunc( FILE * f, Token t ) {
       printf( "{\n\n"); 
       if( local_count > 0 ) printf("    int local[%d];\n\n", local_count ); 
       if( parm != NULL ) loadParms( local, parm, 1 ); 
-      writeStatements( global, local, stat, 1 ); 
+      writeStatements( global, local, stat, 1, -1,-1 ); 
       printf("};\n"); 
    }
 };
