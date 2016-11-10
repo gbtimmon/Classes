@@ -2,6 +2,8 @@ if( t->type == T_VAR && strcmp( t->value, "int" ) == 0 ) t->type = T_TYPE;
 if( t->type == T_VAR && strcmp( t->value, "void" ) == 0 ) t->type = T_VOID;
 if( t->type == T_VAR && strcmp( t->value, "decimal" ) == 0 ) t->type = T_TYPE;
 if( t->type == T_VAR && strcmp( t->value, "binary" ) == 0 ) t->type = T_TYPE;
+if( t->type == T_VAR && strcmp( t->value, "read" ) == 0 ) t->type = T_READ;
+if( t->type == T_VAR && strcmp( t->value, "write" ) == 0 ) t->type = T_WRITE;
 if( t->type == T_VAR && strcmp( t->value, "while" ) == 0 ) t->type = T_WHILE;
 if( t->type == T_VAR && strcmp( t->value, "break" ) == 0 ) t->type = T_BREAK;
 if( t->type == T_VAR && strcmp( t->value, "return" ) == 0 ) t->type = T_RETURN;

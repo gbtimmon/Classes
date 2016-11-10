@@ -1,13 +1,18 @@
-int a,b,c; 
 
-int f() {
-    return a + b; 
+int a() {
+ a();
+ b();
+ c();
 }
 
-int d( int e, int f ){
-    int g; 
+int b() {
+ a();
+ b();
+ c();
+}
 
-    f();
-    g = a + b * c - e * f[a];
-    return g; 
+int c() {
+ a();
+ b();
+ c();
 }

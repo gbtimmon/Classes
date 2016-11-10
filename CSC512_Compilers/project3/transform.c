@@ -71,7 +71,7 @@ void transformSStart( Token t ) {
         while( c != NULL ) {
             n = c->peer; 
             Token_remove( c ); 
-            Token_appendChild( func, c );
+            Token_prependChild( func, c );
             c = n; 
         }
    
@@ -171,20 +171,21 @@ void transformSData( Token t ) {
      
 void transformSStatement( Token t ) {
 
-    token_t collapse_type[] = {
-        S_STATEMENT_A, 
-        S_STATEMENT_B, 
-        S_STATEMENT_P, 
-        S_STATEMENT_R 
-    };
-
-    Token c; 
-    for( int i = 0; i < SIZE_OF_ARRAY( collapse_type ); i++){
-        c = Token_findChild( t, collapse_type[i] ); 
-        if( c != NULL ){
-             Token_collapse( c ) ; 
+    Token c = t->child;
+    while( c != NULL ) {
+        Token next = c->peer; 
+        if( 
+               c->type == S_STATEMENT_A
+            || c->type == S_STATEMENT_B
+            || c->type == S_STATEMENT_C
+            || c->type == S_STATEMENT_D
+            || c->type == S_STATEMENT_P
+            || c->type == S_STATEMENT_R 
+        ){
+            Token_collapse( c ); 
         }
-    }
+        c = next; 
+    };
 
     Token d = Token_findChild( t, S_STATEMENT ); 
     while( d != NULL ) {
@@ -233,7 +234,7 @@ void transformSExp( Token t ){
         Token_free( t ); 
     };
 
-    //t->type = S_XOPER;
+    t->type = S_XOPER;
     splitOper( t ); 
 };
 
@@ -252,6 +253,7 @@ void transformSTerm( Token t ){
 void transformSFact( Token t ) {
     findAndCollapse( t, S_FACT_A ); 
     findAndCollapse( t, S_BRACK_EXP ); 
+    findAndCollapse( t, S_EXP_LIST );
     if( t->child->peer == NULL ){
        Token_replace( t, t->child ); 
        Token_free( t );
@@ -267,6 +269,8 @@ void transformSCondExp( Token t ){
        Token_free( t );
     } else {
        t->type = S_XOPER;
+       Token_appendChild( t, Token_new( T_LPAR, "(" )); 
+       Token_prependChild( t, Token_new( T_RPAR, ")" )); 
     };
 };
     
@@ -286,6 +290,15 @@ void transformSAdd( Token t ){
     Token_free( t ); 
 }
    
+void transformSExpList( Token t ){
+    findAndCollapse( t, S_EXP_LIST_A ); 
+};
+
+void transformSExpListA( Token t ){
+    findAndCollapse( t, S_EXP_LIST_A ); 
+    findAndCollapse( t, S_EXP_LIST_B ); 
+};
+
 void doTransform( Token t ) {
 
     switch( t->type ) {
@@ -301,6 +314,8 @@ void doTransform( Token t ) {
         case S_COND_EXP    : transformSCondExp( t );   break; 
         case S_START       : transformSStart( t );     break;
         case S_FUNC        : transformSFunc( t );      break; 
+        case S_EXP_LIST    : transformSExpList( t );   break;
+        case S_EXP_LIST_A  : transformSExpListA( t );  break;
         case S_CODE        : transformSCode( t );      break; 
         case S_EXP         : transformSExp( t );       break; 
         case S_TERM        : transformSTerm( t );      break;

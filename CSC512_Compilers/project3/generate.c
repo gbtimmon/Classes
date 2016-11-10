@@ -5,6 +5,8 @@
 #include "generate.h"
 #include "symbol.h"
 
+int LABEL_COUNT = 0; 
+
 void writeMeta( FILE * f, Token t ) { 
    Token c = t->child; 
    while( c != NULL ) {
@@ -61,6 +63,7 @@ char * getReference( SymbolTable global, SymbolTable local,  Token c ) {
     }
     return ret;
 }
+
 int putOperChain(SymbolTable global, SymbolTable local, Token t, int depth ) {
 
     int ref = SymbolTable_getTemp( local ); 
@@ -117,7 +120,7 @@ void putLiteral( Token c ) {
      printf( "%s ", c->value); 
 }
 
-void putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
+char * _putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
     Token c = t->child; 
 
     int buf  = 100; 
@@ -153,19 +156,56 @@ void putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
             }
 
             sprintf( out, "%s local[%d]", out, ref); 
-        }
+        } 
             
         used = strlen(out); 
         c= c->peer; 
     }
-    tabCheat(depth);
-    printf( "%s;\n", out );
-    free(out);
+    return out; 
 }
+
+void putStatement( SymbolTable global, SymbolTable local, Token t, int depth ){
+    char * out = _putStatement( global, local, t, depth ); 
+    tabCheat(depth); 
+    printf("%s;\n", out);
+    free( out ); 
+}; 
+
+void putStatementStub( SymbolTable global, SymbolTable local, Token t, int depth ){
+    char * out = _putStatement( global, local, t, depth ); 
+    tabCheat(depth); 
+    printf("%s ", out);
+    free( out ); 
+};
+
+void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth );
+void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth ) { 
+     putStatementStub( global, local, t, depth );
+
+     int label1 = LABEL_COUNT++; 
+     int label2 = LABEL_COUNT++; 
+
+     printf(" goto label_%d;\n", label1); 
+     tab(depth);   
+     printf("goto label_%d;\n", label2);
+     tab(depth);   
+     printf("label_%d: ;\n", label1); 
+
+     Token statements = Token_findChild( t, S_BLOCK );
+     writeStatements( global, local, statements, depth + 1 );
+
+     tab(depth);   
+     printf("label_%d: ;\n", label2); 
+}
+
 void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth ) { 
     Token c = t->child; 
     while( c != NULL ) {
-        putStatement( global, local, c, depth ); 
+        if( c->child->type == T_IF ) {
+            putIfStatement( global, local, c, depth ); 
+        } else {
+            putStatement( global, local, c, depth ); 
+        }
         c=c->peer; 
     }
 };

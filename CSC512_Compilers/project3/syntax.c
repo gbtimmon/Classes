@@ -81,6 +81,8 @@ S_EXP_LIST_B  :: T_STRING     S_EXP_LIST_A                                      
 [CAST]  T_VAR  "void"     T_VOID
 [CAST]  T_VAR  "decimal"  T_TYPE
 [CAST]  T_VAR  "binary"   T_TYPE
+[CAST]  T_VAR  "read"     T_READ
+[CAST]  T_VAR  "write"    T_WRITE
 [CAST]  T_VAR  "while"    T_WHILE
 [CAST]  T_VAR  "break"    T_BREAK
 [CAST]  T_VAR  "return"   T_RETURN

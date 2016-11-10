@@ -1,0 +1,1185 @@
+--SYMBOLS--
+   Symbol [ func state_0 -1 ]
+   Symbol [ func state_1 -1 ]
+   Symbol [ func state_2 -1 ]
+   Symbol [ func state_3 -1 ]
+   Symbol [ func getnextdigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int n 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+int global[0];
+
+int state_0 ();
+
+int state_1 ();
+
+int state_2 ();
+
+int state_3 ();
+
+int getnextdigit (){
+
+    int local[6];
+
+    local[1] = ( 0 == 0 );
+    while ( local[1] );
+    return local[0];
+};
+int state_0 (){
+
+    int local[6];
+
+    local[1] = getnextdigit ( );
+    local[0] = local[1];
+    local[3] = - 1;
+    local[2] = ( local[3] == local[0] );
+    if ( local[2] );
+    local[4] = ( 0 == local[0] );
+    if ( local[4] );
+    local[5] = ( 1 == local[0] );
+    if ( local[5] );
+};
+int state_1 (){
+
+    int local[6];
+
+    local[1] = getnextdigit ( );
+    local[0] = local[1];
+    local[3] = - 1;
+    local[2] = ( local[3] == local[0] );
+    if ( local[2] );
+    local[4] = ( 0 == local[0] );
+    if ( local[4] );
+    local[5] = ( 1 == local[0] );
+    if ( local[5] );
+};
+int state_2 (){
+
+    int local[6];
+
+    local[1] = getnextdigit ( );
+    local[0] = local[1];
+    local[3] = - 1;
+    local[2] = ( local[3] == local[0] );
+    if ( local[2] );
+    local[4] = ( 0 == local[0] );
+    if ( local[4] );
+    local[5] = ( 1 == local[0] );
+    if ( local[5] );
+};
+int state_3 (){
+
+    int local[6];
+
+    local[1] = getnextdigit ( );
+    local[0] = local[1];
+    local[3] = - 1;
+    local[2] = ( local[3] == local[0] );
+    if ( local[2] );
+    local[4] = ( 0 == local[0] );
+    if ( local[4] );
+    local[5] = ( 1 == local[0] );
+    if ( local[5] );
+};
+int main (){
+
+    state_0 ( );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func recursedigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int on 0 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+int global[0];
+
+int recursedigit ( int n ){
+
+    int local[11];
+
+    local[1] = ( 1 == local[0] );
+    if ( local[1] );
+    local[2] = ( 0 == local[0] );
+    if ( local[2] );
+    recursedigit ( );
+    local[4] = (  );
+    local[3] = ( 0 != local[4] );
+    if ( local[3] );
+    local[0] = 0;
+    local[5] = ( 0 == n );
+    if ( local[5] );
+};
+int main (){
+
+    int local[3];
+
+    local[0] = 0;
+    local[1] = ( 0 >= local[0] );
+    while ( local[1] );
+    print ( "The binary representation of: " );
+    write;
+    print ( "is: " );
+    recursedigit ( );
+    print ( "\n\n" );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
+int global[0];
+
+int main (){
+
+    int local[4];
+
+    local[2] = ( local[1] > local[0] );
+    if ( local[2] );
+    local[3] = ( local[0] >= local[1] );
+    if ( local[3] );
+    read;
+    read;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
+   Symbol [ int c 2 ]
+   Symbol [ func f -1 ]
+   Symbol [ func d -1 ]
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int g 0 ]
+   Symbol [ int e -1 ]
+   Symbol [ int f -1 ]
+int global[3];
+
+int f (){
+
+    return;
+};
+int d ( int e, int f ){
+
+    int local[5];
+
+    f ( );
+    local[0] =;
+    return local[0];
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int sum 1 ]
+int global[0];
+
+int main (){
+
+    int local[5];
+
+    write;
+    local[3] = (  );
+    local[4] = 2 / local[0];
+    local[2] = local[3] * local[4];
+    local[1] = local[2];
+    read;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ int array 0 ]
+   Symbol [ func initialize_array -1 ]
+   Symbol [ func fib -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+--SYMBOLS--
+   Symbol [ int val -1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+int global[1];
+
+int initialize_array (){
+
+    int local[4];
+
+    local[1] = 16;
+    local[0] = 0;
+    local[2] = ( local[0] < local[1] );
+    while ( local[2] );
+};
+int fib ( int val ){
+
+    int local[7];
+
+    local[0] = ( val < 2 );
+    if ( local[0] );
+    local[2] = global[0] [ val ];
+    local[3] = - 1;
+    local[1] = ( local[2] == local[3] );
+    if ( local[1] );
+    local[4] = global[0] [ val ];
+    return local[4];
+};
+int main (){
+
+    int local[4];
+
+    local[1] = 16;
+    initialize_array ( );
+    local[0] = 0;
+    print ( "The first few digits of the Fibonacci sequence are:\n" );
+    local[2] = ( local[0] < local[1] );
+    while ( local[2] );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func getinput -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int coneradius 0 ]
+   Symbol [ int coneheight 1 ]
+   Symbol [ int circleradius 2 ]
+   Symbol [ int trianglebase 3 ]
+   Symbol [ int triangleheight 4 ]
+   Symbol [ int sphereradius 5 ]
+   Symbol [ int cone 6 ]
+   Symbol [ int circle 7 ]
+   Symbol [ int triangle 8 ]
+   Symbol [ int sphere 9 ]
+   Symbol [ int pi 10 ]
+int global[0];
+
+int getinput (){
+
+    int local[3];
+
+    return local[0];
+    local[1] = ( 0 >= local[0] );
+    while ( local[1] );
+    local[0] = 0;
+};
+int main (){
+
+    int local[35];
+
+    local[10] = 3141;
+    print ( "Give me a radius for the base of a cone: " );
+    local[11] = getinput ( );
+    local[0] = local[11];
+    print ( "Give me a height for a cone: " );
+    local[12] = getinput ( );
+    local[1] = local[12];
+    print ( "Give me a radius for a circle: " );
+    local[13] = getinput ( );
+    local[2] = local[13];
+    print ( "Give me a length for the base of a triangle: " );
+    local[14] = getinput ( );
+    local[3] = local[14];
+    print ( "Give me a height for a triangle: " );
+    local[15] = getinput ( );
+    local[4] = local[15];
+    print ( "Give me a radius for a sphere: " );
+    local[16] = getinput ( );
+    local[5] = local[16];
+    local[18] = (  );
+    local[17] = local[18] / 3000;
+    local[6] = local[17];
+    local[20] = (  );
+    local[19] = local[20] / 1000;
+    local[7] = local[19];
+    local[23] = local[3] * local[4];
+    local[22] = ( local[23] );
+    local[21] = local[22] / 2;
+    local[8] = local[21];
+    local[25] = (  );
+    local[24] = local[25] / 3000;
+    local[9] = local[24];
+    print ( "The volume of the cone is: " );
+    write;
+    print ( "The area of the circle is: " );
+    write;
+    print ( "The area of the triangle is: " );
+    write;
+    print ( "The volume of the sphere is: " );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int g (){
+
+    return 1;
+};
+int f (){
+
+    int local[1];
+
+    return;
+};
+int e (){
+
+    int local[1];
+
+    return;
+};
+int d (){
+
+    int local[1];
+
+    return;
+};
+int c (){
+
+    int local[1];
+
+    return;
+};
+int b (){
+
+    int local[1];
+
+    return;
+};
+int a (){
+
+    int local[1];
+
+    return;
+};
+int main (){
+
+    int local[2];
+
+    local[1] = a ( );
+    local[0] = local[1];
+    print ( "I calculate the answer to be: " );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+   Symbol [ int c -1 ]
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int c (){
+
+    return 1;
+};
+int b (){
+
+    return 2;
+};
+int a (){
+
+    return 3;
+};
+int foo ( int a, int b, int c ){
+
+    int local[4];
+
+    local[0] = (  );
+    return local[0];
+};
+int main (){
+
+    int local[5];
+
+    local[1] = foo (  );
+    local[0] = local[1];
+    print ( "I calculate the answer to be: " );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ int array_1 0 ]
+   Symbol [ int array_2 1 ]
+   Symbol [ func populate_arrays -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+int global[2];
+
+int populate_arrays (){
+
+    global[0] = 0;
+    global[0] = 1;
+    global[0] = 1;
+    global[0] = 2;
+    global[1] = 3;
+    global[1] = 5;
+    global[1] = 8;
+    global[1] = 13;
+};
+int main (){
+
+    int local[4];
+
+    populate_arrays ( );
+    local[0] = 0;
+    local[1] = 8;
+    print ( "The first few digits of the Fibonacci sequence are:\n" );
+    local[2] = ( local[0] < local[1] );
+    while ( local[2] );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int sum 1 ]
+int global[0];
+
+int main (){
+
+    int local[3];
+
+    write;
+    local[2] = ( local[0] > 0 );
+    while ( local[2] );
+    local[1] = 0;
+    read;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func square -1 ]
+   Symbol [ func complex_abs_squared -1 ]
+   Symbol [ func check_for_bail -1 ]
+   Symbol [ func absval -1 ]
+   Symbol [ func checkpixel -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int x -1 ]
+--SYMBOLS--
+   Symbol [ int real -1 ]
+   Symbol [ int imag -1 ]
+--SYMBOLS--
+   Symbol [ int real -1 ]
+   Symbol [ int imag -1 ]
+--SYMBOLS--
+   Symbol [ int x -1 ]
+--SYMBOLS--
+   Symbol [ int real 0 ]
+   Symbol [ int imag 1 ]
+   Symbol [ int temp 2 ]
+   Symbol [ int iter 3 ]
+   Symbol [ int bail 4 ]
+   Symbol [ int x -1 ]
+   Symbol [ int y -1 ]
+--SYMBOLS--
+   Symbol [ int x 0 ]
+   Symbol [ int y 1 ]
+   Symbol [ int on 2 ]
+int global[0];
+
+int square ( int x ){
+
+    int local[3];
+
+    local[1] = (  );
+    local[0] = local[1] / 1000;
+    return local[0];
+};
+int complex_abs_squared ( int real, int imag ){
+
+    int local[2];
+
+    return;
+};
+int check_for_bail ( int real, int imag ){
+
+    int local[5];
+
+    local[1] = ( real > 4000 );
+    local[2] = ( imag > 4000 );
+    local[0] = ( local[1] || local[2] );
+    if ( local[0] );
+    local[4] = complex_abs_squared (  );
+    local[3] = ( 1600 > local[4] );
+    if ( local[3] );
+    return 1;
+};
+int absval ( int x ){
+
+    int local[3];
+
+    local[0] = ( x < 0 );
+    if ( local[0] );
+    return x;
+};
+int checkpixel ( int x, int y ){
+
+    int local[17];
+
+    local[0] = 0;
+    local[1] = 0;
+    local[3] = 0;
+    local[4] = 16000;
+    local[5] = ( local[3] < 255 );
+    while ( local[5] );
+    return 1;
+};
+int main (){
+
+    int local[10];
+
+    local[1] = 950;
+    local[4] = - 950;
+    local[3] = ( local[1] > local[4] );
+    while ( local[3] );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func max -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
+int global[0];
+
+int max ( int a, int b ){
+
+    int local[1];
+
+    return b;
+    local[0] = ( a > b );
+    if ( local[0] );
+};
+int main (){
+
+    int local[3];
+
+    read;
+    read;
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int m -1 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+int global[0];
+
+int foo ( int m, int n ){
+
+    n =;
+    m =;
+};
+int main (){
+
+    int local[1];
+
+    read;
+    foo ( );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func print_two -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ binary b 0 ]
+   Symbol [ decimal a 1 ]
+int global[0];
+
+int print_two ( int a, int b ){
+
+    write;
+    write;
+};
+int main (){
+
+    int local[2];
+
+    read;
+    read;
+    print_two ( );
+    print_two ( );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func recursionsum -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+int global[0];
+
+int recursionsum ( int n ){
+
+    int local[2];
+
+    return;
+    local[0] = ( n == 0 );
+    if ( local[0] );
+};
+int main (){
+
+    int local[2];
+
+    read;
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func add -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int b 0 ]
+   Symbol [ int a -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
+int global[0];
+
+int add ( int a ){
+
+    int local[1];
+
+    return;
+    read;
+};
+int main (){
+
+    int local[3];
+
+    read;
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func recursedigit -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int on 0 ]
+   Symbol [ int n -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+int global[0];
+
+int recursedigit ( int n ){
+
+    int local[11];
+
+    local[1] = ( 1 == local[0] );
+    if ( local[1] );
+    local[2] = ( 0 == local[0] );
+    if ( local[2] );
+    recursedigit ( );
+    local[4] = (  );
+    local[3] = ( 0 != local[4] );
+    if ( local[3] );
+    local[0] = 0;
+    local[5] = ( 0 == n );
+    if ( local[5] );
+};
+int main (){
+
+    int local[3];
+
+    local[0] = 0;
+    local[1] = ( 0 >= local[0] );
+    while ( local[1] );
+    print ( "The binary representation of: " );
+    write;
+    print ( "is: " );
+    recursedigit ( );
+    print ( "\n\n" );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func g -1 ]
+   Symbol [ func f -1 ]
+   Symbol [ func e -1 ]
+   Symbol [ func d -1 ]
+   Symbol [ func c -1 ]
+   Symbol [ func b -1 ]
+   Symbol [ func a -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int g (){
+
+    return 1;
+};
+int f (){
+
+    int local[1];
+
+    return;
+};
+int e (){
+
+    int local[1];
+
+    return;
+};
+int d (){
+
+    int local[1];
+
+    return;
+};
+int c (){
+
+    int local[1];
+
+    return;
+};
+int b (){
+
+    int local[1];
+
+    return;
+};
+int a (){
+
+    int local[1];
+
+    return;
+};
+int main (){
+
+    int local[2];
+
+    local[1] = a ( );
+    local[0] = local[1];
+    print ( "I calculate the answer to be: " );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ int array_1 0 ]
+   Symbol [ int array_2 1 ]
+   Symbol [ int array_3 2 ]
+   Symbol [ int array_4 3 ]
+   Symbol [ func populate_arrays -1 ]
+   Symbol [ func print_arrays -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+--SYMBOLS--
+   Symbol [ int idx 0 ]
+   Symbol [ int bound 1 ]
+   Symbol [ int temp 2 ]
+int global[4];
+
+int populate_arrays (){
+
+    global[0] = 0;
+    global[1] = 15;
+    global[2] = 5;
+    global[3] = 13;
+    global[0] = 1;
+    global[1] = 14;
+    global[2] = 5;
+    global[3] = 9;
+    global[0] = 2;
+    global[1] = 13;
+    global[2] = 5;
+    global[3] = 12;
+    global[0] = 3;
+    global[1] = 12;
+    global[2] = 5;
+    global[3] = 1;
+    global[0] = 4;
+    global[1] = 11;
+    global[2] = 5;
+    global[3] = 0;
+    global[0] = 5;
+    global[1] = 10;
+    global[2] = 5;
+    global[3] = 14;
+    global[0] = 6;
+    global[1] = 9;
+    global[2] = 5;
+    global[3] = 3;
+    global[0] = 7;
+    global[1] = 8;
+    global[2] = 5;
+    global[3] = 2;
+    global[0] = 8;
+    global[1] = 7;
+    global[2] = 5;
+    global[3] = 11;
+    global[0] = 9;
+    global[1] = 6;
+    global[2] = 5;
+    global[3] = 8;
+    global[0] = 10;
+    global[1] = 5;
+    global[2] = 5;
+    global[3] = 6;
+    global[0] = 11;
+    global[1] = 4;
+    global[2] = 5;
+    global[3] = 4;
+    global[0] = 12;
+    global[1] = 3;
+    global[2] = 5;
+    global[3] = 5;
+    global[0] = 13;
+    global[1] = 2;
+    global[2] = 5;
+    global[3] = 10;
+    global[0] = 14;
+    global[1] = 1;
+    global[2] = 5;
+    global[3] = 7;
+    global[0] = 15;
+    global[1] = 0;
+    global[2] = 5;
+    global[3] = 15;
+};
+int print_arrays (){
+
+    int local[10];
+
+    local[1] = 16;
+    print ( "Array_1:\n" );
+    local[0] = 0;
+    local[2] = ( local[0] < local[1] );
+    while ( local[2] );
+    print ( "\nArray_2:\n" );
+    local[0] = 0;
+    local[3] = ( local[0] < local[1] );
+    while ( local[3] );
+    print ( "\nArray_3:\n" );
+    local[0] = 0;
+    local[4] = ( local[0] < local[1] );
+    while ( local[4] );
+    print ( "\nArray_4:\n" );
+    local[0] = 0;
+    local[5] = ( local[0] < local[1] );
+    while ( local[5] );
+    print ( "\n" );
+};
+int main (){
+
+    int local[27];
+
+    local[1] = 16;
+    populate_arrays ( );
+    print_arrays ( );
+    local[1] = 16;
+    local[0] = 0;
+    local[3] = ( local[0] <  );
+    while ( local[3] );
+    local[0] = 0;
+    local[4] = ( local[0] <  );
+    while ( local[4] );
+    local[0] = 0;
+    local[5] = ( local[0] <  );
+    while ( local[5] );
+    local[0] = 0;
+    local[6] = ( local[0] <  );
+    while ( local[6] );
+    print_arrays ( );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func square -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int x 0 ]
+--SYMBOLS--
+   Symbol [ int val 0 ]
+int global[0];
+
+int square ( int x ){
+
+    int local[2];
+
+    local[1] = local[0] * local[0];
+    return local[1];
+    local[0] = 10;
+};
+int main (){
+
+    int local[2];
+
+    print ( "Give me a number: " );
+    read;
+    print ( "Your number squared is: " );
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func getinput -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+   Symbol [ int line1 0 ]
+   Symbol [ int line2 1 ]
+   Symbol [ int line3 2 ]
+   Symbol [ int line4 3 ]
+   Symbol [ int line5 4 ]
+   Symbol [ int line6 5 ]
+   Symbol [ int line7 6 ]
+   Symbol [ int line8 7 ]
+   Symbol [ int line9 8 ]
+   Symbol [ int line10 9 ]
+   Symbol [ int line11 10 ]
+   Symbol [ int line12 11 ]
+   Symbol [ int dependant 12 ]
+   Symbol [ int single 13 ]
+   Symbol [ int a 14 ]
+   Symbol [ int b 15 ]
+   Symbol [ int c 16 ]
+   Symbol [ int d 17 ]
+   Symbol [ int e 18 ]
+   Symbol [ int f 19 ]
+   Symbol [ int g 20 ]
+   Symbol [ int eic 21 ]
+   Symbol [ int spousedependant 22 ]
+int global[0];
+
+int getinput (){
+
+    int local[4];
+
+    return local[0];
+    local[1] = ( 0 > local[0] );
+    while ( local[1] );
+    local[2] = - 1;
+    local[0] = local[2];
+};
+int main (){
+
+    int local[52];
+
+    print ( "Welcome to the United States 1040 federal income tax program.\n" );
+    print ( "(Note: this isn't the real 1040 form. If you try to submit your\n" );
+    print ( "taxes this way, you'll get what you deserve!\n\n" );
+    print ( "Answer the following questions to determine what you owe.\n\n" );
+    print ( "Total wages, salary, and tips? " );
+    local[23] = getinput ( );
+    local[0] = local[23];
+    print ( "Taxable interest (such as from bank accounts)? " );
+    local[24] = getinput ( );
+    local[1] = local[24];
+    print ( "Unemployment compensation, qualified state tuition, and Alaska\n" );
+    print ( "Permanent Fund dividends? " );
+    local[25] = getinput ( );
+    local[2] = local[25];
+    local[3] =;
+    print ( "Your adjusted gross income is: " );
+    write;
+    local[26] = getinput ( );
+    local[12] = local[26];
+    local[27] = ( 0 != local[12] );
+    if ( local[27] );
+    local[28] = ( 0 == local[12] );
+    if ( local[28] );
+    local[5] =;
+    local[29] = ( local[5] < 0 );
+    if ( local[29] );
+    print ( "Your taxable income is: " );
+    write;
+    print ( "Enter the amount of Federal income tax withheld: " );
+    local[30] = getinput ( );
+    local[6] = local[30];
+    print ( "enter 0 otherwise: " );
+    local[31] = getinput ( );
+    local[21] = local[31];
+    local[7] = 0;
+    local[32] = ( 0 != local[21] );
+    if ( local[32] );
+    local[8] =;
+    print ( "Your total tax payments amount to: " );
+    write;
+    local[34] = (  );
+    local[33] = local[34] / 100;
+    local[9] = local[33];
+    print ( "Your total tax liability is: " );
+    write;
+    local[10] =;
+    local[35] = ( local[10] < 0 );
+    if ( local[35] );
+    local[36] = ( local[10] > 0 );
+    if ( local[36] );
+    local[11] =;
+    local[37] = ( local[11] >= 0 );
+    if ( local[37] );
+    local[38] = ( local[11] < 0 );
+    if ( local[38] );
+    print ( "Thank you for using ez-tax.\n" );
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func add -1 ]
+   Symbol [ func times_eight -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+   Symbol [ int b -1 ]
+--SYMBOLS--
+   Symbol [ int a -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+   Symbol [ int b 1 ]
+int global[0];
+
+int add ( int a, int b ){
+
+    return;
+};
+int times_eight ( int a ){
+
+    int local[7];
+
+    local[0] = add (  );
+    return local[0];
+};
+int main (){
+
+    int local[3];
+
+    read;
+    write;
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ int k 0 ]
+   Symbol [ int x 1 ]
+   Symbol [ func a2 -1 ]
+--SYMBOLS--
+   Symbol [ int v 0 ]
+   Symbol [ decimal j -1 ]
+   Symbol [ decimal e -1 ]
+int global[2];
+
+int a2 ( decimal j, decimal e ){
+
+    int local[6];
+
+    local[0] = j;
+    a2 ( );
+    local[2] = ( global[1] == 1 );
+    local[3] = ( local[0] == j );
+    local[1] = ( local[2] || local[3] );
+    if ( local[1] );
+    return local[0];
+};
+
+===EXIT NORMAL!===
+--SYMBOLS--
+   Symbol [ func foo -1 ]
+   Symbol [ func main -1 ]
+--SYMBOLS--
+   Symbol [ int a 0 ]
+--SYMBOLS--
+int global[0];
+
+int foo (){
+
+    int local[1];
+
+    write;
+    read;
+};
+int main (){
+
+    foo ( );
+};
+
+===EXIT NORMAL!===
