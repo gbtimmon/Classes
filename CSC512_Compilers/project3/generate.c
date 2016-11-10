@@ -290,12 +290,20 @@ void writeFunc( FILE * f, Token t ) {
    }
 };
 
-void generate( FILE * f, Token t ) {
+void generate( FILE * f, Token meta, Token t ) {
+
+    Token m = meta->child ; 
+
+    while( m != NULL ){
+        if( m->value != NULL ) 
+            printf( "%s\n", m->value ); 
+        m=m->peer; 
+    }
 
     int global_size = SymbolTable_getAllocSize( t->scope ); 
 
     if( global_size > 0 )
-        printf( "int global[%d];\n\n", global_size ); 
+        printf( "int global[%d];\n", global_size ); 
    
     Token c = t->child; 
     while( c != NULL ) {

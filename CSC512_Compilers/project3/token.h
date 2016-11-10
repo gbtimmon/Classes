@@ -14,7 +14,6 @@ typedef struct _token {
     token_t type;             // what kind of token am I
     char*   value;            // what is the char data from the original source (If Im terminal )
     int    id;                // A unique ID to keep the tree eaiser to debug. 
-    struct _token * meta;     // keep meta statements off to the side -- eaiser to manage this way. 
     struct _token * parent;   // The symbol that created me. 
     struct _token * child;    // The head of a doubly linked lists of the symbols I created. 
     struct _token * peer;     // The next in the dobuly linked list
@@ -67,11 +66,6 @@ Token      Token_findChild( Token, token_t );
 // will return NULL if non are present. 
 //     @1 : Token to search
 //     @2 : type to look for
-
-void      Token_appendMeta( Token, Token ); 
-// Add a meta statement. will be printed before the current token. 
-//     @1 : parent
-//     @2 : metastatement
 
 void       Token_collapse( Token ); 
 //Remove the current token and inserts it children in its place in the tree. 

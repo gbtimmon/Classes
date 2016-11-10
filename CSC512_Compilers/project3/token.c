@@ -29,7 +29,6 @@ Token Token_new( token_t type, char * buffer ) {
     n->parent  = NULL;   // pointer to the token that generated me
     n->peer    = NULL;   // pointer to my peer ( I am part of a linked list whose head is pointed to by my parent )
     n->lpeer   = NULL;   // pointer to me left peer ( its a doublely linked list ). 
-    n->meta    = NULL;
     n->scope   = NULL;   // a symbol table if one exists here. 
     
     if( buffer ) n->value = malloc( sizeof( char ) * ( strlen(buffer) + 1 ) ) ;
@@ -79,17 +78,6 @@ void Token_appendChild( Token parent, Token lchild ) {
         rchild->lpeer = lchild; 
     }
 };
-
-void Token_appendMeta( Token p, Token m ) { 
-    if( p->meta == NULL){
-        p->meta = m; 
-        return;
-    }
-
-    Token c = p->meta;
-    while( c->peer != NULL ) c = c->peer; 
-    c->peer = m; 
-}
 
 void Token_prependChild( Token b, Token c ) { 
 
@@ -149,8 +137,6 @@ void Token_collapse( Token t ) {
          Token_free( t ); 
          return;
      }
-
-     Token_appendMeta( t->parent, t->meta ); 
 
      c->lpeer    = start; 
      if( c->lpeer != NULL ) 

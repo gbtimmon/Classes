@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include "token.h"
 
-void generate( FILE * f, Token t );
+void generate( FILE * f, Token meta, Token t );
 
 #endif 

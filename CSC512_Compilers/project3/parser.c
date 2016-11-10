@@ -25,6 +25,7 @@ int main( int argc, char ** argp, char ** envp ){
 
     Scanner s   = Scanner_new( argp[1] );
     Token tok   = Scanner_nextToken( s );
+    Token meta  = Token_new( S_START, NULL ); 
     Token tree  = Token_new( S_START, NULL );
     Token eof   = Token_new( T_EOF, NULL );
 
@@ -38,11 +39,8 @@ int main( int argc, char ** argp, char ** envp ){
         //fprintf( stdout, "\nIteration %d\n", iter - 1 ); 
         while( isSkip( tok->type ) ) 
         {
-            //Token_appendMeta( TOS, tok );
-            //printf( "META : %s\n", tok->value ) ; 
-            Token_free( tok ); 
+            Token_prependChild( meta, tok ); 
             tok = Scanner_nextToken( s );
-   
         }
 
        // fprintf( stderr, "TOS -> "); 
@@ -116,7 +114,7 @@ int main( int argc, char ** argp, char ** envp ){
 
     transform( tree ); 
     Token_printTree( tree );
-    generate( stdout, tree ); 
+    generate( stdout, meta, tree ); 
 
     printf("\n===EXIT NORMAL!===\n");
 }
