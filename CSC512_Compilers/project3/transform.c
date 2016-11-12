@@ -162,6 +162,7 @@ void transformSIdList( Token t ) {
 };
 
 void transformSData( Token t ) { 
+     findAndCollapse( t, S_DATA_A ); 
      findAndCollapse( t, S_IDLIST ); 
      findAndCollapse( t, S_XDATA ); 
      t->type = S_XDATA; 
@@ -251,7 +252,6 @@ void transformSTerm( Token t ){
 
 void transformSFact( Token t ) {
     findAndCollapse( t, S_FACT_A ); 
-    findAndCollapse( t, S_BRACK_EXP ); 
     findAndCollapse( t, S_EXP_LIST );
     if( t->child->peer == NULL ){
        Token_replace( t, t->child ); 
@@ -286,6 +286,10 @@ void transformSExpListA( Token t ){
     findAndCollapse( t, S_EXP_LIST_B ); 
 };
 
+void transformSBrackExp( Token t ){
+    findAndRemove( t, T_RBRACK ); 
+    findAndRemove( t, T_LBRACK ); 
+}
 void doTransform( Token t ) {
 
     switch( t->type ) {
@@ -297,6 +301,7 @@ void doTransform( Token t ) {
         case S_PARM_LIST_A : transformSParmListA( t ); break;
         case S_PARM_LIST   : transformSParmList( t );  break; 
         case S_START_A     : transformSStartA( t );    break;
+        case S_BRACK_EXP   : transformSBrackExp( t );  break;
         case S_ADD         : transformSAdd( t );       break;
         case S_COND_EXP    : transformSCondExp( t );   break; 
         case S_START       : transformSStart( t );     break;
@@ -391,6 +396,27 @@ int _dfs( Token node, Token target ){
     return false; 
 }
 
+int getDeclarationSize( Token c ) {
+    if(c->peer == NULL )              return 1; 
+    if(c->peer->type != S_BRACK_EXP ) return 1;
+    if(c->peer->child == NULL ) {
+       fprintf(stderr, "Compile Error : array declaration with no size\n"); 
+       exit(1); 
+    }
+    if(c->peer->child->type != T_NUMBER ) {
+       fprintf(stderr, "Compile Error : illegal array declaration, only constant size arrays allowed.\n"); 
+       exit(1); 
+    }
+
+    int value = atoi( c->peer->child->value ); 
+
+    if( value == 0 ) {
+       fprintf(stderr, "Compile Error : illegal array declaration, only constant size arrays allowed.\n"); 
+       exit(1); 
+    }
+
+    return value; 
+}
 void loadVarList( Token container, Token data ) {
     // Data elements after transform have the form 
     // type var var var type var var etc ...
@@ -404,8 +430,9 @@ void loadVarList( Token container, Token data ) {
         if( c->type == T_XTYPE || c->type == T_TYPE ) 
            type = toType( c->value ); 
     	else if (c->type == T_VAR){
-            if( isVarUsed( container, c ) )
-                SymbolTable_add( container->scope, type, c->value, true  ); 
+            if( isVarUsed( container, c ) ){
+                SymbolTable_add( container->scope, type, getDeclarationSize( c ), c->value, true  ); 
+            }
             else
                 printf( "INFO : removing unused var %s.\n", c->value ); 
         }
@@ -453,7 +480,7 @@ void buildSymbolTables( Token t ){
              // Count the temp vars. 
              SymbolTable_addTemp(c->scope, countOper( c ) ); 
 
-             SymbolTable_add( t->scope, TYPE_FUNC, name->value, false ); 
+             SymbolTable_add( t->scope, TYPE_FUNC, 1, name->value, false ); 
              if( fdata != NULL ) 
                  loadVarList( c, fdata ); 
 

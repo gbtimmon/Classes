@@ -25,9 +25,9 @@ int main( int argc, char ** argp, char ** envp ){
 
     Scanner s   = Scanner_new( argp[1] );
     Token tok   = Scanner_nextToken( s );
-    Token meta  = Token_new( S_START, NULL ); 
-    Token tree  = Token_new( S_START, NULL );
-    Token eof   = Token_new( T_EOF, NULL );
+    Token meta  = Token_new( S_START, NULL); 
+    Token tree  = Token_new( S_START, NULL);
+    Token eof   = Token_new( T_EOF, NULL  );
 
     TokenStack stack = TokenStack_new();
     TokenStack_push( stack, eof  );
@@ -43,12 +43,12 @@ int main( int argc, char ** argp, char ** envp ){
             tok = Scanner_nextToken( s );
         }
 
-       // fprintf( stderr, "TOS -> "); 
-       // Token_write( TOS, stderr ); 
-       // fprintf( stderr, "TOK -> "); 
-       // Token_write( tok, stderr );
-       // fprintf( stderr, "STK -> ");
-       // TokenStack_write( stack, stderr);
+        // fprintf( stderr, "TOS -> "); 
+        // Token_write( TOS, stderr ); 
+        // fprintf( stderr, "TOK -> "); 
+        // Token_write( tok, stderr );
+        // fprintf( stderr, "STK -> ");
+        // TokenStack_write( stack, stderr);
 
         if( TOS->type == T_EOF && tok->type == T_EOF )
         {
@@ -66,7 +66,8 @@ int main( int argc, char ** argp, char ** envp ){
             } 
             else 
             {
-                fprintf(stderr,"Error, illegal token at line number %d\n", s->lineNo + 1);
+                fprintf(stderr,"Parser error in file %s, line %d\n", argp[1], s->lineNo + 1);      
+                fprintf(stderr,"   illegal token %s, transforming %s\n", tokenName[ (int) tok->type ], tokenName[ (int) TOS->type ]); 
                 exit(1); 
             }
         }
@@ -90,7 +91,8 @@ int main( int argc, char ** argp, char ** envp ){
             //fprintf( stderr, "Rule: %d\n", idx + 1 ); 
             if( idx < 0 ) 
             { 
-                fprintf(stderr,"Error, illegal token at line number %d\n", s->lineNo + 1);
+                fprintf(stderr,"Parser error in file %s, line %d\n", argp[1], s->lineNo + 1);      
+                fprintf(stderr,"   illegal token %s, transforming %s\n", tokenName[ (int) tok->type ], tokenName[ (int) TOS->type ]); 
                 exit(1);
             } 
             else 
@@ -111,12 +113,19 @@ int main( int argc, char ** argp, char ** envp ){
     }
     TokenStack_free( stack ); 
     Scanner_free(s); 
-
     transform( tree ); 
-    Token_printTree( tree );
-    generate( stdout, meta, tree ); 
-
-    printf("\n===EXIT NORMAL!===\n");
+   
+    
+    char * newName = malloc( sizeof( char ) * (strlen( argp[1] ) + 5 ) ); 
+    strcpy( newName, argp[1]); 
+    
+    char * itr; 
+    for( int i = 0; i < strlen(newName ); i++) 
+       if( newName[i] == '.' ) itr = newName + i;
+    strcpy(itr, "_gen.c" );
+    FILE * fp = fopen( newName, "w" ); 
+    generate( fp, meta, tree ); 
+    printf("Generated file %s\n", newName ); 
 }
 #endif
 

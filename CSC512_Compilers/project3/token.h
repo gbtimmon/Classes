@@ -13,7 +13,7 @@
 typedef struct _token { 
     token_t type;             // what kind of token am I
     char*   value;            // what is the char data from the original source (If Im terminal )
-    int    id;                // A unique ID to keep the tree eaiser to debug. 
+    int     id;               // A unique ID to keep the tree eaiser to debug. 
     struct _token * parent;   // The symbol that created me. 
     struct _token * child;    // The head of a doubly linked lists of the symbols I created. 
     struct _token * peer;     // The next in the dobuly linked list
@@ -76,7 +76,7 @@ void       Token_printTree( Token );
 //     @1 : The head of the tree
 
 Token      Token_new      ( token_t, char * );
-// Create a new token struct. 
+// Create a new token struct.  
 //     @1 : token type
 //     @2 : token string data, only filled on terminal 
 

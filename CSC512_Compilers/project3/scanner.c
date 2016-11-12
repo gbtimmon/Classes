@@ -47,6 +47,7 @@ Scanner Scanner_new( const char * inFile ) {
     n->lineNo  = 0; 
     n->errCnt  = 0;
     n->outFlag = 0;
+    n->fileName= inFile; 
     n->in      = fopen( inFile, "r");
     n->buffer  = Buffer_new(); 
     n->token   = T_e;
@@ -101,11 +102,12 @@ Token _Scanner_nextToken( Scanner s ) {
         Scanner_nextChar( s );
         return _Scanner_nextToken( s ); 
     } else {
-        fprintf(stderr, "Illegal char %c at line %d.\n",s->cur, s->lineNo);
+        fprintf(stderr, "Scanner Error in file %s at line %d.\n",s->fileName, s->lineNo);
+        fprintf(stderr, "     Illegal char %c\n",s->cur);
         exit(1); 
     }
     
-    return Token_new( s->token, s->buffer->stack ); 
+    return Token_new( s->token, s->buffer->stack); 
 }
 
 Token Scanner_nextToken( Scanner s ) { 

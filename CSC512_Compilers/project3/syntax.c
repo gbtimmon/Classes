@@ -1,4 +1,5 @@
-S_TYPE        :: T_TYPE                                                          FIRST+: T_TYPE
+S_TYPE        :: T_TYPE                                                          FIRST+: T_TYPE 
+S_TYPE        :: T_VOID                                                          FIRST+: T_VOID
 S_ADD         :: T_PLUS                                                          FIRST+: T_PLUS
 S_ADD         :: T_MINUS                                                         FIRST+: T_MINUS
 S_START       :: S_TYPE       T_VAR         S_START_A                            FIRST+: T_TYPE   T_VOID
@@ -20,8 +21,9 @@ S_PARM_LIST_C :: T_e                                                            
 S_FUNC        :: S_TYPE       T_VAR         T_LPAR       S_PARM_LIST T_RPAR      FIRST+: T_VOID T_TYPE
 S_FUNC_DEF    :: T_LCURL      S_DATA        S_STATEMENT  T_RCURL                 FIRST+: T_LCURL
 S_FUNC_DEF    :: T_SEMI                                                          FIRST+: T_SEMI
-S_DATA        :: S_TYPE       T_VAR         S_IDLIST     T_SEMI      S_DATA      FIRST+: T_VOID T_TYPE
+S_DATA        :: S_TYPE       T_VAR        S_DATA_A                              FIRST+: T_VOID T_TYPE
 S_DATA        :: T_e                                                             FIRST+: T_VAR T_RCURL T_WHILE T_IF T_RETURN T_BREAK T_CONTINUE T_READ T_WRITE T_PRINT
+S_DATA_A      :: S_BRACK_EXP  S_IDLIST     T_SEMI      S_DATA                    FIRST+: T_LBRACK T_COMMA T_SEMI
 // Assign or Func call
 S_STATEMENT   :: T_VAR        S_STATEMENT_A S_STATEMENT                          FIRST+: T_VAR
 S_STATEMENT_A :: S_BRACK_EXP  T_EQ          S_EXP        T_SEMI                  FIRST+: T_LBRACK T_EQ

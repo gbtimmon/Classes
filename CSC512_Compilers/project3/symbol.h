@@ -15,6 +15,7 @@ typedef enum _symbol_t {
 typedef struct _symbol {
     symbol_t type;       
     char *   name; 
+    int      size; 
     int      ref; 
 } * Symbol; 
 
@@ -28,7 +29,7 @@ typedef struct _sTable {
 } * SymbolTable; 
 
 SymbolTable  SymbolTable_new ( int );
-int          SymbolTable_add ( SymbolTable, symbol_t, const char *, bool ); 
+int          SymbolTable_add ( SymbolTable, symbol_t, int, const char *, bool ); 
 int          SymbolTable_addTemp( SymbolTable, int );
 int          SymbolTable_getAllocSize( SymbolTable );
 int          SymbolTable_getTemp( SymbolTable );

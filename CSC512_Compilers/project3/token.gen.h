@@ -37,6 +37,7 @@ typedef enum _token_t {
     T_BREAK,
     T_BOOL_OP,
     S_XOPER,
+    S_XLOAD,
     S_XFUNC,
     S_XDATA,
     S_XCODE,
@@ -66,6 +67,7 @@ typedef enum _token_t {
     S_EXP_LIST,
     S_EXP_A,
     S_EXP,
+    S_DATA_A,
     S_DATA,
     S_COND_EXP_A,
     S_COND_EXP,
@@ -79,4 +81,4 @@ typedef enum _token_t {
 //name mapping
 const char * tokenName[];
 #define TERM_COUNT 36
-#define SYM_COUNT  38
+#define SYM_COUNT  40

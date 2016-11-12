@@ -16,6 +16,7 @@ typedef struct _scanner {
     int errCnt; 
     int outFlag;
     char cur; 
+    const char * fileName; 
     Buffer buffer; 
     token_t token;
     FILE * in;

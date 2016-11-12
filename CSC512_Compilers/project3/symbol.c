@@ -37,19 +37,20 @@ int  SymbolTable_getAllocSize( SymbolTable s ) {
      return s->ref + s->temp; 
 };
 
-int  SymbolTable_add( SymbolTable s,  symbol_t type, const char * name, bool referenced ){
+int  SymbolTable_add( SymbolTable s,  symbol_t type, int size, const char * name, bool referenced ){
   
     if( SymbolTable_find( s, name ) != NULL ) 
         return -1; 
 
     Symbol new = malloc( sizeof( struct _symbol ) ); 
     new->type = type; 
+    new->size = size; 
     new->name = malloc( sizeof(char) * (strlen( name ) + 2) );
     strcpy( new->name, name ); 
 
     if( referenced ) {
         new->ref = s->ref; 
-        s->ref += 1;  
+        s->ref += size;  
     } else 
         new->ref = -1; 
 
