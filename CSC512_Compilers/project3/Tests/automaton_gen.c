@@ -16,19 +16,19 @@ int getnextdigit (){
 
 
     label_0: ;
-    if(0==0) goto labal_2;
+    if(0==0) goto label_2;
     goto label_1;
     label_2: ;
         print ( "Give me a number (-1 to quit): " );
         read ( local[0] );
         local[1] = - 1;
-        if(local[1]<=local[0] )  goto label_3 ;
+        if(local[1]<=local[0] )  goto label_3;
         goto label_4;
         label_3: ;
-            goto label_1
+            goto label_1;
         label_4: ;
         print ( "I need a number that's either 0 or 1.\n" );
-    goto label_0 ;
+    goto label_0;
     label_1: ;
     return local[0];
 };

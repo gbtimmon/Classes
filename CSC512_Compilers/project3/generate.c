@@ -172,6 +172,39 @@ char * putStatement( SymbolTable global, SymbolTable local, Token t, int depth, 
     free( out ); 
 }
 
+char * putCondExp( SymbolTable global, SymbolTable local,  Token t , int depth ) {
+    char * out = malloc( sizeof( char ) * 2 ) ; 
+    sprintf(out, ""); 
+
+    Token c = t->child; 
+    while( c != NULL ) {
+        dynamicStrcat(&out, " " );
+        switch( c->type ) {
+          case T_VAR :{
+            char * ref = getReference( global, local, c, depth ); 
+            dynamicStrcat( &out, ref ); 
+            free(ref); 
+            break; 
+          }
+          case T_NUMBER :
+          case T_BOOL_OP :
+          case T_CMP :
+            dynamicStrcat( &out, c->value ); 
+            break;
+          case S_XOPER:{
+            int ref = putOperChain( global, local, c, depth ); 
+            char * str[20]; 
+            sprintf( str, "local[%d]", ref ); 
+            dynamicStrcat(&out, str ); 
+            break;
+          }
+        }
+        c = c -> peer; 
+    }
+
+    return out; 
+}
+
 void putWhileStatement( SymbolTable global, SymbolTable local, Token t, int depth  ) { 
 
      int looplbl = LABEL_COUNT++; 
@@ -188,36 +221,15 @@ void putWhileStatement( SymbolTable global, SymbolTable local, Token t, int dept
      char * out = malloc( sizeof(char) * 100 ); 
      sprintf(  out, "if(" ); 
 
-     while( cnd != NULL ) {
-         if( cnd ->type == S_COND ){
-             Token opr = cnd->child; 
-             while( opr != NULL ) {
-                 if( opr->type == S_XOPER ){
-                     int ref = putOperChain( global, local, opr, depth ); 
-                     char * temp[20];
-                     sprintf( temp, "local[%d]", ref ); 
-                     dynamicStrcat( &out, temp ); 
-                 } else if ( opr->type == T_VAR ){
-                     char * ref = getReference( global, local, opr, depth ); 
-                     dynamicStrcat( &out, ref ); 
-                     free( ref ); 
-                 } else {
-                     dynamicStrcat( &out, opr->value ); 
-                 } 
-                 opr = opr->peer; 
-             } 
-         } else {
-             dynamicStrcat(&out, " "); 
-             dynamicStrcat(&out, cnd->value ); 
-         }
-         cnd = cnd -> peer; 
-     }
+     char * condExp = putCondExp( global, local, exp, depth ); 
+     dynamicStrcat( &out, condExp ); 
+     free( condExp ); 
 
      tab(depth); 
      fprintf(GLOBAL_FILE,  out ); 
      free( out ); 
     
-     fprintf(GLOBAL_FILE,  ") goto labal_%d;\n", okaylbl ); 
+     fprintf(GLOBAL_FILE,  ") goto label_%d;\n", okaylbl ); 
 
      tab(depth);
      fprintf(GLOBAL_FILE, "goto label_%d;\n", exitlbl ); 
@@ -229,7 +241,7 @@ void putWhileStatement( SymbolTable global, SymbolTable local, Token t, int dept
      writeStatements( global, local, statements, depth + 1, looplbl, exitlbl );
 
      tab(depth);   
-     fprintf(GLOBAL_FILE, "goto label_%d: ;\n", looplbl); 
+     fprintf(GLOBAL_FILE, "goto label_%d;\n", looplbl); 
 
      tab(depth);   
      fprintf(GLOBAL_FILE, "label_%d: ;\n", exitlbl); 
@@ -241,34 +253,11 @@ void putIfStatement( SymbolTable global, SymbolTable local, Token t, int depth, 
      Token exp  = Token_findChild( t, S_COND_EXP ); 
      Token cnd  = exp->child; 
 
-     char * out = malloc( sizeof(char) * 100 ); 
+     char * out = malloc( sizeof(char) * 5 ); 
      sprintf(  out, "if(" ); 
-
-     while( cnd != NULL ) {
-         if( cnd ->type == S_COND ){
-             Token opr = cnd->child; 
-             while( opr != NULL ) {
-                 if( opr->type == S_XOPER ){
-                     int ref = putOperChain( global, local, opr, depth ); 
-                     char * temp[20];
-                     sprintf(temp, "local[%d]", ref ); 
-                     dynamicStrcat( &out, temp ); 
-                 } else if ( opr->type == T_VAR ){
-                     char * ref = getReference( global, local, opr, depth ); 
-                     dynamicStrcat( &out, ref ); 
-                     free( ref ); 
-                 } else {
-                     dynamicStrcat( &out, opr->value ); 
-                 } 
-                 opr = opr->peer; 
-             } 
-         } else {
-             dynamicStrcat(&out, " "); 
-             dynamicStrcat(&out, cnd->value ); 
-         }
-         cnd = cnd -> peer; 
-     }
-            
+     char * condExp = putCondExp( global, local, exp, depth ); 
+     dynamicStrcat( &out, condExp ); 
+     free( condExp ); 
      tab(depth);    
      fprintf(GLOBAL_FILE,  out ); 
      fprintf(GLOBAL_FILE,  ") ");

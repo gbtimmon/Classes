@@ -266,6 +266,26 @@ void transformSFact( Token t ) {
 };
     
 void transformSCondExp( Token t ){
+    findAndCollapse( t, S_COND_EXP_A ); 
+
+    int cc = Token_countChild( t, -1); 
+    if( cc == 1 ){
+        findAndCollapse( t, S_COND ); 
+    } 
+   
+    if( cc == 3 ) {
+        int lhs = Token_countChild(t->child, -1 ); 
+        if( lhs > 1 ) 
+            t->child->type = S_XOPER; 
+        else 
+            Token_collapse( t->child ); 
+        
+        int rhs = Token_countChild( t->child->peer->peer, -1 ); 
+        if( lhs > 1 ) 
+            t->child->peer->peer->type = S_XOPER; 
+        else 
+            Token_collapse( t->child->peer->peer ); 
+    }
 };
     
 void transformSCond( Token t ){
