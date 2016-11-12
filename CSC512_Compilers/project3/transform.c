@@ -211,14 +211,17 @@ void splitOper( Token t ) {
         int len = Token_countChild( cur, -1 );
         if( len > 3 ) {
             Token oper  = Token_new( S_XOPER, NULL ); 
-            Token child = cur->child->peer->peer; 
+            Token child = cur->child; 
+            while( child->peer != NULL ) child = child->peer; 
+    
+            child = child->lpeer->lpeer; 
             while( child != NULL ){
-                Token next = child->peer; 
+                Token next = child->lpeer; 
                 Token_remove( child );    
-                Token_prependChild( oper, child ); 
+                Token_appendChild( oper, child ); 
                 child = next;
             } 
-            Token_prependChild( cur, oper);
+            Token_appendChild( cur, oper);
             cur = oper; 
         } else {
             return;

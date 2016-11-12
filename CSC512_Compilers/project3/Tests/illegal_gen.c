@@ -25,7 +25,7 @@ int main (){
     local[1] = 8;
     print ( "The first few digits of the Fibonacci sequence are:\n" );
     label_0: ;
-    if(local[0]<local[1]) goto label_2;
+    if( local[0] < local[1]) goto label_2;
     goto label_1;
     label_2: ;
         local[2] = global[0 + local[0]];

@@ -77,13 +77,13 @@ int checkpixel ( int x, int y ){
     if( local[3] < 255) goto label_8;
     goto label_7;
     label_8: ;
-        local[8] = square ( local[0] );
+        local[9] = square ( local[0] );
         local[10] = square ( local[1] );
-        local[9] = local[10] + local[5];
-        local[7] = local[8] - local[9];
+        local[8] = local[9] - local[10];
+        local[7] = local[8] + local[5];
         local[2] = local[7];
-        local[15] = local[0] * local[1];
-        local[14] = 2 * local[15];
+        local[15] = 2 * local[0];
+        local[14] = local[15] * local[1];
         local[13] = local[14] + 500;
         local[12] = local[13] / 1000;
         local[11] = local[12] + local[6];

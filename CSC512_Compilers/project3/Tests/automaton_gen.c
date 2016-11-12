@@ -12,17 +12,19 @@ int state_3 ();
 
 int getnextdigit (){
 
-    int local[2];
+    int local[4];
 
 
     label_0: ;
-    if(0==0) goto label_2;
+    if( 0 == 0) goto label_2;
     goto label_1;
     label_2: ;
         print ( "Give me a number (-1 to quit): " );
         read ( local[0] );
-        local[1] = - 1;
-        if(local[1]<=local[0] )  goto label_3;
+        local[2] = - 1;
+        local[1] = local[2] <= local[0];
+        local[3] = 1 >= local[0];
+        if( local[1] && local[3])  goto label_3;
         goto label_4;
         label_3: ;
             goto label_1;
@@ -40,7 +42,7 @@ int state_0 (){
     local[1] = getnextdigit ( );
     local[0] = local[1];
     local[2] = - 1;
-    if(local[2]==local[0])  goto label_5;
+    if( local[2] == local[0])  goto label_5;
     goto label_6;
     label_5: ;
         print ( "You gave me an even number of 0's.\n" );
@@ -48,12 +50,12 @@ int state_0 (){
         print ( "I therefore accept this input.\n" );
         return;
     label_6: ;
-    if(0==local[0])  goto label_7;
+    if( 0 == local[0])  goto label_7;
     goto label_8;
     label_7: ;
         state_2 ( );
     label_8: ;
-    if(1==local[0])  goto label_9;
+    if( 1 == local[0])  goto label_9;
     goto label_10;
     label_9: ;
         state_1 ( );
@@ -67,7 +69,7 @@ int state_1 (){
     local[1] = getnextdigit ( );
     local[0] = local[1];
     local[2] = - 1;
-    if(local[2]==local[0])  goto label_11;
+    if( local[2] == local[0])  goto label_11;
     goto label_12;
     label_11: ;
         print ( "You gave me an even number of 0's.\n" );
@@ -75,12 +77,12 @@ int state_1 (){
         print ( "I therefore reject this input.\n" );
         return;
     label_12: ;
-    if(0==local[0])  goto label_13;
+    if( 0 == local[0])  goto label_13;
     goto label_14;
     label_13: ;
         state_3 ( );
     label_14: ;
-    if(1==local[0])  goto label_15;
+    if( 1 == local[0])  goto label_15;
     goto label_16;
     label_15: ;
         state_0 ( );
@@ -94,7 +96,7 @@ int state_2 (){
     local[1] = getnextdigit ( );
     local[0] = local[1];
     local[2] = - 1;
-    if(local[2]==local[0])  goto label_17;
+    if( local[2] == local[0])  goto label_17;
     goto label_18;
     label_17: ;
         print ( "You gave me an odd number of 0's.\n" );
@@ -102,12 +104,12 @@ int state_2 (){
         print ( "I therefore reject this input.\n" );
         return;
     label_18: ;
-    if(0==local[0])  goto label_19;
+    if( 0 == local[0])  goto label_19;
     goto label_20;
     label_19: ;
         state_0 ( );
     label_20: ;
-    if(1==local[0])  goto label_21;
+    if( 1 == local[0])  goto label_21;
     goto label_22;
     label_21: ;
         state_3 ( );
@@ -121,7 +123,7 @@ int state_3 (){
     local[1] = getnextdigit ( );
     local[0] = local[1];
     local[2] = - 1;
-    if(local[2]==local[0])  goto label_23;
+    if( local[2] == local[0])  goto label_23;
     goto label_24;
     label_23: ;
         print ( "You gave me an odd number of 0's.\n" );
@@ -129,12 +131,12 @@ int state_3 (){
         print ( "I therefore reject this input.\n" );
         return;
     label_24: ;
-    if(0==local[0])  goto label_25;
+    if( 0 == local[0])  goto label_25;
     goto label_26;
     label_25: ;
         state_1 ( );
     label_26: ;
-    if(1==local[0])  goto label_27;
+    if( 1 == local[0])  goto label_27;
     goto label_28;
     label_27: ;
         state_2 ( );

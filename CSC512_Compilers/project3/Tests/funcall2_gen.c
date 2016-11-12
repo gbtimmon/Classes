@@ -22,10 +22,10 @@ int foo ( int a, int b, int c ){
     local[1] = b;
     local[2] = c;
 
-    local[4] = local[0] * 3;
+    local[5] = local[0] * 3;
     local[6] = local[1] * 2;
-    local[5] = local[6] + local[2];
-    local[3] = local[4] + local[5];
+    local[4] = local[5] + local[6];
+    local[3] = local[4] + local[2];
     return local[3];
 };
 int main (){

@@ -8,7 +8,7 @@ int main (){
     read ( local[0] );
     local[1] = 0;
     label_0: ;
-    if(local[0]>0) goto label_2;
+    if( local[0] > 0) goto label_2;
     goto label_1;
     label_2: ;
         local[2] = local[1] + local[0];

@@ -114,7 +114,6 @@ int main( int argc, char ** argp, char ** envp ){
     TokenStack_free( stack ); 
     Scanner_free(s); 
     transform( tree ); 
-   
     char * newName = malloc( sizeof( char ) * (strlen( argp[1] ) + 5 ) ); 
     strcpy( newName, argp[1]); 
     

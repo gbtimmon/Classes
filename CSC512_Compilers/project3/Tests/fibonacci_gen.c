@@ -11,7 +11,7 @@ int initialize_array (){
     local[1] = 16;
     local[0] = 0;
     label_0: ;
-    if(local[0]<local[1]) goto label_2;
+    if( local[0] < local[1]) goto label_2;
     goto label_1;
     label_2: ;
         local[2] = - 1;
@@ -27,14 +27,14 @@ int fib ( int val ){
 
     local[0] = val;
 
-    if(local[0]<2)  goto label_3;
+    if( local[0] < 2)  goto label_3;
     goto label_4;
     label_3: ;
         return 1;
     label_4: ;
     local[1] = global[0 + local[0]];
     local[2] = - 1;
-    if(local[1]==local[2])  goto label_5;
+    if( local[1] == local[2])  goto label_5;
     goto label_6;
     label_5: ;
         local[5] = local[0] - 1;
@@ -57,7 +57,7 @@ int main (){
     local[0] = 0;
     print ( "The first few digits of the Fibonacci sequence are:\n" );
     label_7: ;
-    if(local[0]<local[1]) goto label_9;
+    if( local[0] < local[1]) goto label_9;
     goto label_8;
     label_9: ;
         local[2] = fib ( local[0] );

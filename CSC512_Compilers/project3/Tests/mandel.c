@@ -5,7 +5,7 @@
 
 int square(int x)
 {
-    return (x*x+500)/1000;
+    return ( x*x+500)/1000;
 }
 
 int complex_abs_squared(int real, int imag)
@@ -33,6 +33,7 @@ int absval(int x)
 	return -1 * x;
     }
     return x;
+
 }
 
 int checkpixel(int x, int y)

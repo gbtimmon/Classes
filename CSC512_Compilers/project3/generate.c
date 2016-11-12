@@ -93,7 +93,7 @@ char * getReference( SymbolTable global, SymbolTable local,  Token c, int depth 
     if( offset->type == S_XOPER ) {
         int ref = putOperChain( global, local, offset, depth ); 
         char * out = malloc( sizeof( char ) * 27 ); 
-        sprintf(out, "%s[%d + local[%d]]", (isLocal==0) ? "local" : "global", sym->ref, 7 ); 
+        sprintf(out, "%s[%d + local[%d]]", (isLocal==0) ? "local" : "global", sym->ref, ref ); 
         return out;
     }
     return emptyStr();
