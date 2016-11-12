@@ -7,7 +7,7 @@ STATIC   = -c
 CFLAGS   = -w -Wall -std=c99 -pedantic -g
 LINKER   = 
 
-BINARY = parser
+BINARY = compile
 
 all : generateTable.py $(BINARY) cleanup
 

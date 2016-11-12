@@ -215,7 +215,7 @@ void splitOper( Token t ) {
             while( child != NULL ){
                 Token next = child->peer; 
                 Token_remove( child );    
-                Token_appendChild( oper, child ); 
+                Token_prependChild( oper, child ); 
                 child = next;
             } 
             Token_prependChild( cur, oper);

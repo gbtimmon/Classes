@@ -303,12 +303,12 @@ void writeStatements( SymbolTable global, SymbolTable local, Token t, int depth,
                exit(1); 
             }
             tab(depth); 
-            fprintf(GLOBAL_FILE, "goto label_%d\n", continuel);
+            fprintf(GLOBAL_FILE, "goto label_%d;\n", continuel);
         } else if ( c->child->type == T_BREAK ){
             if( continuel == -1 )
                fprintf( stderr, "break statement outside of block\n");
             tab(depth); 
-            fprintf(GLOBAL_FILE, "goto label_%d\n", breakl);
+            fprintf(GLOBAL_FILE, "goto label_%d;\n", breakl);
         } else {
             putStatement( global, local, c, depth, continuel, breakl ); 
         }
