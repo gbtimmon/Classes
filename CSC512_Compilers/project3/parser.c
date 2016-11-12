@@ -115,8 +115,6 @@ int main( int argc, char ** argp, char ** envp ){
     Scanner_free(s); 
     transform( tree ); 
    
-    Token_printTree( tree ); 
-    
     char * newName = malloc( sizeof( char ) * (strlen( argp[1] ) + 5 ) ); 
     strcpy( newName, argp[1]); 
     
