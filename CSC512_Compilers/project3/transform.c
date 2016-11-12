@@ -96,7 +96,6 @@ void transformSStart( Token t ) {
             c = next; 
         }
  
-        //findAndRemove( data, T_SEMI ); 
         Token_appendChild( t, data ); 
  
         //then order the functions. 

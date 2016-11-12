@@ -220,7 +220,7 @@ void Token_printTree( Token h ) {
    if( h->child == NULL && !isTerminal( h->type) ){
        printf( "%s ->", myself ); 
        printf(" NULL\n"); 
-   } else if( !isTerminal( h->type ) && h->type != S_XDATA ) {
+   } else if( !isTerminal( h->type ) && h->type != 99999 ) {
        printf( "%s ->", myself ); 
        Token c = h->child; 
        while( c != NULL ){

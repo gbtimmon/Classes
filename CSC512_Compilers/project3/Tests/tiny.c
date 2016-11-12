@@ -1,7 +1,7 @@
 #define taco 1
 #define monky taco
 
-int k,x;
+int k[15];
 
 int a2( decimal j, decimal e ) { 
     int v;
