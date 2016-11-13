@@ -5,16 +5,10 @@
 #include "assert.h"
 #include <stdbool.h>
 
-int _break_; 
-#define BREAK() {printf("BREAK %d\n", _break_++);fflush(NULL);}
 #define SIZE_OF_ARRAY(_array) (sizeof(_array) / sizeof(_array[0]))
 #define EQ(x,y) strcmp( x, y ) == 0 
 
-/** Recode the IR Tree formed by the parser. 
-    Do a depth / last item first scan and recode as we go. 
-    This way subtrees are recoded before we recode a node. 
-     **/
-
+  
 void findAndCollapse( Token t, token_t type ){
     Token c = Token_findChild( t, type ); 
     while( c != NULL ) {
