@@ -30,7 +30,6 @@
   label will result in an error continue or break without containing loop. 
 **/
   
-  declaration f
 void generate( FILE * f, Token meta, Token t );
 
 
