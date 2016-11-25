@@ -1,28 +1,29 @@
 import sys
+
 class BinTree(object) :
 
   class Node(object) :
       _id = 1
-      def __init__( s, key, pri, seg, l, r, p ):
+      def __init__( s, key, seg, l, r, p ):
         s.id     = BinTree.Node._id
         s.key    = key
-        s.pri    = pri
         s.seg    = seg
         s.left   = l
         s.right  = r
         s.parent = p
-
         BinTree.Node._id += 1
 
-      def pri( s ) :
+      def pri( s, l ) :
         m = s.seg.slope() 
-
+        p = s.seg.l
+        return Point( l.x, p.y + ( ( l.x - p.x) * m ))
+ 
       def __repr__( s ) : return s.__str__()
       def __str__( s ) :
         left  = str(s.left.id) if s.left else "None"
         par   = str(s.parent.id) if s.parent else "None"
         right = str(s.right.id) if s.right else "None"
-        return "%2d\n==================\n  KEY : %10s PRI : %10s VAL : %s]\n  PAR : %10s LFT : %10s RGT : %4s]>"%(s.id, str(s.key), str(s.pri), str(s.val), par, left, right)
+        return "%2d\n==================\n  KEY : %10s VAL : %s]\n  PAR : %10s LFT : %10s RGT : %4s]>"%(s.id, str(s.key), str(s.seg), par, left, right)
 
   def __init__(s) :
     s.root = None
@@ -32,21 +33,21 @@ class BinTree(object) :
   def __len__(s) :
     return s.size
 
-  def put( s, key, pri, seg ):
+  def put( s, key, at, seg ):
     s.size += 1
     if s.root == None :
-      newNode    = BinTree.Node( key, pri, seg, None, None, None )
+      newNode    = BinTree.Node( key, seg, None, None, None )
       s.root     = newNode
       s.lkp[key] = newNode
       return
 
     cur = s.root
     while True :
-      if cur.key >= key:
+      if cur.pri(at) >= key:
         if cur.left :
           cur = cur.left
         else :
-          newNode    = BinTree.Node( key, pri, seg, None, None, cur )
+          newNode    = BinTree.Node( key, seg, None, None, cur )
           cur.left   = newNode
           s.lkp[key] = newNode
           return
@@ -54,7 +55,7 @@ class BinTree(object) :
         if cur.right :
           cur = cur.right
         else :
-          newNode    = BinTree.Node( key, pri, seg, None, None, cur )
+          newNode    = BinTree.Node( key, seg, None, None, cur )
           cur.right  = newNode
           s.lkp[key] = newNode
           return

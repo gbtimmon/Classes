@@ -52,7 +52,6 @@ class Segment ( object ) :
     t2  = float( num ) / float( den )    
 
     I = p3 + ( v4.scale( t4 ) ) 
-    print( "SUGG", s, o, I ) 
     if( not( 0.0 <= t2 <= 1.0 and 0.0 <= t4 <= 1.0 ) ) : 
       return None 
 
