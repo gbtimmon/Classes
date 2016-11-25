@@ -2,6 +2,14 @@
 #define _SYMBOL_TABLE_H_
 
 #include <stdbool.h>
+/**
+  A very simple store and look up for symbols.
+  Its a linked list, just like everything else 
+  because ll is so easy in c. ;D.
+
+  Symbol table also manages temp vars. and
+  assigns names to them. 
+**/
 
 typedef enum _symbol_t {  
     TYPE_INT, 

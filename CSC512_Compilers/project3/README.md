@@ -1,3 +1,35 @@
+This is the code for my compiler / code generator. 
+The compile works in a three step process - the parser generates a tree, transform.c transforms the tree into a better form for output and generator.c takes the tree and outputs c code. 
+
+A few small changes to token from the last project. I added functions for creating and manipulating trees of token, and pointers to support trees. I am lazy so the parser tokens are directly used to create a AST tree.
+
+The tree after transformation has a simple structure illistrated below. 
+
+START
+  +- ROOT DATA
+  +- FUNC 1
+  |    +- type
+  |    +- name
+  |    +- parms
+  |    |   +-parm 1
+  |    |   ...
+  |    +- code
+  |       +- stmnt 1
+  |       +- stmnt 2 (if , or while)
+  |          +-code 
+  |             +stmnt 1
+  |
+  +- FUNC 2
+  +- FUNC 3
+
+Trasnformations happen in a depth first search manner. This is important becuase a transform function is written for each node, and it is written with the assumption that all of its child nodes are fully transformed. Also the recursive DFS implementation allows us to change the tree in place without worrying about losing the order to process the tokens since the order is already fully in the stack before any transfromations occur. 
+
+Each root and function node has a symbol table. Which corresponds to local and global scope. There is 
+no support for more than the two scopes. 
+
+ ----------------------------------
+(README from project 2 is bleow )
+
 This is the code for my parser. 
 
 This code code has a few class

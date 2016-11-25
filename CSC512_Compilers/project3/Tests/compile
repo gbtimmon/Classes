@@ -1,0 +1,6 @@
+gcc ${1}
+./a.out
+read -rsp $'Press enter to continue...\n'
+F=$(../compile ${1} | awk '{print $3}' )
+gcc $F
+./a.out

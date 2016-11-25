@@ -7,11 +7,11 @@ STATIC   = -c
 CFLAGS   = -w -Wall -std=c99 -pedantic -g
 LINKER   = 
 
-BINARY = parser
+BINARY = compile
 
 all : generateTable.py $(BINARY) cleanup
 
-$(BINARY) : symbol.o token.o scanner.o buffer.o parserTable.o generate.o parser.c transform.o
+$(BINARY) : token.o symbol.o scanner.o buffer.o parserTable.o generate.o parser.c transform.o
 	$(CC) $(SRC_PATH)/parser.c symbol.o token.o scanner.o buffer.o generate.o transform.o parserTable.o $(INC) $(LIB) $(CFLAGS) $(LINKER) -o $(BINARY)
 
 generateTable.py: 

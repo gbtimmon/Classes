@@ -5,16 +5,10 @@
 #include "assert.h"
 #include <stdbool.h>
 
-int _break_; 
-#define BREAK() {printf("BREAK %d\n", _break_++);fflush(NULL);}
 #define SIZE_OF_ARRAY(_array) (sizeof(_array) / sizeof(_array[0]))
 #define EQ(x,y) strcmp( x, y ) == 0 
 
-/** Recode the IR Tree formed by the parser. 
-    Do a depth / last item first scan and recode as we go. 
-    This way subtrees are recoded before we recode a node. 
-     **/
-
+  
 void findAndCollapse( Token t, token_t type ){
     Token c = Token_findChild( t, type ); 
     while( c != NULL ) {
@@ -211,14 +205,17 @@ void splitOper( Token t ) {
         int len = Token_countChild( cur, -1 );
         if( len > 3 ) {
             Token oper  = Token_new( S_XOPER, NULL ); 
-            Token child = cur->child->peer->peer; 
+            Token child = cur->child; 
+            while( child->peer != NULL ) child = child->peer; 
+    
+            child = child->lpeer->lpeer; 
             while( child != NULL ){
-                Token next = child->peer; 
+                Token next = child->lpeer; 
                 Token_remove( child );    
                 Token_appendChild( oper, child ); 
                 child = next;
             } 
-            Token_prependChild( cur, oper);
+            Token_appendChild( cur, oper);
             cur = oper; 
         } else {
             return;
@@ -266,6 +263,26 @@ void transformSFact( Token t ) {
 };
     
 void transformSCondExp( Token t ){
+    findAndCollapse( t, S_COND_EXP_A ); 
+
+    int cc = Token_countChild( t, -1); 
+    if( cc == 1 ){
+        findAndCollapse( t, S_COND ); 
+    } 
+   
+    if( cc == 3 ) {
+        int lhs = Token_countChild(t->child, -1 ); 
+        if( lhs > 1 ) 
+            t->child->type = S_XOPER; 
+        else 
+            Token_collapse( t->child ); 
+        
+        int rhs = Token_countChild( t->child->peer->peer, -1 ); 
+        if( lhs > 1 ) 
+            t->child->peer->peer->type = S_XOPER; 
+        else 
+            Token_collapse( t->child->peer->peer ); 
+    }
 };
     
 void transformSCond( Token t ){
